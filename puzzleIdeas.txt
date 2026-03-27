@@ -1,0 +1,19 @@
+Puzzle concepts:
+- platform based puzzles (tasks to complete to move onto the next section)
+    ex: Fire boy and Water girl type of puzzles
+- separate game based puzzles (a separate mini-game to complete to move on)
+    ex: complete a maze that is separate from the sprite
+
+Platform based:
+- buttons that need to be pushed
+- boxes to jump onto to for the sprite to reach platforms
+- obtain keys to get through doors/gates
+- player has to walk through portals
+- controls are inverse for the player
+- heavy/light gravity
+- avoid "monsters"
+
+Game based:
+- maze
+- "exit"/parking based game
+    where there are other objects that can only move up/down & left/right
