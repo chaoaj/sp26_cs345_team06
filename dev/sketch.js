@@ -1,5 +1,7 @@
 var playerX = 25
-var playerY = 350
+var playerY = -100
+
+//USE RELATIVE SCALE NOT PIXEL VALUES
 
 function setupPlayfield() {
   background(220)
@@ -11,6 +13,7 @@ function setupPlayfield() {
 
 function setup() {
   createCanvas(1066, 600);
+  playerY = .6*height
   //bigger than normal because it loads in a webpage, more detail
   //keep 16:9 ratio
 }
