@@ -1,24 +1,33 @@
-var playerX = 25
-var playerY = -100
-
-//USE RELATIVE SCALE NOT PIXEL VALUES
-
-function setupPlayfield() {
-  background(220)
-  rect(0, .8*height, width, .2*height)
-  rect(playerX, playerY, .2*height, .2*height)
-  //.2*height is 50 in standard 400x400 frame,
-  // refactor other scales if changed
-}
+let gameState = "title";
 
 function setup() {
-  createCanvas(1066, 600);
-  playerY = .6*height
-  //bigger than normal because it loads in a webpage, more detail
-  //keep 16:9 ratio
+  createCanvas(windowWidth, windowHeight);
+  textAlign(CENTER, CENTER);
+  rectMode(CENTER);
 }
 
-function draw() {
-  keyListener()
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
 
+function draw() { // change to wanted game state.
+  if (gameState === "title") {
+    drawTitleScreen();
+  } else {
+    return;
+  }
+}
+
+function drawGamePrototype() {
+  background(220);
+  fill(20);
+  noStroke();
+  textSize(24);
+  text("Game Prototype Running", width / 2, height / 2);
+}
+
+function keyPressed() {
+  if (gameState === "title") {
+    handleTitleKeyPressed()
+  }
 }
