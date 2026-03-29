@@ -2,8 +2,14 @@ var jumpDebounce = false
 const gravity = 0.5
 let yVelocity = 0;
 
+function jumpDebounceTimeout() {
+    setTimeout(() => {
+        jumpDebounce = false;
+        print("db reset")
+    }, 500);
+}
+
 function keyListener() {
-    setupPlayfield()
     if (keyIsDown(65)) {
         playerX -= 5;
     }
@@ -13,7 +19,9 @@ function keyListener() {
     if (keyIsDown(32) && !jumpDebounce) {
         yVelocity = -10;
         jumpDebounce = true
+        jumpDebounceTimeout();
     }
+
     yVelocity += gravity;
     playerY += yVelocity;
 }
