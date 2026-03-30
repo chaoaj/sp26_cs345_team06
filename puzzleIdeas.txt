@@ -17,3 +17,17 @@ Game based:
 - maze
 - "exit"/parking based game
     where there are other objects that can only move up/down & left/right
+- laser
+- sorting game
+- memory game
+
+
+General acceptance criteria:
+- the player can understand what to do within 10-15 seconds without none to minimum
+    amounts of directions/instructions
+- there are interactive elements are visually distinct
+- all puzzle interactions respond quickly to user input
+- controls behave consistently with the rest of the platform
+- the player must complete the puzzles to proceed
+- the player can retry puzzles without restarting the entire level unless all lives are lost
+- if a level is restarted, the puzzle must also restarted
