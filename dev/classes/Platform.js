@@ -1,20 +1,12 @@
-export default class Platform{
-    constructor(data){
-        this.x = data.x;
-        this.y = data.y;
-        this.w = data.w;
-        this.h = data.h;
+class Platform{
+    constructor(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
     }
 
 
-    constructor(x, y, w, h) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-  }
-
-  
     draw(){
         fill(100, 100, 100);
         noStroke();
