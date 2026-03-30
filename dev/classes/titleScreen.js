@@ -1,20 +1,23 @@
 function preload() {
-  var titleScreenimage = loadImage("assets/Title.png")
-  var startInstructionImage = loadImage("assets/Start.png")
+  titleScreenimage = loadImage("assets/Title.png")
+  startInstructionImage = loadImage("assets/Start.png")
 
-  var layer1 = loadImage("assets/layer1.png")
-  var layer2 = loadImage("assets/layer2.png")
-  var layer3 = loadImage("assets/layer3.png")
-  var layer4 = loadImage("assets/layer4.png")
-  var layer5 = loadImage("assets/layer5.png")
+  layer1 = loadImage("assets/layer1.png")
+  layer2 = loadImage("assets/layer2.png")
+  layer3 = loadImage("assets/layer3.png")
+  layer4 = loadImage("assets/layer4.png")
+  layer5 = loadImage("assets/layer5.png")
 }
 
 function drawTitleScreenLayers() {
   const normalized = constrain((mouseX - width / 2) / (width / 2), -1, 1);
+  //abs function but with not 0
   const maxShift = width * 0.08;
-
   const layer2Offset = -normalized * maxShift * 0.2;
   const layer4Offset = -normalized * maxShift * 0.75;
+
+  //i dont know if its better to use var or const
+  // i just wanted the variables to be colored
 
   image(layer5, 0, 0, width, height);
   image(layer4, layer4Offset, 0, width, height);
@@ -34,23 +37,26 @@ function drawTitleScreen() {
   const imageWidthScale = .5
   // 1153 x 140
   // for centering image
-  image(titleScreenimage,
+  image(
+    titleScreenimage,
     width / 2 - (imageWidthScale*width / 2),
     //THIS IS CENTERED PLEASE ASK EJ BEFORE YOU CHANGE THIS
     height / 2 - (imageHeightScale*height / 2) - (height/5),
     imageWidthScale * width,
-    imageHeightScale * height);
+    imageHeightScale * height
+  );
 
   const startImageHeightScale = .05
   const startImageWidthScale = .3
   // 1059 x 91
-  image(startInstructionImage,
+  image(
+    startInstructionImage,
     width / 2 - (startImageWidthScale*width / 2),
     //THIS IS CENTERED PLEASE ASK EJ BEFORE YOU CHANGE THIS
     height / 2 - (startImageHeightScale*height / 2),
     startImageWidthScale * width,
-    startImageHeightScale * height);
-
+    startImageHeightScale * height
+  );
 }
 
 function handleTitleKeyPressed() {
