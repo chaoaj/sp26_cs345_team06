@@ -1,39 +1,37 @@
 function preload() {
-  titleScreenimage = loadImage("assets/Title.png")
-  startInstructionImage = loadImage("assets/Start.png")
+  var titleScreenimage = loadImage("assets/Title.png")
+  var startInstructionImage = loadImage("assets/Start.png")
+
+  var layer1 = loadImage("assets/layer1.png")
+  var layer2 = loadImage("assets/layer2.png")
+  var layer3 = loadImage("assets/layer3.png")
+  var layer4 = loadImage("assets/layer4.png")
+  var layer5 = loadImage("assets/layer5.png")
 }
 
+function drawTitleScreenLayers() {
+  const normalized = constrain((mouseX - width / 2) / (width / 2), -1, 1);
+  const maxShift = width * 0.08;
+
+  const layer2Offset = -normalized * maxShift * 0.2;
+  const layer4Offset = -normalized * maxShift * 0.75;
+
+  image(layer5, 0, 0, width, height);
+  image(layer4, layer4Offset, 0, width, height);
+  //image(layer3, layer3Offset, 0, width*1.25, height);
+  // TODO: center this layer then bring it back
+  image(layer2, layer2Offset, 0, width, height);
+  image(layer1, 0, 0, width, height);
+}
 
 function drawTitleScreen() {
 
-  background(30, 40, 70);
-
-  // Title text box
-  // fill(245);
-  // stroke(40);
-  // strokeWeight(2);
-  // rect(width / 2, height / 2 - 50, 280, 70, 10);
-
-  // noStroke();
-  // fill(25);
-  // textSize(30);
-  // text("Rush the Temple", width / 2, height / 2 - 52);
-
-  // Start prompt text box
-  // fill(245);
-  // stroke(40);
-  // strokeWeight(2);
-  // rect(width / 2, height / 2 + 45, 280, 60, 10);
-
-  // noStroke();
-  // fill(25);
-  // textSize(18);
-  // text("Press Space to Start", width / 2, height / 2 + 45);
+  drawTitleScreenLayers();
 
   //TODO: tween in/out with bounce/rotation
 
-  imageHeightScale = .12
-  imageWidthScale = .5
+  const imageHeightScale = .12
+  const imageWidthScale = .5
   // 1153 x 140
   // for centering image
   image(titleScreenimage,
@@ -43,8 +41,8 @@ function drawTitleScreen() {
     imageWidthScale * width,
     imageHeightScale * height);
 
-  startImageHeightScale = .05
-  startImageWidthScale = .3
+  const startImageHeightScale = .05
+  const startImageWidthScale = .3
   // 1059 x 91
   image(startInstructionImage,
     width / 2 - (startImageWidthScale*width / 2),
