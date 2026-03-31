@@ -1,12 +1,19 @@
 let gameState = "title";
 
-let platform;
+level1Platforms = {
+  platform1: new Platform(200, 400, 300, 20),
+  platform2: new Platform(500, 300, 200, 20),
+  platform3: new Platform(800, 500, 250, 20),
+  platform4: new Platform(1100, 350, 150, 20),
+  platform5: new Platform(1400, 450, 300, 20)
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
+
   rectMode(CENTER);
-  platform = new Platform(200, 400, 300, 20);
+  //platform = new Platform(200, 400, 300, 20);
 }
 
 function windowResized() {
@@ -18,7 +25,9 @@ function draw() { // change to wanted game state.
     drawTitleScreen();
   } else if (gameState === "playing") {
     background(220);
-    platform.draw();
+    level1 = new Level(level1Platforms);
+    level1.drawPlatforms()
+    //platform.draw();
   }
 }
 
