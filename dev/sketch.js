@@ -20,7 +20,7 @@ function setup() {
 
 function setupLevel() {
   //platform = new Platform(width / 2, height * 0.72, 320, 20);
-  level = new Level(level1Platforms);
+  level = new Level(level1Platforms, backgroundImage);
   level.drawPlatforms();
   player = new Player(width * .2, height-100, 40, 60);
 }

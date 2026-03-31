@@ -15,11 +15,9 @@ class Platform{
         this.w = w;
         this.h = h;
     }
-
     draw(){
         fill(100, 100, 100);
         noStroke();
         rect(this.x, this.y, this.w, this.h);
     }
-
 }
