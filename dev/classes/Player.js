@@ -2,6 +2,8 @@ class Player {
   constructor(x, y, width, height) {
     this.x = x;
     this.y = y;
+    this.spawnX = x;
+    this.spawnY = y;
     this.width = width;
     this.height = height;
     this.yVelocity = 0;
@@ -9,6 +11,8 @@ class Player {
     this.jumpStrength = 12;
     this.gravity = 0.6;
     this.isOnGround = false;
+    this.maxHealth = 3;
+    this.health = this.maxHealth;
   }
 
   update(platforms) {
@@ -55,6 +59,29 @@ class Player {
       this.yVelocity = 0;
       this.isOnGround = true;
     }
+  }
+  takeDamage(amount = 1) {
+    this.health = Math.max(0, this.health - amount);
+    if (this.health <= 0) {
+      this.respawn();
+    }
+  }
+
+  gainHealth(amount = 1) {
+    this.health += amount;
+  }
+
+  setSpawnPoint(x, y) {
+    this.spawnX = x;
+    this.spawnY = y;
+  }
+
+  respawn() {
+    this.x = this.spawnX;
+    this.y = this.spawnY;
+    this.yVelocity = 0;
+    this.isOnGround = false;
+    this.health = this.maxHealth;
   }
 
   draw() {

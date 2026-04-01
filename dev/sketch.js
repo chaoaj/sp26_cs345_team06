@@ -5,6 +5,7 @@ let players;
 let player;
 
 let level1Platforms = []
+let level1Items = []
 
 function setup() {
 
@@ -19,6 +20,10 @@ function setup() {
     new Platform(1400, 450, 300, 40, brickPlatformImage)
   ]
 
+  level1Items = [
+    new Items(500, 250, "health")
+  ]
+
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
@@ -27,7 +32,7 @@ function setup() {
 
 function setupLevel() {
   //platform = new Platform(width / 2, height * 0.72, 320, 20);
-  level = new Level(level1Platforms, backgroundImage, brickFloorImage);
+  level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items);
   level.drawPlatforms();
   player = new Player(width * .2, height-100, 40, 60);
 }
@@ -44,7 +49,9 @@ function draw() {
   } else if (gameState === "playing") {
     level.drawLevel();
     player.update(level1Platforms);
+    level.collectTouchedItems(player);
     player.draw();
+    level.drawHUD(player);
   }
 }
 
