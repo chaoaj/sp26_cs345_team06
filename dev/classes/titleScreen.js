@@ -23,15 +23,15 @@ function drawTitleScreen() {
   drawTitleScreenLayers();
   //TODO: sin() bobbing effect
 
-  const attributionImageHeightScale = .07
-  const attributionImageWidthScale = .3
+  const attributionImageHeightScale = .11
+  const attributionImageWidthScale = .5
   // 1728 x 189
   // for centering image
   image(
     attribution,
     width / 2 - (attributionImageWidthScale*width / 2),
     //THIS IS CENTERED PLEASE ASK EJ BEFORE YOU CHANGE THIS
-    height * .925,
+    height * .9,
     attributionImageWidthScale * width,
     attributionImageHeightScale * height
   );

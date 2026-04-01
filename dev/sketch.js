@@ -4,15 +4,21 @@ let platforms = [];
 let players;
 let player;
 
-level1Platforms = [
-  new Platform(200, 400, 300, 20),
-  new Platform(500, 300, 200, 20),
-  new Platform(800, 500, 250, 20),
-  new Platform(1100, 350, 150, 20),
-  new Platform(1400, 450, 300, 20)
-]
+let level1Platforms = []
 
 function setup() {
+
+  //TODO: make a table in a different class for
+  // different levels (maybe, it is here because setup runs affter
+  // preload, otherwise it was using image variables before they were loaded)
+  level1Platforms = [
+    new Platform(200, 400, 300, 40, brickPlatformImage),
+    new Platform(500, 300, 200, 40, brickPlatformImage),
+    new Platform(800, 500, 250, 40, brickPlatformImage),
+    new Platform(1100, 350, 150, 40, brickPlatformImage),
+    new Platform(1400, 450, 300, 40, brickPlatformImage)
+  ]
+
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
@@ -21,7 +27,7 @@ function setup() {
 
 function setupLevel() {
   //platform = new Platform(width / 2, height * 0.72, 320, 20);
-  level = new Level(level1Platforms, backgroundImage);
+  level = new Level(level1Platforms, backgroundImage, brickFloorImage);
   level.drawPlatforms();
   player = new Player(width * .2, height-100, 40, 60);
 }
@@ -29,6 +35,7 @@ function setupLevel() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   setupLevel();
+  //TODO: LOGIC ERROR -> resizing makes player respawn
 }
 
 function draw() {

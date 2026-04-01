@@ -8,15 +8,23 @@ class Platform{
 
     //File will not compile with both constructors
 
-    constructor(x, y, w, h) {
+    constructor(x, y, w, h, platformImage) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.platformImage = platformImage;
     }
     draw(){
         fill(100, 100, 100);
         noStroke();
         rect(this.x, this.y, this.w, this.h);
+        //rect is for hitbox visualization,
+        // actual hitbox is determined by the 
+        // numerical properties
+
+        //TODO: make these images into a repeatimng texture
+        // in some way, so that they can be any width without looking stretched
+        image(this.platformImage, this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
     }
 }

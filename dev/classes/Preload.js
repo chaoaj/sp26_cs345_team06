@@ -19,6 +19,5 @@ function preload() {
   brickFloorImage = loadImage("assets/Floor1.png");
 
   //Platforms
-  brickPlatformImage = loadImage("assets/BrickPlatform.png");
-
+  brickPlatformImage = loadImage("assets/BrickPlatform.png")
 }
