@@ -9,7 +9,7 @@ class Level {
         image(this.background, 0, 0, width, height);
     }
     drawPlatforms() {
-        print("drawing platforms")
+        //print("drawing platforms")
         for (let platform of this.platforms) {
             platform.draw();
         }

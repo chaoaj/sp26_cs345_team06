@@ -18,10 +18,12 @@ class Platform{
     draw(){
         fill(100, 100, 100);
         noStroke();
-        rect(this.x, this.y, this.w, this.h);
+        //rect(this.x, this.y, this.w, this.h);
+
         //rect is for hitbox visualization,
         // actual hitbox is determined by the 
-        // numerical properties
+        // numerical properties.
+        //uncomment rect if collision issues arise
 
         //TODO: make these images into a repeatimng texture
         // in some way, so that they can be any width without looking stretched
