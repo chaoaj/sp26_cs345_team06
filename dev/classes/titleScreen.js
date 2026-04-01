@@ -22,17 +22,31 @@ function drawTitleScreen() {
 
   drawTitleScreenLayers();
   //TODO: sin() bobbing effect
-  const imageHeightScale = .12
-  const imageWidthScale = .5
+
+  const attributionImageHeightScale = .07
+  const attributionImageWidthScale = .3
+  // 1728 x 189
+  // for centering image
+  image(
+    attribution,
+    width / 2 - (attributionImageWidthScale*width / 2),
+    //THIS IS CENTERED PLEASE ASK EJ BEFORE YOU CHANGE THIS
+    height * .925,
+    attributionImageWidthScale * width,
+    attributionImageHeightScale * height
+  );
+
+  const titleImageHeightScale = .12
+  const titleImageWidthScale = .5
   // 1153 x 140
   // for centering image
   image(
     titleScreenimage,
-    width / 2 - (imageWidthScale*width / 2),
+    width / 2 - (titleImageWidthScale*width / 2),
     //THIS IS CENTERED PLEASE ASK EJ BEFORE YOU CHANGE THIS
-    height / 2 - (imageHeightScale*height / 2) - (height/5),
-    imageWidthScale * width,
-    imageHeightScale * height
+    height / 2 - (titleImageHeightScale*height / 2) - (height/5),
+    titleImageWidthScale * width,
+    titleImageHeightScale * height
   );
 
   const startImageHeightScale = .05

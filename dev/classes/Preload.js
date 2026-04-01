@@ -10,6 +10,7 @@ function preload() {
   layer3 = loadImage("assets/Layer3.png")
   layer4 = loadImage("assets/Layer4.png")
   layer5 = loadImage("assets/Layer5.png")
+  attribution = loadImage("assets/attribution.png")
 
   //Backgrounds
   backgroundImage = loadImage("assets/Background1.png");
