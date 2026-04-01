@@ -1,8 +1,9 @@
 class Level {
-    constructor(platforms, backgroundimage, floorImage, items = []) { // added items parameter with default empty array
+    constructor(platforms, backgroundimage, floorImage, items = [], traps = []) { // added items parameter with default empty array
         //table of platforms, not drawn yet
         this.platforms = platforms;
         this.items = items;
+        this.traps = traps;
         this.background = backgroundimage;
         //floor, do not include in level platforms
         var floor = new Platform(width / 2, height, width, 50, floorImage);
@@ -19,6 +20,12 @@ class Level {
     drawItems() {
         for (let item of this.items) {
             item.draw();
+        }
+    }
+
+    drawTraps() {
+        for (let trap of this.traps) {
+            trap.draw();
         }
     }
 
@@ -46,6 +53,7 @@ class Level {
         image(this.background, 0, 0, width, height);
         this.drawPlatforms();
         this.drawItems();
+        this.drawTraps();
     }
     drawPlayer(player) {
         player.draw();

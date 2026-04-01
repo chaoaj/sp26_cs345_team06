@@ -6,6 +6,7 @@ let player;
 
 let level1Platforms = []
 let level1Items = []
+let level1Traps = []
 
 function setup() {
 
@@ -27,12 +28,17 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
+
+  level1Traps = [
+    new SpikeTrap(800, height - 75, 120, 40)
+  ]
+
   setupLevel();
 }
 
 function setupLevel() {
   //platform = new Platform(width / 2, height * 0.72, 320, 20);
-  level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items);
+  level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps);
   level.drawPlatforms();
   player = new Player(width * .2, height-100, 40, 60);
 }
