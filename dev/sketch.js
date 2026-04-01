@@ -51,6 +51,7 @@ function drawGamePrototype() {
 function keyPressed() {
   if (gameState === "title") {
     handleTitleKeyPressed();
-    handleTitleKeyPressed();
+    //handleTitleKeyPressed();
+    //  why are there two?
   }
 }
