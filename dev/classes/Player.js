@@ -48,10 +48,7 @@ class Player {
   }
 
   constrainToScreen() {
-    const halfWidth = this.width / 2;
     const halfHeight = this.height / 2;
-
-    this.x = constrain(this.x, halfWidth, width - halfWidth);
 
     if (this.y + halfHeight >= height) {
       this.y = height - halfHeight;

@@ -1,6 +1,7 @@
 let gameState = "title";
 
-let platforms;
+let platforms = [];
+let players;
 let player;
 
 level1Platforms = [
@@ -30,7 +31,7 @@ function windowResized() {
   setupLevel();
 }
 
-function draw() { // change to wanted game state.
+function draw() {
   if (gameState === "title") {
     drawTitleScreen();
   } else if (gameState === "playing") {
@@ -49,6 +50,7 @@ function drawGamePrototype() {
 
 function keyPressed() {
   if (gameState === "title") {
+    handleTitleKeyPressed();
     handleTitleKeyPressed();
   }
 }

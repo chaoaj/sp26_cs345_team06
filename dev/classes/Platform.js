@@ -6,8 +6,7 @@ class Platform{
     //     this.h = data.h;
     // }
 
-    //File will not compile with both constructors, 
-    // above constructor is not needed at all
+    //File will not compile with both constructors
 
     constructor(x, y, w, h) {
         this.x = x;
