@@ -3,6 +3,8 @@ function drawTitleScreenLayers() {
   //abs function but with not 0
   const maxShift = width * 0.08;
   const layer2Offset = -normalized * maxShift * 0.2;
+  const layer3Offset = -normalized * maxShift * 0.5;
+  //unused but dont delete
   const layer4Offset = -normalized * maxShift * 0.75;
 
   //i dont know if its better to use var or const
@@ -19,9 +21,7 @@ function drawTitleScreenLayers() {
 function drawTitleScreen() {
 
   drawTitleScreenLayers();
-
-  //TODO: tween in/out with bounce/rotation
-
+  //TODO: sin() bobbing effect
   const imageHeightScale = .12
   const imageWidthScale = .5
   // 1153 x 140
