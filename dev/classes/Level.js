@@ -1,14 +1,16 @@
 class Level {
-    constructor(platforms, backgroundimage, floorImage, items = [], traps = []) { // added items parameter with default empty array
+    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = []) {
+        this.worldWidth = worldWidth || width;
         //table of platforms, not drawn yet
         this.platforms = platforms;
         this.items = items;
         this.traps = traps;
+        this.boxes = boxes;
+        this.buttons = buttons;
         this.background = backgroundimage;
         //floor, do not include in level platforms
-        var floor = new Platform(width / 2, height, width, 50, floorImage);
+        var floor = new Platform(this.worldWidth / 2, height, this.worldWidth, 50, floorImage);
         platforms.push(floor);
-        image(this.background, 0, 0, width, height);
     }
     drawPlatforms() {
         //print("drawing platforms")
@@ -49,11 +51,83 @@ class Level {
         );
     }
 
-    drawLevel() {
+    drawBackground() {
         image(this.background, 0, 0, width, height);
+    }
+
+    drawWorld() {
         this.drawPlatforms();
         this.drawItems();
         this.drawTraps();
+        for (const box of this.boxes) box.draw();
+        for (const button of this.buttons) button.draw();
+    }
+
+    updatePuzzleElements(player) {
+        this.resolvePlayerBoxCollisions(player);
+
+        for (const box of this.boxes) {
+            box.update(this.platforms);
+        }
+
+        for (let i = 0; i < this.boxes.length; i++) {
+            for (let j = i + 1; j < this.boxes.length; j++) {
+                this.boxes[i].resolveBoxCollision(this.boxes[j]);
+            }
+        }
+
+        const entities = [player, ...this.boxes];
+        for (const button of this.buttons) {
+            button.checkPressed(entities);
+        }
+    }
+
+    resolvePlayerBoxCollisions(player) {
+        for (const box of this.boxes) {
+            const playerLeft = player.x - player.width / 2;
+            const playerRight = player.x + player.width / 2;
+            const playerTop = player.y - player.height / 2;
+            const playerBottom = player.y + player.height / 2;
+            const boxLeft = box.x - box.w / 2;
+            const boxRight = box.x + box.w / 2;
+            const boxTop = box.y - box.h / 2;
+            const boxBottom = box.y + box.h / 2;
+
+            if (playerRight <= boxLeft || playerLeft >= boxRight ||
+                playerBottom <= boxTop || playerTop >= boxBottom) {
+                continue;
+            }
+
+            const overlapLeft = playerRight - boxLeft;
+            const overlapRight = boxRight - playerLeft;
+            const overlapTop = playerBottom - boxTop;
+            const overlapBottom = boxBottom - playerTop;
+            const minX = Math.min(overlapLeft, overlapRight);
+            const minY = Math.min(overlapTop, overlapBottom);
+
+            if (minY <= minX) {
+                if (overlapTop <= overlapBottom) {
+                    player.y -= overlapTop;
+                    player.yVelocity = 0;
+                    player.isOnGround = true;
+                } else {
+                    player.y += overlapBottom;
+                }
+            } else {
+                if (overlapLeft <= overlapRight) {
+                    player.x -= overlapLeft;
+                    box.xVelocity = 4;
+                } else {
+                    player.x += overlapRight;
+                    box.xVelocity = -4;
+                }
+            }
+        }
+    }
+
+    drawLevel() {
+        this.drawBackground();
+        this.drawWorld();
     }
     drawPlayer(player) {
         player.draw();
