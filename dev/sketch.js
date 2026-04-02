@@ -30,7 +30,8 @@ function setup() {
   rectMode(CENTER);
 
   level1Traps = [
-    new SpikeTrap(800, height - 75, 120, 40)
+    new SpikeTrap(800, height - 75, 120, 40),
+    new LaserTrap(500, 220, 260, 18)
   ]
 
   setupLevel();
