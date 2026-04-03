@@ -13,6 +13,15 @@ let level1Items = []
 let level1Traps = []
 let level1Boxes = []
 let level1Buttons = []
+let pauseStartedAt = null;
+let accumulatedPauseMs = 0;
+
+function getGameMillis() {
+  if (gameState === "paused" && pauseStartedAt !== null) {
+    return pauseStartedAt - accumulatedPauseMs;
+  }
+  return millis() - accumulatedPauseMs;
+}
 
 function setup() {
 
@@ -56,6 +65,8 @@ function setupLevel() {
   level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons);
   player = new Player(width * .2, height - 100, 40, 60);
   camera = new Camera(WORLD_WIDTH, height * WORLD_HEIGHT_MULTIPLIER);
+  pauseStartedAt = null;
+  accumulatedPauseMs = 0;
 }
 
 function windowResized() {
@@ -82,7 +93,32 @@ function draw() {
 
     level.drawHUD(player);
     level.collectTouchedItems(player);
+  } else if (gameState === "paused") {
+    // Render current world without simulation updates while paused.
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawPauseOverlay();
   }
+}
+
+function drawPauseOverlay() {
+  push();
+  noStroke();
+  fill(0, 0, 0, 140);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(56);
+  text("Paused", width / 2, height / 2 - 30);
+  textSize(22);
+  text("Press P or Esc to resume", width / 2, height / 2 + 24);
+  pop();
 }
 
 function drawGamePrototype() {
@@ -97,5 +133,19 @@ function keyPressed() {
     handleTitleKeyPressed();
     //handleTitleKeyPressed();
     //  why are there two?
+    return;
+  }
+
+  if (key === "p" || key === "P" || keyCode === ESCAPE) {
+    if (gameState === "playing") {
+      pauseStartedAt = millis();
+      gameState = "paused";
+    } else if (gameState === "paused") {
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
+      }
+      pauseStartedAt = null;
+      gameState = "playing";
+    }
   }
 }

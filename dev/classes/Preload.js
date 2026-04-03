@@ -20,4 +20,7 @@ function preload() {
 
   //Platforms
   brickPlatformImage = loadImage("assets/BrickPlatform.png")
+
+  //UI
+  heartImage = loadImage("assets/heart.png")
 }

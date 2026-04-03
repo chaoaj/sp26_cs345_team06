@@ -6,7 +6,9 @@ class LaserTrap extends Trap {
   }
 
   isFiring() {
-    return millis() % this.repeatInterval < this.fireDuration;
+    // return millis() % this.repeatInterval < this.fireDuration;
+    const clock = typeof getGameMillis === "function" ? getGameMillis() : millis();
+    return clock % this.repeatInterval < this.fireDuration;
   }
 
   draw() {

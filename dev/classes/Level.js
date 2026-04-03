@@ -136,6 +136,12 @@ class Level {
         fill(255);
         textSize(24);
         textAlign(LEFT, TOP);
-        text(`Health: ${player.health}`, 10, 10);
+        if (typeof heartImage !== "undefined" && heartImage) {
+            for (let i = 0; i < player.health; i++) {
+                image(heartImage, 20 + i * 40, 20, 30, 30);
+            }
+        } else {
+            text(`Health: ${player.health}`, 10, 10);
+        }
     }
 }
