@@ -8,7 +8,7 @@ class Player {
     this.height = height;
     this.yVelocity = 0;
     this.moveSpeed = 5;
-    this.jumpStrength = 12;
+    this.jumpStrength = 14;
     this.gravity = 0.6;
     this.isOnGround = false;
     this.maxHealth = 3;
@@ -16,39 +16,100 @@ class Player {
   }
 
   update(platforms) {
+    const previousX = this.x;
+    const previousY = this.y;
+
     applyPlayerControls(this);
+    this.resolveHorizontalCollisions(platforms, previousX);
 
     this.yVelocity += this.gravity;
     this.y += this.yVelocity;
     this.isOnGround = false;
 
-    for (const platform of platforms) {
-      this.resolvePlatformCollision(platform);
-    }
-
+    this.resolveVerticalCollisions(platforms, previousY);
     this.constrainToScreen();
   }
 
-  resolvePlatformCollision(platform) {
-    const platformTop = platform.y - platform.h / 2;
-    const platformLeft = platform.x - platform.w / 2;
-    const platformRight = platform.x + platform.w / 2;
-    const playerLeft = this.x - this.width / 2;
-    const playerRight = this.x + this.width / 2;
+  resolveHorizontalCollisions(platforms, previousX) {
     const playerTop = this.y - this.height / 2;
     const playerBottom = this.y + this.height / 2;
 
-    if (
-      this.yVelocity >= 0 &&
-      playerRight > platformLeft &&
-      playerLeft < platformRight &&
-      playerBottom >= platformTop &&
-      playerTop < platformTop
-    ) {
-      this.y = platformTop - this.height / 2;
-      this.yVelocity = 0;
-      this.isOnGround = true;
+    for (const platform of platforms) {
+      const platformTop = platform.y - platform.h / 2;
+      const platformBottom = platform.y + platform.h / 2;
+      const platformLeft = platform.x - platform.w / 2;
+      const platformRight = platform.x + platform.w / 2;
+      const playerLeft = this.x - this.width / 2;
+      const playerRight = this.x + this.width / 2;
+
+      const overlapsY = playerBottom > platformTop && playerTop < platformBottom;
+      const overlapsX = playerRight > platformLeft && playerLeft < platformRight;
+
+      if (!overlapsX || !overlapsY) {
+        continue;
+      }
+
+      if (this.x > previousX) {
+        this.x = platformLeft - this.width / 2;
+      } else if (this.x < previousX) {
+        this.x = platformRight + this.width / 2;
+      }
     }
+  }
+
+  resolveVerticalCollisions(platforms, previousY) {
+    const previousTop = previousY - this.height / 2;
+    const previousBottom = previousY + this.height / 2;
+
+    for (const platform of platforms) {
+      const platformTop = platform.y - platform.h / 2;
+      const platformBottom = platform.y + platform.h / 2;
+      const platformLeft = platform.x - platform.w / 2;
+      const platformRight = platform.x + platform.w / 2;
+      const playerLeft = this.x - this.width / 2;
+      const playerRight = this.x + this.width / 2;
+      const playerTop = this.y - this.height / 2;
+      const playerBottom = this.y + this.height / 2;
+
+      const overlapsX = playerRight > platformLeft && playerLeft < platformRight;
+      const overlapsY = playerBottom > platformTop && playerTop < platformBottom;
+
+      if (!overlapsX || !overlapsY) {
+        continue;
+      }
+
+      if (this.yVelocity >= 0 && previousBottom <= platformTop) {
+        this.y = platformTop - this.height / 2;
+        this.yVelocity = 0;
+        this.isOnGround = true;
+      } else if (this.yVelocity < 0 && previousTop >= platformBottom) {
+        this.y = platformBottom + this.height / 2;
+        this.yVelocity = 0;
+      }
+    }
+  }
+
+  resolvePlatformCollision(platform) {
+    // Legacy single-pass collision (kept for reference).
+    // const platformTop = platform.y - platform.h / 2;
+    // const platformLeft = platform.x - platform.w / 2;
+    // const platformRight = platform.x + platform.w / 2;
+    // const playerLeft = this.x - this.width / 2;
+    // const playerRight = this.x + this.width / 2;
+    // const playerTop = this.y - this.height / 2;
+    // const playerBottom = this.y + this.height / 2;
+    //
+    // if (
+    //   this.yVelocity >= 0 &&
+    //   playerRight > platformLeft &&
+    //   playerLeft < platformRight &&
+    //   playerBottom >= platformTop &&
+    //   playerTop < platformTop
+    // ) {
+    //   this.y = platformTop - this.height / 2;
+    //   this.yVelocity = 0;
+    //   this.isOnGround = true;
+    // }
   }
 
   constrainToScreen() {
