@@ -80,6 +80,7 @@ function draw() {
     drawTitleScreen();
   } else if (gameState === "playing") {
     player.update(level1Platforms);
+    level.applyTrapDamage(player);
     level.updatePuzzleElements(player);
     camera.follow(player);
     camera.constrainPlayer(player);

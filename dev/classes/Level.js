@@ -9,6 +9,8 @@ class Level {
         this.buttons = buttons;
         this.background = backgroundimage;
         //floor, do not include in level platforms
+        this.trapDamageCooldownMs = 400;
+        this.lastTrapDamageAt = -Infinity;
         var floor = new Platform(this.worldWidth / 2, height, this.worldWidth, 50, floorImage);
         platforms.push(floor);
     }
@@ -29,6 +31,44 @@ class Level {
         for (let trap of this.traps) {
             trap.draw();
         }
+    }
+
+    applyTrapDamage(player) {
+        const now = typeof getGameMillis === "function" ? getGameMillis() : millis();
+        if (now - this.lastTrapDamageAt < this.trapDamageCooldownMs) {
+            return;
+        }
+
+        for (const trap of this.traps) {
+            if (!(trap instanceof SpikeTrap)) {
+                continue;
+            }
+
+            if (this.isPlayerTouchingTrap(player, trap)) {
+                player.takeDamage(trap.damage);
+                this.lastTrapDamageAt = now;
+                return;
+            }
+        }
+    }
+
+    isPlayerTouchingTrap(player, trap) {
+        const playerLeft = player.x - player.width / 2;
+        const playerRight = player.x + player.width / 2;
+        const playerTop = player.y - player.height / 2;
+        const playerBottom = player.y + player.height / 2;
+
+        const trapLeft = trap.x - trap.w / 2;
+        const trapRight = trap.x + trap.w / 2;
+        const trapTop = trap.y - trap.h / 2;
+        const trapBottom = trap.y + trap.h / 2;
+
+        return (
+            playerRight > trapLeft &&
+            playerLeft < trapRight &&
+            playerBottom > trapTop &&
+            playerTop < trapBottom
+        );
     }
 
     collectTouchedItems(player) {

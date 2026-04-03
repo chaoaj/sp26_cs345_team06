@@ -13,6 +13,7 @@ class Player {
     this.isOnGround = false;
     this.maxHealth = 3;
     this.health = this.maxHealth;
+    this.abilities = {};
   }
 
   update(platforms) {
@@ -143,6 +144,24 @@ class Player {
     this.yVelocity = 0;
     this.isOnGround = false;
     this.health = this.maxHealth;
+  }
+
+  addPermanentAbility(ability) { // if called will add ability
+    if (!ability || !ability.name) {
+      return false;
+    }
+
+    if (this.abilities[ability.name]) {
+      return false;
+    }
+
+    this.abilities[ability.name] = ability;
+    ability.applyTo(this);
+    return true;
+  }
+
+  hasAbility(abilityName) { // check for if player already has it
+    return !!this.abilities[abilityName];
   }
 
   draw() {
