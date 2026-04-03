@@ -1,5 +1,5 @@
 class Level {
-    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = []) {
+    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = []) {
         this.worldWidth = worldWidth || width;
         //table of platforms, not drawn yet
         this.platforms = platforms;
@@ -7,6 +7,7 @@ class Level {
         this.traps = traps;
         this.boxes = boxes;
         this.buttons = buttons;
+        this.enemies = enemies;
         this.background = backgroundimage;
         //floor, do not include in level platforms
         this.trapDamageCooldownMs = 400;
@@ -30,6 +31,18 @@ class Level {
     drawTraps() {
         for (let trap of this.traps) {
             trap.draw();
+        }
+    }
+
+    drawEnemies() {
+        for (const enemy of this.enemies) {
+            enemy.draw();
+        }
+    }
+
+    updateEnemies() {
+        for (const enemy of this.enemies) {
+            enemy.update();
         }
     }
 
@@ -99,6 +112,7 @@ class Level {
         this.drawPlatforms();
         this.drawItems();
         this.drawTraps();
+        this.drawEnemies();
         for (const box of this.boxes) box.draw();
         for (const button of this.buttons) button.draw();
     }

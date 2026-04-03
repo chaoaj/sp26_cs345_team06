@@ -13,6 +13,7 @@ let level1Items = []
 let level1Traps = []
 let level1Boxes = []
 let level1Buttons = []
+let level1Enemies = []
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
 
@@ -58,11 +59,15 @@ function setup() {
     new Button(1100, height - 35, 80, 20, () => console.log("button pressed"))
   ]
 
+  level1Enemies = [
+    new Hostile(970, height - 255, 40, 40, 1.5, 900, 1040)
+  ]
+
   setupLevel();
 }
 
 function setupLevel() {
-  level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons);
+  level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies);
   player = new Player(width * .2, height - 100, 40, 60);
   camera = new Camera(WORLD_WIDTH, height * WORLD_HEIGHT_MULTIPLIER);
   pauseStartedAt = null;
@@ -81,6 +86,7 @@ function draw() {
   } else if (gameState === "playing") {
     player.update(level1Platforms);
     level.applyTrapDamage(player);
+    level.updateEnemies();
     level.updatePuzzleElements(player);
     camera.follow(player);
     camera.constrainPlayer(player);
