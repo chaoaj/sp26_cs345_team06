@@ -65,6 +65,8 @@ function drawTitleScreen() {
 function handleTitleKeyPressed() {
   if (keyCode === 32) {
     gameState = "playing";
+    backgroundMusic.play()
+
     print("Game Started");
   }
 }

@@ -32,7 +32,6 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
-
   level1Platforms = [
     new Platform(250,  height - 130, 220, 30, brickPlatformImage),
     new Platform(490,  height - 220, 220, 30, brickPlatformImage),
@@ -64,6 +63,7 @@ function setup() {
   ]
 
   setupLevel();
+
 }
 
 function setupLevel() {
