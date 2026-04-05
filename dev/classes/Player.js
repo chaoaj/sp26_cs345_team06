@@ -14,7 +14,28 @@ class Player {
     this.maxHealth = 3;
     this.health = this.maxHealth;
     this.abilities = {};
+
+    this.hitboxInsetX   = 12;
+    this.hitboxInsetTop = 20;
+
+    this.facingLeft = false;
+    this.isHurt = false;
+    this.animations = {
+      idle: { sheet: playerIdleSheet, frameCount: 4, fps: 8,  loop: true  },
+      walk: { sheet: playerWalkSheet, frameCount: 6, fps: 10, loop: true  },
+      run:  { sheet: playerRunSheet,  frameCount: 6, fps: 14, loop: true  },
+      jump: { sheet: playerJumpSheet, frameCount: 8, fps: 10, loop: false },
+      hurt: { sheet: playerHurtSheet, frameCount: 4, fps: 12, loop: false },
+    };
+    this.animState = "idle";
+    this.animFrame = 0;
+    this.animTimer = 0;
   }
+
+  get hitLeft()   { return this.x - this.width  / 2 + this.hitboxInsetX;   }
+  get hitRight()  { return this.x + this.width  / 2 - this.hitboxInsetX;   }
+  get hitTop()    { return this.y - this.height / 2 + this.hitboxInsetTop; }
+  get hitBottom() { return this.y + this.height / 2;                        }
 
   update(platforms) {
     const previousX = this.x;
@@ -29,89 +50,56 @@ class Player {
 
     this.resolveVerticalCollisions(platforms, previousY);
     this.constrainToScreen();
+    this.updateAnimation();
+    this.advanceFrame();
   }
 
   resolveHorizontalCollisions(platforms, previousX) {
-    const playerTop = this.y - this.height / 2;
-    const playerBottom = this.y + this.height / 2;
-
     for (const platform of platforms) {
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
       const platformRight = platform.x + platform.w / 2;
-      const playerLeft = this.x - this.width / 2;
-      const playerRight = this.x + this.width / 2;
 
-      const overlapsY = playerBottom > platformTop && playerTop < platformBottom;
-      const overlapsX = playerRight > platformLeft && playerLeft < platformRight;
+      const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
+      const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
 
-      if (!overlapsX || !overlapsY) {
-        continue;
-      }
+      if (!overlapsX || !overlapsY) continue;
 
       if (this.x > previousX) {
-        this.x = platformLeft - this.width / 2;
+        this.x = platformLeft - (this.width / 2 - this.hitboxInsetX);
       } else if (this.x < previousX) {
-        this.x = platformRight + this.width / 2;
+        this.x = platformRight + (this.width / 2 - this.hitboxInsetX);
       }
     }
   }
 
   resolveVerticalCollisions(platforms, previousY) {
-    const previousTop = previousY - this.height / 2;
-    const previousBottom = previousY + this.height / 2;
+    const previousHitBottom = previousY + this.height / 2;
+    const previousHitTop    = previousY - this.height / 2 + this.hitboxInsetTop;
 
     for (const platform of platforms) {
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
       const platformRight = platform.x + platform.w / 2;
-      const playerLeft = this.x - this.width / 2;
-      const playerRight = this.x + this.width / 2;
-      const playerTop = this.y - this.height / 2;
-      const playerBottom = this.y + this.height / 2;
 
-      const overlapsX = playerRight > platformLeft && playerLeft < platformRight;
-      const overlapsY = playerBottom > platformTop && playerTop < platformBottom;
+      const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
+      const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
 
-      if (!overlapsX || !overlapsY) {
-        continue;
-      }
+      if (!overlapsX || !overlapsY) continue;
 
-      if (this.yVelocity >= 0 && previousBottom <= platformTop) {
+      if (this.yVelocity >= 0 && previousHitBottom <= platformTop) {
         this.y = platformTop - this.height / 2;
         this.yVelocity = 0;
         this.isOnGround = true;
-      } else if (this.yVelocity < 0 && previousTop >= platformBottom) {
-        this.y = platformBottom + this.height / 2;
+      } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
+        this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;
       }
     }
   }
 
-  resolvePlatformCollision(platform) {
-    // Legacy single-pass collision (kept for reference).
-    // const platformTop = platform.y - platform.h / 2;
-    // const platformLeft = platform.x - platform.w / 2;
-    // const platformRight = platform.x + platform.w / 2;
-    // const playerLeft = this.x - this.width / 2;
-    // const playerRight = this.x + this.width / 2;
-    // const playerTop = this.y - this.height / 2;
-    // const playerBottom = this.y + this.height / 2;
-    //
-    // if (
-    //   this.yVelocity >= 0 &&
-    //   playerRight > platformLeft &&
-    //   playerLeft < platformRight &&
-    //   playerBottom >= platformTop &&
-    //   playerTop < platformTop
-    // ) {
-    //   this.y = platformTop - this.height / 2;
-    //   this.yVelocity = 0;
-    //   this.isOnGround = true;
-    // }
-  }
 
   constrainToScreen() {
     const halfHeight = this.height / 2;
@@ -122,8 +110,51 @@ class Player {
       this.isOnGround = true;
     }
   }
+  updateAnimation() {
+    if (this.isHurt) {
+      if (this.animFrame >= this.animations.hurt.frameCount - 1) {
+        this.isHurt = false;
+      } else {
+        return;
+      }
+    }
+
+    const moving = keyIsDown(65) || keyIsDown(68);
+    if (!this.isOnGround) {
+      this.setAnimState("jump");
+    } else if (moving) {
+      this.setAnimState("walk");
+    } else {
+      this.setAnimState("idle");
+    }
+  }
+
+  setAnimState(state) {
+    if (this.animState !== state) {
+      this.animState = state;
+      this.animFrame = 0;
+      this.animTimer = 0;
+    }
+  }
+
+  advanceFrame() {
+    const anim = this.animations[this.animState];
+    this.animTimer += deltaTime;
+    const frameDuration = 1000 / anim.fps;
+    if (this.animTimer >= frameDuration) {
+      this.animTimer -= frameDuration;
+      if (anim.loop) {
+        this.animFrame = (this.animFrame + 1) % anim.frameCount;
+      } else {
+        this.animFrame = min(this.animFrame + 1, anim.frameCount - 1);
+      }
+    }
+  }
+
   takeDamage(amount = 1) {
     this.health = Math.max(0, this.health - amount);
+    this.isHurt = true;
+    this.setAnimState("hurt");
     if (this.health <= 0) {
       this.respawn();
     }
@@ -144,6 +175,8 @@ class Player {
     this.yVelocity = 0;
     this.isOnGround = false;
     this.health = this.maxHealth;
+    this.isHurt = false;
+    this.setAnimState("idle");
   }
 
   addPermanentAbility(ability) { // if called will add ability
@@ -165,8 +198,16 @@ class Player {
   }
 
   draw() {
-    fill(70, 130, 255);
+    const anim = this.animations[this.animState];
+    const frameW = anim.sheet.width / anim.frameCount;
+    const sx = this.animFrame * frameW;
+
+    push();
+    translate(this.x, this.y);
+    if (this.facingLeft) scale(-1, 1);
+    imageMode(CENTER);
     noStroke();
-    rect(this.x, this.y, this.width, this.height, 8);
+    image(anim.sheet, 0, 0, this.width, this.height, sx, 0, frameW, anim.sheet.height);
+    pop();
   }
 }

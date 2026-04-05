@@ -68,7 +68,7 @@ function setup() {
 
 function setupLevel() {
   level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies);
-  player = new Player(width * .2, height - 100, 40, 60);
+  player = new Player(width * .2, height - 100, 80, 120);
   camera = new Camera(WORLD_WIDTH, height * WORLD_HEIGHT_MULTIPLIER);
   pauseStartedAt = null;
   accumulatedPauseMs = 0;

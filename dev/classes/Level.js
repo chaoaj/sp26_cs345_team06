@@ -66,21 +66,16 @@ class Level {
     }
 
     isPlayerTouchingTrap(player, trap) {
-        const playerLeft = player.x - player.width / 2;
-        const playerRight = player.x + player.width / 2;
-        const playerTop = player.y - player.height / 2;
-        const playerBottom = player.y + player.height / 2;
-
         const trapLeft = trap.x - trap.w / 2;
         const trapRight = trap.x + trap.w / 2;
         const trapTop = trap.y - trap.h / 2;
         const trapBottom = trap.y + trap.h / 2;
 
         return (
-            playerRight > trapLeft &&
-            playerLeft < trapRight &&
-            playerBottom > trapTop &&
-            playerTop < trapBottom
+            player.hitRight > trapLeft &&
+            player.hitLeft < trapRight &&
+            player.hitBottom > trapTop &&
+            player.hitTop < trapBottom
         );
     }
 
@@ -138,24 +133,20 @@ class Level {
 
     resolvePlayerBoxCollisions(player) {
         for (const box of this.boxes) {
-            const playerLeft = player.x - player.width / 2;
-            const playerRight = player.x + player.width / 2;
-            const playerTop = player.y - player.height / 2;
-            const playerBottom = player.y + player.height / 2;
             const boxLeft = box.x - box.w / 2;
             const boxRight = box.x + box.w / 2;
             const boxTop = box.y - box.h / 2;
             const boxBottom = box.y + box.h / 2;
 
-            if (playerRight <= boxLeft || playerLeft >= boxRight ||
-                playerBottom <= boxTop || playerTop >= boxBottom) {
+            if (player.hitRight <= boxLeft || player.hitLeft >= boxRight ||
+                player.hitBottom <= boxTop || player.hitTop >= boxBottom) {
                 continue;
             }
 
-            const overlapLeft = playerRight - boxLeft;
-            const overlapRight = boxRight - playerLeft;
-            const overlapTop = playerBottom - boxTop;
-            const overlapBottom = boxBottom - playerTop;
+            const overlapLeft = player.hitRight - boxLeft;
+            const overlapRight = boxRight - player.hitLeft;
+            const overlapTop = player.hitBottom - boxTop;
+            const overlapBottom = boxBottom - player.hitTop;
             const minX = Math.min(overlapLeft, overlapRight);
             const minY = Math.min(overlapTop, overlapBottom);
 
