@@ -33,25 +33,25 @@ function setup() {
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
   level1Platforms = [
-    new Platform(250,  height - 130, 220, 30, brickPlatformImage),
-    new Platform(490,  height - 220, 220, 30, brickPlatformImage),
-    new Platform(730,  height - 310, 220, 30, brickPlatformImage),
-    new Platform(970,  height - 220, 220, 30, brickPlatformImage),
-    new Platform(1210, height - 130, 220, 30, brickPlatformImage)
+    new Platform(250,  height - 170, 220, 30, brickPlatformImage),
+    new Platform(490,  height - 300, 220, 30, brickPlatformImage),
+    new Platform(730,  height - 430, 220, 30, brickPlatformImage),
+    new Platform(970,  height - 300, 220, 30, brickPlatformImage),
+    new Platform(1210, height - 170, 220, 30, brickPlatformImage)
   ]
 
   level1Items = [
-    new Items(730, height - 360, "health")
+    new Items(730, height - 460, "health")
   ]
 
   level1Traps = [
-    new SpikeTrap(730, height - 75, 120, 40),
-    new LaserTrap(610, height - 240, 160, 14)
+    new SpikeTrap(730, height - 45, 120, 40),
+    new LaserTrap(610, height - 325, 160, 14)
   ]
 
   level1Boxes = [
-    new Box(490, height - 290, 50),
-    new Box(730, height - 390, 50)
+    new Box(490, height - 360, 50),
+    new Box(700, height - 490, 50)
   ]
 
   level1Buttons = [
@@ -59,7 +59,7 @@ function setup() {
   ]
 
   level1Enemies = [
-    new Hostile(970, height - 255, 40, 40, 1.5, 900, 1040)
+    new Hostile(970, height - 335, 40, 40, 1.5, 900, 1040)
   ]
 
   setupLevel();
@@ -86,6 +86,7 @@ function draw() {
   } else if (gameState === "playing") {
     player.update(level1Platforms);
     level.applyTrapDamage(player);
+    level.applyEnemyDamage(player);
     level.updateEnemies();
     level.updatePuzzleElements(player);
     camera.follow(player);

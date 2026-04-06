@@ -8,7 +8,7 @@ class Player {
     this.height = height;
     this.yVelocity = 0;
     this.moveSpeed = 5;
-    this.jumpStrength = 14;
+    this.jumpStrength = 15;
     this.gravity = 0.6;
     this.isOnGround = false;
     this.maxHealth = 3;

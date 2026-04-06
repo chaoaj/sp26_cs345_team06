@@ -189,6 +189,31 @@ class Level {
         }
     }
 
+    applyEnemyDamage(player) {
+        const now = typeof getGameMillis === "function" ? getGameMillis() : millis();
+        if (now - this.lastTrapDamageAt < this.trapDamageCooldownMs) {
+            return;
+        }
+
+        for (const enemy of this.enemies) {
+            const enemyLeft   = enemy.x - enemy.w / 2;
+            const enemyRight  = enemy.x + enemy.w / 2;
+            const enemyTop    = enemy.y - enemy.h / 2;
+            const enemyBottom = enemy.y + enemy.h / 2;
+
+            if (
+                player.hitRight > enemyLeft &&
+                player.hitLeft  < enemyRight &&
+                player.hitBottom > enemyTop &&
+                player.hitTop   < enemyBottom
+            ) {
+                player.takeDamage(enemy.damage);
+                this.lastTrapDamageAt = now;
+                return;
+            }
+        }
+    }
+
     drawLevel() {
         this.drawBackground();
         this.drawWorld();
