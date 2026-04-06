@@ -53,14 +53,33 @@ class Level {
         }
 
         for (const trap of this.traps) {
-            if (!(trap instanceof SpikeTrap)) {
-                continue;
+            // if (!(trap instanceof SpikeTrap)) {
+            //     continue;
+            // }
+
+            // if (this.isPlayerTouchingTrap(player, trap)) {
+            //     player.takeDamage(trap.damage);
+            //     this.lastTrapDamageAt = now;
+            //     return;
+            // }
+            if (trap instanceof SpikeTrap) {
+                if (this.isPlayerTouchingTrap(player, trap)) {
+                    player.takeDamage(trap.damage);
+                    this.lastTrapDamageAt = now;
+                    return;
+                }
             }
 
-            if (this.isPlayerTouchingTrap(player, trap)) {
-                player.takeDamage(trap.damage);
-                this.lastTrapDamageAt = now;
-                return;
+            else if (trap instanceof LaserTrap) {
+                if (!trap.isFiring()) {
+                    continue;
+                }
+
+                if (this.isPlayerTouchingTrap(player, trap)) {
+                    player.takeDamage(trap.damage);
+                    this.lastTrapDamageAt = now;
+                    return;
+                }
             }
         }
     }
