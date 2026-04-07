@@ -5,14 +5,8 @@ function preload() {
   //Music
   backgroundMusic = loadSound("assets/BackgroundMusic.mp3")
 
-  //Player Sprites
-  playerIdleSheet = loadImage("assets/chacter_sprite/1/Idle.png");
-  playerWalkSheet = loadImage("assets/chacter_sprite/1/Walk.png");
-  playerRunSheet  = loadImage("assets/chacter_sprite/1/Run.png");
-  playerJumpSheet = loadImage("assets/chacter_sprite/1/Jump.png");
-  playerHurtSheet = loadImage("assets/chacter_sprite/1/Hurt.png");
-
   //Sound Effects
+
 
   //Title Screen
   titleScreenimage = loadImage("assets/Title.png")
@@ -32,6 +26,16 @@ function preload() {
 
   //Platforms
   brickPlatformImage = loadImage("assets/BrickPlatform.png")
+
+  //Object Sprites
+  woodenBox = loadImage("assets/WoodenBox.png")
+
+  //Player Sprites
+  playerIdleSheet = loadImage("assets/chacter_sprite/1/Idle.png");
+  playerWalkSheet = loadImage("assets/chacter_sprite/1/Walk.png");
+  playerRunSheet  = loadImage("assets/chacter_sprite/1/Run.png");
+  playerJumpSheet = loadImage("assets/chacter_sprite/1/Jump.png");
+  playerHurtSheet = loadImage("assets/chacter_sprite/1/Hurt.png");
 
   //UI
   heartImage = loadImage("assets/heart.png")

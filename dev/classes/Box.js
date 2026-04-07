@@ -90,5 +90,6 @@ class Box {
     fill(160, 100, 40);
     noStroke();
     rect(this.x, this.y, this.w, this.h);
+    image(woodenBox, this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
   }
 }
