@@ -111,10 +111,20 @@ class Level {
     isPlayerTouchingItem(player, item) {
         const playerHalfW = player.width / 2;
         const playerHalfH = player.height / 2;
+        let itemHalfW = item.w / 2;
+        let itemHalfH = item.h / 2;
+
+        if (typeof item.w === "undefined") {
+            itemHalfW = item.radius;
+        }
+
+        if (typeof item.h === "undefined") {
+            itemHalfH = item.radius;
+        }
 
         return (
-            Math.abs(player.x - item.x) <= playerHalfW + item.radius &&
-            Math.abs(player.y - item.y) <= playerHalfH + item.radius
+            Math.abs(player.x - item.x) <= playerHalfW + itemHalfW &&
+            Math.abs(player.y - item.y) <= playerHalfH + itemHalfH
         );
     }
 
@@ -231,6 +241,12 @@ class Level {
             }
         } else {
             text(`Health: ${player.health}`, 10, 10);
+        }
+
+        if (player.highJumpExpiresAt > 0) {
+            const highJumpTimeLeftMs = player.getHighJumpTimeLeftMs();
+            const highJumpTimeLeftSeconds = ceil(highJumpTimeLeftMs / 1000);
+            text(`High Jump: ${highJumpTimeLeftSeconds}s`, 20, 60);
         }
     }
 }

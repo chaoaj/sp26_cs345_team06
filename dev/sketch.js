@@ -41,7 +41,8 @@ function setup() {
   ]
 
   level1Items = [
-    new Items(730, height - 460, "health")
+    new Items(730, height - 460, "health"),
+    new Items(970, height - 35, "feather")
   ]
 
   level1Traps = [

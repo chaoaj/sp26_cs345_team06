@@ -8,7 +8,8 @@ class Player {
     this.height = height;
     this.yVelocity = 0;
     this.moveSpeed = 5;
-    this.jumpStrength = 15;
+    this.baseJumpStrength = 15;
+    this.jumpStrength = this.baseJumpStrength;
     this.gravity = 0.6;
     this.isOnGround = false;
     this.maxHealth = 3;
@@ -30,6 +31,9 @@ class Player {
     this.animState = "idle";
     this.animFrame = 0;
     this.animTimer = 0;
+    this.highJumpDurationMs = 30000;
+    this.highJumpStrength = 22;
+    this.highJumpExpiresAt = 0;
   }
 
   get hitLeft()   { return this.x - this.width  / 2 + this.hitboxInsetX;   }
@@ -41,6 +45,7 @@ class Player {
     const previousX = this.x;
     const previousY = this.y;
 
+    this.updateTimedEffects();
     applyPlayerControls(this);
     this.resolveHorizontalCollisions(platforms, previousX);
 
@@ -52,6 +57,17 @@ class Player {
     this.constrainToScreen();
     this.updateAnimation();
     this.advanceFrame();
+  }
+
+  updateTimedEffects() {
+    const now = getGameMillis();
+
+    if (this.highJumpExpiresAt > 0) {
+      if (now >= this.highJumpExpiresAt) {
+        this.jumpStrength = this.baseJumpStrength;
+        this.highJumpExpiresAt = 0;
+      }
+    }
   }
 
   resolveHorizontalCollisions(platforms, previousX) {
@@ -195,6 +211,20 @@ class Player {
 
   hasAbility(abilityName) { // check for if player already has it
     return !!this.abilities[abilityName];
+  }
+
+  activateHighJump() {
+    const now = getGameMillis();
+    this.jumpStrength = this.highJumpStrength;
+    this.highJumpExpiresAt = now + this.highJumpDurationMs;
+  }
+
+  getHighJumpTimeLeftMs() {
+    if (this.highJumpExpiresAt <= 0) {
+      return 0;
+    }
+
+    return this.highJumpExpiresAt - getGameMillis();
   }
 
   draw() {
