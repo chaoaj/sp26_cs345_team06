@@ -25,7 +25,7 @@ function getGameMillis() {
 }
 
 function setup() {
-
+  noSmooth()
   //TODO: make a table in a different class for
   // different levels (maybe, it is here because setup runs affter
   // preload, otherwise it was using image variables before they were loaded)

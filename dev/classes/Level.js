@@ -225,18 +225,23 @@ class Level {
     }
 
     drawLevel() {
+        noSmooth()
+
         this.drawBackground();
         this.drawWorld();
     }
     drawPlayer(player) {
+        noSmooth()
         player.draw();
     }
     drawHUD(player) {
+        noSmooth()
         fill(255);
         textSize(24);
         textAlign(LEFT, TOP);
         if (typeof heartImage !== "undefined" && heartImage) {
             for (let i = 0; i < player.health; i++) {
+                noSmooth()
                 image(heartImage, 20 + i * 40, 20, 30, 30);
             }
         } else {
