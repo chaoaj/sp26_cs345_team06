@@ -248,10 +248,24 @@ class Level {
             text(`Health: ${player.health}`, 10, 10);
         }
 
+        if (player.shieldHealth > 0) {
+            fill(80, 170, 255);
+            for (let i = 0; i < player.shieldHealth; i++) {
+                rect(35 + i * 40, 70, 24, 24, 5);
+            }
+            fill(255);
+        }
+
         if (player.highJumpExpiresAt > 0) {
             const highJumpTimeLeftMs = player.getHighJumpTimeLeftMs();
             const highJumpTimeLeftSeconds = ceil(highJumpTimeLeftMs / 1000);
-            text(`High Jump: ${highJumpTimeLeftSeconds}s`, 20, 60);
+            text(`High Jump: ${highJumpTimeLeftSeconds}s`, 20, 100);
+        }
+
+        if (player.speedPotionExpiresAt > 0) {
+            const speedPotionTimeLeftMs = player.getSpeedPotionTimeLeftMs();
+            const speedPotionTimeLeftSeconds = ceil(speedPotionTimeLeftMs / 1000);
+            text(`Speed: ${speedPotionTimeLeftSeconds}s`, 20, 135);
         }
     }
 }

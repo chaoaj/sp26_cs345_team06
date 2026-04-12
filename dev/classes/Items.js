@@ -16,6 +16,14 @@ class Items {
             fill(200, 230, 255);
         }
 
+        if (this.type === "shield") {
+            fill(80, 170, 255);
+        }
+
+        if (this.type === "potion") {
+            fill(150, 90, 255);
+        }
+
         noStroke();
         rectMode(CENTER);
         rect(this.x, this.y, this.w, this.h);
@@ -28,6 +36,14 @@ class Items {
 
         if (this.type === "feather") {
             player.activateHighJump();
+        }
+
+        if (this.type === "shield") {
+            player.addShield(2);
+        }
+
+        if (this.type === "potion") {
+            player.activateSpeedPotion();
         }
     }
 }

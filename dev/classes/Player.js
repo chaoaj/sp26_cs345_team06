@@ -7,7 +7,11 @@ class Player {
     this.width = width;
     this.height = height;
     this.yVelocity = 0;
-    this.moveSpeed = 5;
+    this.baseMoveSpeed = 5;
+    this.moveSpeed = this.baseMoveSpeed;
+    this.speedPotionMoveSpeed = 8;
+    this.speedPotionDurationMs = 30000;
+    this.speedPotionExpiresAt = 0;
     this.jumpMomentumX = 0;
     this.jumpDirectionalBoost = 2.4;
     this.jumpMomentumDecay = 0.88;
@@ -20,6 +24,8 @@ class Player {
     this.isOnGround = false;
     this.maxHealth = 3;
     this.health = this.maxHealth;
+    this.maxShield = 2;
+    this.shieldHealth = 0;
     this.abilities = {};
 
     this.hitboxInsetX   = 12;
@@ -72,6 +78,13 @@ class Player {
       if (now >= this.highJumpExpiresAt) {
         this.jumpStrength = this.baseJumpStrength;
         this.highJumpExpiresAt = 0;
+      }
+    }
+
+    if (this.speedPotionExpiresAt > 0) {
+      if (now >= this.speedPotionExpiresAt) {
+        this.moveSpeed = this.baseMoveSpeed;
+        this.speedPotionExpiresAt = 0;
       }
     }
   }
@@ -176,7 +189,18 @@ class Player {
   }
 
   takeDamage(amount = 1) {
-    this.health = Math.max(0, this.health - amount);
+    let remainingDamage = amount;
+
+    if (this.shieldHealth > 0) {
+      const blockedDamage = Math.min(this.shieldHealth, remainingDamage);
+      this.shieldHealth -= blockedDamage;
+      remainingDamage -= blockedDamage;
+    }
+
+    if (remainingDamage > 0) {
+      this.health = Math.max(0, this.health - remainingDamage);
+    }
+
     this.isHurt = true;
     this.setAnimState("hurt");
     if (this.health <= 0) {
@@ -185,7 +209,11 @@ class Player {
   }
 
   gainHealth(amount = 1) {
-    this.health += amount;
+    this.health = Math.min(this.maxHealth, this.health + amount);
+  }
+
+  addShield(amount = 2) {
+    this.shieldHealth = Math.min(this.maxShield, this.shieldHealth + amount);
   }
 
   setSpawnPoint(x, y) {
@@ -229,12 +257,26 @@ class Player {
     this.highJumpExpiresAt = now + this.highJumpDurationMs;
   }
 
+  activateSpeedPotion() {
+    const now = getGameMillis();
+    this.moveSpeed = this.speedPotionMoveSpeed;
+    this.speedPotionExpiresAt = now + this.speedPotionDurationMs;
+  }
+
   getHighJumpTimeLeftMs() {
     if (this.highJumpExpiresAt <= 0) {
       return 0;
     }
 
     return this.highJumpExpiresAt - getGameMillis();
+  }
+
+  getSpeedPotionTimeLeftMs() {
+    if (this.speedPotionExpiresAt <= 0) {
+      return 0;
+    }
+
+    return this.speedPotionExpiresAt - getGameMillis();
   }
 
   draw() {
