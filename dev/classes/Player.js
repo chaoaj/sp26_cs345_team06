@@ -8,6 +8,12 @@ class Player {
     this.height = height;
     this.yVelocity = 0;
     this.moveSpeed = 5;
+    this.jumpMomentumX = 0;
+    this.jumpDirectionalBoost = 2.4;
+    this.jumpMomentumDecay = 0.88;
+    this.wasJumpHeld = false;
+    this.jumpBufferDurationMs = 120;
+    this.jumpBufferUntil = 0;
     this.baseJumpStrength = 15;
     this.jumpStrength = this.baseJumpStrength;
     this.gravity = 0.6;
@@ -108,6 +114,7 @@ class Player {
       if (this.yVelocity >= 0 && previousHitBottom <= platformTop) {
         this.y = platformTop - this.height / 2;
         this.yVelocity = 0;
+        this.jumpMomentumX = 0;
         this.isOnGround = true;
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
@@ -123,6 +130,7 @@ class Player {
     if (this.y + halfHeight >= height) {
       this.y = height - halfHeight;
       this.yVelocity = 0;
+      this.jumpMomentumX = 0;
       this.isOnGround = true;
     }
   }
@@ -188,6 +196,8 @@ class Player {
   respawn() {
     this.x = this.spawnX;
     this.y = this.spawnY;
+    this.jumpMomentumX = 0;
+    this.jumpBufferUntil = 0;
     this.yVelocity = 0;
     this.isOnGround = false;
     this.health = this.maxHealth;
