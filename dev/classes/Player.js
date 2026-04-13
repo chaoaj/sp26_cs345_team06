@@ -18,6 +18,18 @@ class Player {
     this.wasJumpHeld = false;
     this.jumpBufferDurationMs = 120;
     this.jumpBufferUntil = 0;
+    this.maxAirJumps = 0;
+    this.remainingAirJumps = this.maxAirJumps;
+    this.canDash = false;
+    this.isDashing = false;
+    this.dashDirection = 1;
+    this.dashSpeed = 14;
+    this.groundDashMultiplier = 1.4;
+    this.dashDurationMs = 140;
+    this.dashCooldownMs = 450;
+    this.dashEndsAt = 0;
+    this.dashCooldownUntil = 0;
+    this.wasDashHeld = false;
     this.baseJumpStrength = 15;
     this.jumpStrength = this.baseJumpStrength;
     this.gravity = 0.6;
@@ -26,7 +38,6 @@ class Player {
     this.health = this.maxHealth;
     this.maxShield = 2;
     this.shieldHealth = 0;
-    this.abilities = {};
 
     this.hitboxInsetX   = 12;
     this.hitboxInsetTop = 20;
@@ -128,6 +139,7 @@ class Player {
         this.y = platformTop - this.height / 2;
         this.yVelocity = 0;
         this.jumpMomentumX = 0;
+        this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
@@ -144,6 +156,7 @@ class Player {
       this.y = height - halfHeight;
       this.yVelocity = 0;
       this.jumpMomentumX = 0;
+      this.remainingAirJumps = this.maxAirJumps;
       this.isOnGround = true;
     }
   }
@@ -226,6 +239,12 @@ class Player {
     this.y = this.spawnY;
     this.jumpMomentumX = 0;
     this.jumpBufferUntil = 0;
+    this.remainingAirJumps = this.maxAirJumps;
+    this.isDashing = false;
+    this.dashEndsAt = 0;
+    this.dashCooldownUntil = 0;
+    this.wasDashHeld = false;
+    this.wasJumpHeld = false;
     this.yVelocity = 0;
     this.isOnGround = false;
     this.health = this.maxHealth;
@@ -234,21 +253,20 @@ class Player {
   }
 
   addPermanentAbility(ability) { // if called will add ability
-    if (!ability || !ability.name) {
+    const didGrant = Ability.grant(this, ability);
+    if (!didGrant) {
       return false;
     }
 
-    if (this.abilities[ability.name]) {
-      return false;
+    if (typeof showAbilityUnlock === "function") {
+      showAbilityUnlock(ability);
     }
 
-    this.abilities[ability.name] = ability;
-    ability.applyTo(this);
     return true;
   }
 
   hasAbility(abilityName) { // check for if player already has it
-    return !!this.abilities[abilityName];
+    return Ability.has(this, abilityName);
   }
 
   activateHighJump() {

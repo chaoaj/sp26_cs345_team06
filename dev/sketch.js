@@ -16,12 +16,41 @@ let level1Buttons = []
 let level1Enemies = []
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
+let abilityUnlockPopup = null;
 
 function getGameMillis() {
-  if (gameState === "paused" && pauseStartedAt !== null) {
+  if ((gameState === "paused" || gameState === "abilityUnlock") && pauseStartedAt !== null) {
     return pauseStartedAt - accumulatedPauseMs;
   }
   return millis() - accumulatedPauseMs;
+}
+
+function showAbilityUnlock(ability) {
+  if (!ability || !ability.name || gameState !== "playing") {
+    return;
+  }
+
+  abilityUnlockPopup = {
+    name: ability.name,
+    description: ability.description || "New ability unlocked.",
+  };
+
+  pauseStartedAt = millis();
+  gameState = "abilityUnlock";
+}
+
+function closeAbilityUnlockPopup() {
+  if (!abilityUnlockPopup || gameState !== "abilityUnlock") {
+    return;
+  }
+
+  if (pauseStartedAt !== null) {
+    accumulatedPauseMs += millis() - pauseStartedAt;
+  }
+
+  pauseStartedAt = null;
+  abilityUnlockPopup = null;
+  gameState = "playing";
 }
 
 function setup() {
@@ -44,7 +73,9 @@ function setup() {
     new Items(730, height - 460, "health"),
     new Items(970, height - 35, "feather"),
     new Items(490, height - 390, "shield"),
-    new Items(1210, height - 200, "potion")
+    new Items(1210, height - 200, "potion"),
+    new Items(250, height - 220, "doubleJumpAbility"),
+    new Items(1210, height - 220, "dashAbility")
   ]
 
   level1Traps = [
@@ -73,6 +104,7 @@ function setupLevel() {
   level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies);
   player = new Player(width * .2, height - 100, 80, 120);
   camera = new Camera(WORLD_WIDTH, height * WORLD_HEIGHT_MULTIPLIER);
+  abilityUnlockPopup = null;
   pauseStartedAt = null;
   accumulatedPauseMs = 0;
 }
@@ -113,6 +145,14 @@ function draw() {
     camera.reset();
     level.drawHUD(player);
     drawPauseOverlay();
+  } else if (gameState === "abilityUnlock") {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawAbilityUnlockOverlay();
   }
 }
 
@@ -132,6 +172,42 @@ function drawPauseOverlay() {
   pop();
 }
 
+function drawAbilityUnlockOverlay() {
+  if (!abilityUnlockPopup) {
+    return;
+  }
+
+  push();
+  noStroke();
+  fill(0, 0, 0, 165);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+
+  const panelW = min(560, width - 60);
+  const panelH = 220;
+  const panelX = width / 2;
+  const panelY = height / 2;
+
+  rectMode(CENTER);
+  fill(24, 28, 42);
+  rect(panelX, panelY, panelW, panelH, 18);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(34);
+  text("Ability Unlocked", panelX, panelY - 65);
+
+  textSize(28);
+  text(abilityUnlockPopup.name, panelX, panelY - 20);
+
+  textSize(20);
+  text(abilityUnlockPopup.description, panelX, panelY + 24);
+
+  textSize(16);
+  text("Press any key to continue", panelX, panelY + 78);
+  pop();
+}
+
 function drawGamePrototype() {
   fill(20);
   noStroke();
@@ -144,6 +220,11 @@ function keyPressed() {
     handleTitleKeyPressed();
     //handleTitleKeyPressed();
     //  why are there two?
+    return;
+  }
+
+  if (gameState === "abilityUnlock") {
+    closeAbilityUnlockPopup();
     return;
   }
 

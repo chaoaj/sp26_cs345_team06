@@ -99,13 +99,18 @@ class Level {
     }
 
     collectTouchedItems(player) {
-        this.items = this.items.filter((item) => {
+        const now = typeof getGameMillis === "function" ? getGameMillis() : millis();
+
+        for (const item of this.items) {
+            if (typeof item.isAvailable === "function" && !item.isAvailable(now)) {
+                continue;
+            }
+
             const touched = this.isPlayerTouchingItem(player, item);
             if (touched) {
                 item.applyEffect(player);
             }
-            return !touched;
-        });
+        }
     }
 
     isPlayerTouchingItem(player, item) {
