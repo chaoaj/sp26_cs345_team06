@@ -22,6 +22,14 @@ class Level {
         }
     }
 
+    updateMovingPlatforms() {
+        for (const platform of this.platforms) {
+            if (platform instanceof MovingPlatform) {
+                platform.update();
+            }
+        }
+    }
+
     drawItems() {
         for (let item of this.items) {
             item.draw();

@@ -66,7 +66,9 @@ function setup() {
     new Platform(490,  height - 300, 220, 30, brickPlatformImage),
     new Platform(730,  height - 430, 220, 30, brickPlatformImage),
     new Platform(970,  height - 300, 220, 30, brickPlatformImage),
-    new Platform(1210, height - 170, 220, 30, brickPlatformImage)
+    new Platform(1210, height - 170, 220, 30, brickPlatformImage),
+    new MovingPlatform(1450, height - 300, 200, 30, brickPlatformImage, "y", 180, 1.5),
+    new MovingPlatform(1650, height - 170, 200, 30, brickPlatformImage, "x", 200, 2)
   ]
 
   level1Items = [
@@ -119,6 +121,7 @@ function draw() {
   if (gameState === "title") {
     drawTitleScreen();
   } else if (gameState === "playing") {
+    level.updateMovingPlatforms();
     player.update(level1Platforms);
     level.applyTrapDamage(player);
     level.applyEnemyDamage(player);

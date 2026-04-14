@@ -141,6 +141,9 @@ class Player {
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
+        if (platform.xVelocity) {
+          this.x += platform.xVelocity;
+        }
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;
