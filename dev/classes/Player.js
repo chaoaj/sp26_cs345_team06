@@ -39,8 +39,8 @@ class Player {
     this.maxShield = 2;
     this.shieldHealth = 0;
 
-    this.hitboxInsetX   = 12;
-    this.hitboxInsetTop = 20;
+    this.hitboxInsetX   = 35;
+    this.hitboxInsetTop = 50;
 
     this.facingLeft = false;
     this.isHurt = false;
