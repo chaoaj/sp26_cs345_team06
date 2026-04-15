@@ -7,6 +7,14 @@ function preload() {
 
   //Sound Effects
 
+  //Items
+  featherImage = loadImage("assets/Feather.png")
+  healthImage = loadImage("assets/Heart.png")
+  speedImage = loadImage("assets/SpeedPotion.png")
+  shieldImage = loadImage("assets/Shield.png")
+    //Ability Items
+  doubleJumpAmuletImage = loadImage("assets/DoubleJumpAmulet.png")
+  dashAmuletImage = loadImage("assets/DashAmulet.png")
 
   //Title Screen
   titleScreenimage = loadImage("assets/Title.png")
@@ -29,6 +37,7 @@ function preload() {
 
   //Object Sprites
   woodenBox = loadImage("assets/WoodenBox.png")
+  spikeTrap = loadImage("assets/SpikeTrap.png")
 
   //Player Sprites
   playerIdleSheet = loadImage("assets/chacter_sprite/1/Idle.png");
@@ -36,6 +45,9 @@ function preload() {
   playerRunSheet  = loadImage("assets/chacter_sprite/1/Run.png");
   playerJumpSheet = loadImage("assets/chacter_sprite/1/Jump.png");
   playerHurtSheet = loadImage("assets/chacter_sprite/1/Hurt.png");
+
+  //Enemy Sprites
+  greenslimeimage = loadImage("assets/SlimeWalk.png")
 
   //UI
   heartImage = loadImage("assets/heart.png")

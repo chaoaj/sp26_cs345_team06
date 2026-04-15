@@ -45,37 +45,37 @@ class Items {
     }
 
     draw() {
+        imageMode(CENTER);
         if (!this.isAvailable()) {
             return;
         }
 
         if (this.type === "health") {
-            fill(255, 215, 0);
+            image(healthImage, this.x, this.y, this.w*1.5, this.h*1.5);
         }
 
         if (this.type === "feather") {
-            fill(200, 230, 255);
+            image(featherImage, this.x, this.y- this.w*.75, this.w*2, this.h*2);
         }
-
         if (this.type === "shield") {
-            fill(80, 170, 255);
+            image(shieldImage, this.x, this.y, this.w*1.5, this.h*1.5);
         }
 
         if (this.type === "potion") {
-            fill(150, 90, 255);
+            image(speedImage, this.x, this.y, this.w*1.5, this.h*1.5);
         }
 
         if (this.type === "doubleJumpAbility") {
-            fill(120, 210, 255);
+            image(doubleJumpAmuletImage, this.x, this.y, this.w*1.5, this.h*1.5);
         }
 
         if (this.type === "dashAbility") {
-            fill(255, 170, 90);
+            image(dashAmuletImage, this.x, this.y, this.w*1.5, this.h*1.5);
         }
 
         noStroke();
         rectMode(CENTER);
-        rect(this.x, this.y, this.w, this.h);
+       //rect(this.x, this.y, this.w, this.h);
     }
 
     onCollected(now = this.getNowMs()) {

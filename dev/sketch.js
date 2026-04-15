@@ -90,6 +90,10 @@ function setup() {
     new Box(700, height - 490, 50)
   ]
 
+  level1Doors = [
+    new Door(1650, height - 205, 80, 70)
+  ]
+
   level1Buttons = [
     new Button(1100, height - 35, 80, 20, () => console.log("button pressed"))
   ]
@@ -103,7 +107,7 @@ function setup() {
 }
 
 function setupLevel() {
-  level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies);
+  level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies, level1Doors);
   player = new Player(width * .2, height - 100, 80, 120);
   camera = new Camera(WORLD_WIDTH, height * WORLD_HEIGHT_MULTIPLIER);
   abilityUnlockPopup = null;

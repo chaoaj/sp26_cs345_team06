@@ -8,16 +8,17 @@ class SpikeTrap extends Trap {
     fill(180, 180, 180);
     noStroke();
 
-    const left = this.x - this.w / 2;
-    const top = this.y - this.h / 2;
-    const spikeWidth = this.w / this.spikeCount;
+    // const left = this.x - this.w / 2;
+    // const top = this.y - this.h / 2;
+    // const spikeWidth = this.w / this.spikeCount;
 
-    for (let i = 0; i < this.spikeCount; i++) {
-      const x1 = left + i * spikeWidth;
-      const x2 = x1 + spikeWidth / 2;
-      const x3 = x1 + spikeWidth;
+    // for (let i = 0; i < this.spikeCount; i++) {
+    //   const x1 = left + i * spikeWidth;
+    //   const x2 = x1 + spikeWidth / 2;
+    //   const x3 = x1 + spikeWidth;
 
-      triangle(x1, top + this.h, x2, top, x3, top + this.h);
-    }
+    //   triangle(x1, top + this.h, x2, top, x3, top + this.h);
+    // }
+    image(spikeTrap, this.x, this.y, this.w, this.h);
   }
 }
