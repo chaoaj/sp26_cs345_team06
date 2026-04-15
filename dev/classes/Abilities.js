@@ -68,6 +68,7 @@ class Ability {
   }
 
   static calculateDashStep(player, context) {
+
     const {
       dashPressed = false,
       movingLeft = false,

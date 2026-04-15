@@ -158,6 +158,7 @@ class Level {
         this.drawItems();
         this.drawTraps();
         this.drawEnemies();
+        this.drawDoors();
         for (const box of this.boxes) box.draw();
         for (const button of this.buttons) button.draw();
     }

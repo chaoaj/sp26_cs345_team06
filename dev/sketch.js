@@ -14,6 +14,7 @@ let level1Traps = []
 let level1Boxes = []
 let level1Buttons = []
 let level1Enemies = []
+let level1Doors = []
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
 let abilityUnlockPopup = null;

@@ -1,7 +1,7 @@
 function preload() {
   //can only have one preload function across all files
   // so preload here
-  
+
   //Music
   backgroundMusic = loadSound("assets/BackgroundMusic.mp3")
 

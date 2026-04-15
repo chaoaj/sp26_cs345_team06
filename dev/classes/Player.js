@@ -70,7 +70,7 @@ class Player {
 
     this.updateTimedEffects();
     applyPlayerControls(this);
-    this.resolveHorizontalCollisions(platforms, previousX);
+    this.resolveHorizontalCollisions(platforms, previousX, previousY);
 
     this.yVelocity += this.gravity;
     this.y += this.yVelocity;
@@ -100,17 +100,23 @@ class Player {
     }
   }
 
-  resolveHorizontalCollisions(platforms, previousX) {
+  resolveHorizontalCollisions(platforms, previousX, previousY) {
+    const previousHitBottom = previousY + this.height / 2;
+
     for (const platform of platforms) {
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
       const platformRight = platform.x + platform.w / 2;
+      const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
+      const previousPlatformTop = platformTop - platformYVelocity;
+      const wasAbovePlatformLastFrame = previousHitBottom <= previousPlatformTop + 2;
 
       const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
       const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
 
       if (!overlapsX || !overlapsY) continue;
+      if (wasAbovePlatformLastFrame) continue;
 
       if (this.x > previousX) {
         this.x = platformLeft - (this.width / 2 - this.hitboxInsetX);
@@ -129,13 +135,15 @@ class Player {
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
       const platformRight = platform.x + platform.w / 2;
+      const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
+      const previousPlatformTop = platformTop - platformYVelocity;
 
       const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
       const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
 
       if (!overlapsX || !overlapsY) continue;
 
-      if (this.yVelocity >= 0 && previousHitBottom <= platformTop) {
+      if (this.yVelocity >= 0 && previousHitBottom <= previousPlatformTop) {
         this.y = platformTop - this.height / 2;
         this.yVelocity = 0;
         this.jumpMomentumX = 0;

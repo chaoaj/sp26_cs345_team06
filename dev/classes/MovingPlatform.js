@@ -22,9 +22,14 @@ class MovingPlatform extends Platform {
     }
 
     update() {
+        // Reset and recompute per-frame velocity so collision code can rely on it.
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+
         if (this.axis === "x") {
-            this.x += this.speed * this.direction;
-            this.xVelocity = this.speed * this.direction;
+            const step = this.speed * this.direction;
+            this.x += step;
+            this.xVelocity = step;
 
             if (this.x >= this.startX + this.distance) {
                 this.x = this.startX + this.distance;
@@ -34,8 +39,9 @@ class MovingPlatform extends Platform {
                 this.direction = 1;
             }
         } else {
-            this.y += this.speed * this.direction;
-            this.yVelocity = this.speed * this.direction;
+            const step = this.speed * this.direction;
+            this.y += step;
+            this.yVelocity = step;
 
             if (this.y >= this.startY + this.distance) {
                 this.y = this.startY + this.distance;
