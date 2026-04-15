@@ -91,9 +91,7 @@ function setup() {
     new Box(700, height - 490, 50)
   ]
 
-  level1Doors = [
-    new Door(1650, height - 205, 80, 70)
-  ]
+  level1Doors = []
 
   level1Buttons = [
     new Button(1100, height - 35, 80, 20, () => console.log("button pressed"))
