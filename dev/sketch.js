@@ -8,6 +8,10 @@ let players;
 let player;
 let camera;
 
+let levelNum = 1
+let levels = []
+let levelTemplates = []
+
 let level1Platforms = []
 let level1Items = []
 let level1Traps = []
@@ -91,6 +95,10 @@ function setup() {
     new Box(700, height - 490, 50)
   ]
 
+  level2Boxes = [
+
+  ]
+
   level1Doors = []
 
   level1Buttons = [
@@ -100,13 +108,19 @@ function setup() {
   level1Enemies = [
     new Hostile(970, height - 335, 40, 40, 1.5, 900, 1040)
   ]
-
+  level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors]
+  levelTemplates.push(level1Template);
+  level2Template = [level1Platforms, level1Items, level1Traps, level2Boxes, level1Buttons, level1Enemies, level1Doors]
+  levelTemplates.push(level2Template);
   setupLevel();
 
 }
 
 function setupLevel() {
-  level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies, level1Doors);
+  //level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies, level1Doors);
+  level1 = new Level(levelTemplates[0][0], backgroundImage, brickFloorImage, levelTemplates[0][1], levelTemplates[0][2], WORLD_WIDTH, levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6]);
+  level2 = new Level(levelTemplates[1][0], backgroundImage, brickFloorImage, levelTemplates[1][1], levelTemplates[1][2], WORLD_WIDTH, levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6]);
+  levels.push(level1, level2);
   player = new Player(width * .2, height - 100, 80, 120);
   camera = new Camera(WORLD_WIDTH, height * WORLD_HEIGHT_MULTIPLIER);
   abilityUnlockPopup = null;
@@ -121,9 +135,11 @@ function windowResized() {
 }
 
 function draw() {
+  level = levels[levelNum - 1];
   if (gameState === "title") {
     drawTitleScreen();
   } else if (gameState === "playing") {
+
     level.updateMovingPlatforms();
     player.update(level1Platforms);
     level.applyTrapDamage(player);
@@ -233,7 +249,11 @@ function keyPressed() {
     closeAbilityUnlockPopup();
     return;
   }
-
+  //TEMPORARY
+  if (key=='l') {
+    levelNum = 2
+  }
+  //TEMPORARY
   if (key === "p" || key === "P" || keyCode === ESCAPE) {
     if (gameState === "playing") {
       pauseStartedAt = millis();
