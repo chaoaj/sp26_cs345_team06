@@ -272,7 +272,8 @@ class Level {
         if (player.shieldHealth > 0) {
             fill(80, 170, 255);
             for (let i = 0; i < player.shieldHealth; i++) {
-                rect(35 + i * 40, 70, 24, 24, 5);
+                //rect(35 + i * 40, 70, 24, 24, 5);
+                image(shieldImage, 20 + i * 40, 60, 30, 30);
             }
             fill(255);
         }
