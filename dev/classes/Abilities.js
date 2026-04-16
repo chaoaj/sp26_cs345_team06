@@ -56,6 +56,19 @@ class Ability {
     return !!(abilityMap && abilityMap.has(abilityName));
   }
 
+  static getUnlockedAbilities(player) {
+    if (!player) {
+      return [];
+    }
+
+    const abilityMap = Ability.getRegistry().get(player);
+    if (!abilityMap) {
+      return [];
+    }
+
+    return Array.from(abilityMap.values());
+  }
+
   static canDoubleJump(player) {
     return (
       Ability.has(player, "doubleJump") ||

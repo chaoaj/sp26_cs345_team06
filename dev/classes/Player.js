@@ -102,6 +102,7 @@ class Player {
 
   resolveHorizontalCollisions(platforms, previousX, previousY) {
     const previousHitBottom = previousY + this.height / 2;
+    const previousHitTop = previousY - this.height / 2 + this.hitboxInsetTop;
 
     for (const platform of platforms) {
       const platformTop = platform.y - platform.h / 2;
@@ -110,13 +111,16 @@ class Player {
       const platformRight = platform.x + platform.w / 2;
       const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
       const previousPlatformTop = platformTop - platformYVelocity;
+      const previousPlatformBottom = platformBottom - platformYVelocity;
       const wasAbovePlatformLastFrame = previousHitBottom <= previousPlatformTop + 2;
+      const wasBelowPlatformLastFrame = previousHitTop >= previousPlatformBottom - 2;
 
       const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
       const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
 
       if (!overlapsX || !overlapsY) continue;
       if (wasAbovePlatformLastFrame) continue;
+      if (wasBelowPlatformLastFrame) continue;
 
       if (this.x > previousX) {
         this.x = platformLeft - (this.width / 2 - this.hitboxInsetX);
@@ -140,6 +144,23 @@ class Player {
 
       const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
       const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
+      const crossedPlatformTop =
+        this.yVelocity >= 0 &&
+        previousHitBottom <= previousPlatformTop &&
+        this.hitBottom >= platformTop;
+
+      // Swept landing check prevents phasing through platforms at high relative speeds.
+      if (overlapsX && crossedPlatformTop) {
+        this.y = platformTop - this.height / 2;
+        this.yVelocity = 0;
+        this.jumpMomentumX = 0;
+        this.remainingAirJumps = this.maxAirJumps;
+        this.isOnGround = true;
+        if (platform.xVelocity) {
+          this.x += platform.xVelocity;
+        }
+        continue;
+      }
 
       if (!overlapsX || !overlapsY) continue;
 

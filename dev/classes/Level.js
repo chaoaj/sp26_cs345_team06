@@ -290,5 +290,10 @@ class Level {
             const speedPotionTimeLeftSeconds = ceil(speedPotionTimeLeftMs / 1000);
             text(`Speed: ${speedPotionTimeLeftSeconds}s`, 20, 135);
         }
+
+        if (typeof levelNum === "number") {
+            textAlign(RIGHT, TOP);
+            text(`Level ${levelNum}`, width - 20, 20);
+        }
     }
 }
