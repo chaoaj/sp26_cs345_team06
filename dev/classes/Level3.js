@@ -7,26 +7,31 @@ function getLevel3Template() {
     new MovingPlatform(1080, height - 360, 140, 30, brickPlatformImage, "x", 60, 1.2, true),
     new MovingPlatform(1370, height - 430, 210, 30, brickPlatformImage, "x", 60, 1.2, false),
     new MovingPlatform(1660, height - 500, 170, 30, brickPlatformImage, "x", 60, 1.2, true), // end of platform staircase
-    new MovingPlatform(1940, height - 420, 230, 30, brickPlatformImage, "y", 80, 1, false),
+    new MovingPlatform(1940, height - 560, 230, 30, brickPlatformImage, "y", 80, 1, false),
     // Long stationary platforms at the top of the staircase.
-    new Platform(2450, height - 200, 700, 30, brickPlatformImage),
-    new Platform(2450, height - 350, 700, 30, brickPlatformImage),
+    new Platform(2450, height - 700, 700, 30, brickPlatformImage), // stationary 1
+    new Platform(2450, height - 900, 700, 30, brickPlatformImage), // stationary 2
+    // Wall blocking the right end of the stationary platforms.
+    new Platform(2815, height - 985, 30, 800, brickPlatformImage), // wall S1/s2
   ];
 
   const level3Items = [
     new Items(770, height - 420, "health"),
-    new Items(1030, height - 35, "feather"),
     new Items(510, height - 310, "shield"),
-    new Items(1290, height - 200, "potion"),
+    new Items(2750, height - 800, "doubleJumpAbility"),
   ];
 
   const level3Traps = [
     new SpikeTrap(880, height - 45, 120, 40),
     new LaserTrap(640, height - 305, 170, 14),
+    // Two spike sections on stationary 1; gap between them is intended for dash timing.
+    new SpikeTrap(2300, height - 735, 140, 40),
+    new LaserTrap(2450, height - 805, 14, 180, 1, 2000, 5000, 800, "y"),
+    new SpikeTrap(2600, height - 735, 140, 40),
   ];
 
   const level3Boxes = [
-    new Box(580, height - 340, 50),
+    new Box(2750, height - 930, 30, 30),
   ];
 
   const level3Buttons = [

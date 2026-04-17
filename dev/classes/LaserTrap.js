@@ -1,9 +1,10 @@
 class LaserTrap extends Trap {
-  constructor(x, y, w, h, damage = 1, fireDuration = 2000, repeatInterval = 5000, previewDuration = 800) {
+  constructor(x, y, w, h, damage = 1, fireDuration = 2000, repeatInterval = 5000, previewDuration = 800, axis = "x") {
     super(x, y, w, h, damage);
     this.fireDuration = fireDuration;
     this.previewDuration = previewDuration;
     this.repeatInterval = max(repeatInterval, fireDuration + previewDuration);
+    this.axis = axis;
   }
 
   getCycleTime() {
@@ -23,22 +24,38 @@ class LaserTrap extends Trap {
 
   draw() {
     const left = this.x - this.w / 2;
+    const right = this.x + this.w / 2;
     const top = this.y - this.h / 2;
-    const emitterX = left - 9;
+    const bottom = this.y + this.h / 2;
+    const isVertical = this.axis === "y";
+    const beamThickness = isVertical ? this.w : this.h;
+    const emitterSize = beamThickness + 2;
 
     rectMode(CORNER);
     noStroke();
     fill(70);
-    rect(left - 18, top - 6, 18, this.h + 12, 6);
+    if (isVertical) {
+      rect(left - 6, top - 18, this.w + 12, 18, 6);
+    } else {
+      rect(left - 18, top - 6, 18, this.h + 12, 6);
+    }
 
     if (this.isPreviewing()) {
       stroke(255, 70, 70, 140);
-      strokeWeight(max(2, this.h * 0.35));
-      line(left, this.y, left + this.w, this.y);
+      strokeWeight(max(2, beamThickness * 0.35));
+      if (isVertical) {
+        line(this.x, top, this.x, bottom);
+      } else {
+        line(left, this.y, right, this.y);
+      }
 
       noStroke();
       fill(150, 45, 45);
-      circle(emitterX, this.y, this.h + 2);
+      if (isVertical) {
+        circle(this.x, top - 9, emitterSize);
+      } else {
+        circle(left - 9, this.y, emitterSize);
+      }
       rectMode(CENTER);
       return;
     }
@@ -46,22 +63,38 @@ class LaserTrap extends Trap {
     if (!this.isFiring()) {
       noStroke();
       fill(120);
-      circle(emitterX, this.y, this.h);
+      if (isVertical) {
+        circle(this.x, top - 9, beamThickness);
+      } else {
+        circle(left - 9, this.y, beamThickness);
+      }
       rectMode(CENTER);
       return;
     }
 
     stroke(255, 40, 40);
-    strokeWeight(this.h);
-    line(left, this.y, left + this.w, this.y);
+    strokeWeight(beamThickness);
+    if (isVertical) {
+      line(this.x, top, this.x, bottom);
+    } else {
+      line(left, this.y, right, this.y);
+    }
 
     stroke(255, 120, 120);
-    strokeWeight(max(2, this.h * 0.25));
-    line(left, this.y, left + this.w, this.y);
+    strokeWeight(max(2, beamThickness * 0.25));
+    if (isVertical) {
+      line(this.x, top, this.x, bottom);
+    } else {
+      line(left, this.y, right, this.y);
+    }
 
     noStroke();
     fill(220, 70, 70);
-    circle(emitterX, this.y, this.h + 6);
+    if (isVertical) {
+      circle(this.x, top - 9, beamThickness + 6);
+    } else {
+      circle(left - 9, this.y, beamThickness + 6);
+    }
 
     rectMode(CENTER);
   }
