@@ -1,6 +1,6 @@
 let gameState = "title";
 
-const WORLD_WIDTH = 1800;
+const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT_MULTIPLIER = 1;
 const LEVEL_WORLD_WIDTHS = [1800, 1800, 3000];
 
@@ -62,43 +62,38 @@ function closeAbilityUnlockPopup() {
 function setup() {
   noSmooth()
   //TODO: make a table in a different class for
-  // different levels (maybe, it is here because setup runs affter
+  // different levels (maybe, it is here because setup runs after
   // preload, otherwise it was using image variables before they were loaded)
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
   level1Platforms = [
     new Platform(250,  height - 170, 220, 30, brickPlatformImage),
-    new Platform(490,  height - 300, 220, 30, brickPlatformImage),
-    new Platform(730,  height - 430, 220, 30, brickPlatformImage),
-    new Platform(970,  height - 300, 220, 30, brickPlatformImage),
+    new Platform(490,  height - 260, 220, 30, brickPlatformImage),
+    new Platform(730,  height - 350, 220, 30, brickPlatformImage),
+    new Platform(970,  height - 260, 220, 30, brickPlatformImage),
     new Platform(1210, height - 170, 220, 30, brickPlatformImage),
     new MovingPlatform(1450, height - 300, 200, 30, brickPlatformImage, "y", 180, 1.5),
-    new MovingPlatform(1650, height - 170, 200, 30, brickPlatformImage, "x", 200, 2)
-  ]
-
-  level2Platforms = [
-    new Platform(250,  height - 300, 220, 30, brickPlatformImage),
-    new Platform(490,  height - 400, 220, 30, brickPlatformImage),
-    new Platform(730,  height - 430, 220, 30, brickPlatformImage),
-    new Platform(970,  height - 300, 220, 30, brickPlatformImage),
-    new Platform(1210, height - 170, 220, 30, brickPlatformImage),
-    new MovingPlatform(1450, height - 300, 200, 30, brickPlatformImage, "y", 180, 1.5),
-    new MovingPlatform(1650, height - 170, 200, 30, brickPlatformImage, "x", 200, 2)
+    new MovingPlatform(1650, height - 170, 200, 30, brickPlatformImage, "x", 700, 2),
+    new Platform(2000, height - 300, 220, 30, brickPlatformImage),
+    new Platform(2450, height - 350, 220, 30, brickPlatformImage),
+    new Platform(2600, height - 170, 220, 30, brickPlatformImage),
+    new Platform(2800, height - 300, 220, 30, brickPlatformImage)
   ]
 
   level1Items = [
-    new Items(730, height - 460, "health"),
-    new Items(970, height - 35, "feather"),
-    new Items(490, height - 390, "shield"),
+    new Items(730, height - 420, "health"),
+    new Items(970, height - 280, "feather"),
+    new Items(490, height - 330, "shield"),
     new Items(1210, height - 200, "potion"),
     new Items(250, height - 220, "doubleJumpAbility"),
     new Items(1210, height - 220, "dashAbility")
   ]
 
   level1Traps = [
-    new SpikeTrap(730, height - 50, 120, 50),
-    new LaserTrap(610, height - 325, 160, 14)
+    new SpikeTrap(730, height - 45, 120, 40),
+    new LaserTrap(610, height - 285, 160, 14),
+    new SpikeTrap(1900, height - 45, 120, 30)
   ]
 
   level1Boxes = [
@@ -110,21 +105,16 @@ function setup() {
 
   ]
 
-  level1Pits = [
-    [15,3],
-    [25,5]
+  level1Doors = [
+    new Door(2800, height - 365, 75, 100)
   ]
-
-  level2Pits = []
-
-  level1Doors = []
 
   level1Buttons = [
     new Button(1100, height - 35, 80, 20, () => console.log("button pressed"))
   ]
 
   level1Enemies = [
-    new Hostile(970, height - 335, 40, 40, 1.5, 900, 1040)
+    new Hostile(970, height - 295, 40, 40, 1.5, 900, 1040)
   ]
   level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits]
   levelTemplates.push(level1Template);
@@ -249,6 +239,7 @@ function draw() {
 
     level.updateMovingPlatforms();
     player.update(level.platforms);
+    player.update(level.platforms);
     level.applyTrapDamage(player);
     level.applyEnemyDamage(player);
     level.updateEnemies();
@@ -265,6 +256,38 @@ function draw() {
 
     level.drawHUD(player);
     level.collectTouchedItems(player);
+
+    if (level.doors.length > 0) {
+      for (const door of level.doors) {
+        const playerLeft = player.x - player.w / 2;
+        const playerRight = player.x + player.w / 2;
+        const playerTop = player.y - player.h / 2;
+        const playerBottom = player.y + player.h / 2;
+
+        const doorLeft = door.x - door.w / 2;
+        const doorRight = door.x + door.w / 2;
+        const doorTop = door.y - door.h / 2;
+        const doorBottom = door.y + door.h / 2;
+
+        const hit =
+          playerRight > doorLeft &&
+          playerLeft < doorRight &&
+          playerBottom >= doorTop &&
+          playerTop < doorBottom;
+
+        if (hit) {
+          levelNum++;
+          player.x = width * 0.2;
+          player.y = height - 100;
+          player.yVelocity = 0;
+          player.isOnGround = false;
+
+          camera.follow(player);
+          camera.constrainPlayer(player);
+          break;
+        }
+      }
+    }
   } else if (gameState === "paused") {
     // Render current world without simulation updates while paused.
     level.drawBackground();

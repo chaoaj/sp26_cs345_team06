@@ -1,13 +1,13 @@
 class Door {
-    constructor(x, y, width, height) { 
+    constructor(x, y, w, h) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.w = w;
+        this.h = h;
     }
     drawDoor() {
         fill(139, 69, 19);
-        rect(this.x, this.y, this.width, this.height);
+        rect(this.x, this.y, this.w, this.h);
         console.log("door")
     }
 }
