@@ -13,7 +13,7 @@ class Level {
         //floor, do not include in level platforms
         this.trapDamageCooldownMs = 400;
         this.lastTrapDamageAt = -Infinity;
-        var floor = new Platform(this.worldWidth / 2, height, this.worldWidth, 50, floorImage);
+        var floor = new Platform(this.worldWidth / 2, height, this.worldWidth, 50, null);
         platforms.push(floor);
     }
     drawPlatforms() {
