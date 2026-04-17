@@ -1,12 +1,15 @@
 function getLevel3Template() {
   const level3Platforms = [
-    new Platform(250, height - 170, 220, 30, brickPlatformImage),
-    new Platform(510, height - 280, 220, 30, brickPlatformImage),
-    new Platform(770, height - 390, 220, 30, brickPlatformImage),
-    new Platform(1030, height - 280, 220, 30, brickPlatformImage),
-    new Platform(1290, height - 170, 220, 30, brickPlatformImage),
-    new MovingPlatform(1510, height - 300, 180, 30, brickPlatformImage, "x", 220, 2),
-    new MovingPlatform(1670, height - 170, 180, 30, brickPlatformImage, "y", 150, 1.6),
+    // Connected moving staircase with larger gaps and varied step sizes.
+    new MovingPlatform(260, height - 150, 220, 30, brickPlatformImage, "x", 60, 1.2, false),
+    new MovingPlatform(520, height - 220, 160, 30, brickPlatformImage, "x", 60, 1.2, true),
+    new MovingPlatform(800, height - 290, 200, 30, brickPlatformImage, "x", 60, 1.2, false),
+    new MovingPlatform(1080, height - 360, 140, 30, brickPlatformImage, "x", 60, 1.2, true),
+    new MovingPlatform(1370, height - 430, 210, 30, brickPlatformImage, "x", 60, 1.2, false),
+    new MovingPlatform(1660, height - 500, 170, 30, brickPlatformImage, "x", 60, 1.2, true),
+    new MovingPlatform(1940, height - 420, 230, 30, brickPlatformImage, "y", 80, 1, false),
+    new MovingPlatform(2200, height - 320, 180, 30, brickPlatformImage, "x", 220, 2, true),
+    new MovingPlatform(2480, height - 190, 150, 30, brickPlatformImage, "y", 150, 1.6, false),
   ];
 
   const level3Items = [
