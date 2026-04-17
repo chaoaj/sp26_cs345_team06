@@ -2,12 +2,13 @@ let gameState = "title";
 
 const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT_MULTIPLIER = 1;
-const LEVEL_WORLD_WIDTHS = [1800, 1800, 3000];
+const LEVEL_WORLD_WIDTHS = [1800, 2600, 3300];
 
 let platforms = [];
 let players;
 let player;
 let camera;
+let endGameLevel;
 
 let levelNum = 1
 let levels = []
@@ -109,9 +110,6 @@ function setup() {
 
   ]
 
-  // Keep level 2 valid even if a dedicated layout isn't configured yet.
-  level2Platforms = [...level1Platforms]
-
   level1Doors = [
     new Door(2800, height - 365, 75, 100)
   ]
@@ -125,7 +123,7 @@ function setup() {
   ]
   level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits]
   levelTemplates.push(level1Template);
-  level2Template = [level2Platforms, level1Items, level1Traps, level2Boxes, level1Buttons, level1Enemies, level1Doors, level2Pits]
+  level2Template = getLevel2Template();
   levelTemplates.push(level2Template);
   level3Template = getLevel3Template();
   if (level3Template.length < 8) {
@@ -145,7 +143,11 @@ function setupLevel() {
   level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7]);
   levels = [];
   levels.push(level1, level2, level3);
-  const spawnX = width * 0.2;
+
+  endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
+  endGameLevel.setup();
+
+  const spawnX = width * 0.12;
   const spawnY = height - 160;
   player = new Player(spawnX, spawnY, 80, 120);
   player.onRespawn = () => {
@@ -160,6 +162,40 @@ function setupLevel() {
   accumulatedPauseMs = 0;
 }
 
+function startEndGame() {
+  if (!endGameLevel || !player) {
+    return;
+  }
+
+  const spawn = endGameLevel.getSpawnPoint();
+  player.setSpawnPoint(spawn.x, spawn.y);
+  player.respawn();
+
+  if (camera) {
+    camera.worldWidth = endGameLevel.worldWidth;
+    camera.x = 0;
+    camera.y = 0;
+  }
+
+  gameState = "endgame";
+}
+
+function restartToTitle() {
+  levelNum = 1;
+  levels = [];
+  levelTemplates = [];
+  setup();
+
+  if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) {
+    backgroundMusic.stop();
+  }
+  if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
+    soliloquyMusic.stop();
+  }
+
+  gameState = "title";
+}
+
 function switchToLevel(nextLevelNum) {
   if (!levels || levels.length === 0) {
     return;
@@ -172,7 +208,7 @@ function switchToLevel(nextLevelNum) {
 
   levelNum = clampedLevelNum;
 
-  const spawnX = width * 0.2;
+  const spawnX = width * 0.12;
   const spawnY = height - 160;
   if (player) {
     player.setSpawnPoint(spawnX, spawnY);
@@ -272,10 +308,10 @@ function draw() {
 
     if (level.doors.length > 0) {
       for (const door of level.doors) {
-        const playerLeft = player.x - player.w / 2;
-        const playerRight = player.x + player.w / 2;
-        const playerTop = player.y - player.h / 2;
-        const playerBottom = player.y + player.h / 2;
+        const playerLeft = typeof player.hitLeft === "number" ? player.hitLeft : player.x - player.width / 2;
+        const playerRight = typeof player.hitRight === "number" ? player.hitRight : player.x + player.width / 2;
+        const playerTop = typeof player.hitTop === "number" ? player.hitTop : player.y - player.height / 2;
+        const playerBottom = typeof player.hitBottom === "number" ? player.hitBottom : player.y + player.height / 2;
 
         const doorLeft = door.x - door.w / 2;
         const doorRight = door.x + door.w / 2;
@@ -289,10 +325,37 @@ function draw() {
           playerTop < doorBottom;
 
         if (hit) {
-          switchToLevel(levelNum + 1);
+          if (levelNum >= levels.length) {
+            startEndGame();
+          } else {
+            switchToLevel(levelNum + 1);
+          }
           break;
         }
       }
+    }
+  } else if (gameState === "endgame") {
+    player.update(endGameLevel.platforms);
+    camera.follow(player);
+    camera.constrainPlayer(player);
+
+    endGameLevel.drawBackground();
+
+    camera.apply();
+    endGameLevel.drawWorld();
+    player.draw();
+    camera.reset();
+
+    if (endGameLevel.hasCollectedTreasure(player)) {
+      push();
+      fill(255);
+      textAlign(CENTER, CENTER);
+      textSize(38);
+      text("You Win!", width / 2, height / 2 - 20);
+      textSize(18);
+      text("Treasure recovered.", width / 2, height / 2 + 18);
+      text("Press R to return to title", width / 2, height / 2 + 52);
+      pop();
     }
   } else if (gameState === "paused") {
     // Render current world without simulation updates while paused.
@@ -440,6 +503,15 @@ function keyPressed() {
     closeAbilityUnlockPopup();
     return;
   }
+
+  if (gameState === "endgame") {
+    const canRestart = endGameLevel && endGameLevel.treasure && endGameLevel.treasure.collected;
+    if (canRestart && (key === "r" || key === "R")) {
+      restartToTitle();
+    }
+    return;
+  }
+
   //TEMPORARY
   if (key === 'l' || key === 'L') {
     const nextLevelNum = (levelNum % levels.length) + 1;
