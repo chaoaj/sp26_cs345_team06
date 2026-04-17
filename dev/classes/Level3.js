@@ -6,10 +6,11 @@ function getLevel3Template() {
     new MovingPlatform(800, height - 290, 200, 30, brickPlatformImage, "x", 60, 1.2, false),
     new MovingPlatform(1080, height - 360, 140, 30, brickPlatformImage, "x", 60, 1.2, true),
     new MovingPlatform(1370, height - 430, 210, 30, brickPlatformImage, "x", 60, 1.2, false),
-    new MovingPlatform(1660, height - 500, 170, 30, brickPlatformImage, "x", 60, 1.2, true),
+    new MovingPlatform(1660, height - 500, 170, 30, brickPlatformImage, "x", 60, 1.2, true), // end of platform staircase
     new MovingPlatform(1940, height - 420, 230, 30, brickPlatformImage, "y", 80, 1, false),
-    new MovingPlatform(2200, height - 320, 180, 30, brickPlatformImage, "x", 220, 2, true),
-    new MovingPlatform(2480, height - 190, 150, 30, brickPlatformImage, "y", 150, 1.6, false),
+    // Long stationary platforms at the top of the staircase.
+    new Platform(2450, height - 200, 700, 30, brickPlatformImage),
+    new Platform(2450, height - 350, 700, 30, brickPlatformImage),
   ];
 
   const level3Items = [
