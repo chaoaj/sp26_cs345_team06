@@ -86,7 +86,7 @@ function setup() {
   ]
 
   level1Traps = [
-    new SpikeTrap(730, height - 45, 120, 40),
+    new SpikeTrap(730, height - 50, 120, 50),
     new LaserTrap(610, height - 325, 160, 14)
   ]
 
