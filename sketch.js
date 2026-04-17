@@ -276,6 +276,39 @@ function updateLevelMusic() {
   }
 }
 
+function mousePressed() {
+  if (gameState !== "paused") {
+    return;
+  }
+
+  const action = handlePauseMenuClick(mouseX, mouseY);
+  if (action === "resume") {
+    if (pauseStartedAt !== null) {
+      accumulatedPauseMs += millis() - pauseStartedAt;
+    }
+    pauseStartedAt = null;
+    gameState = "playing";
+  } else if (action === "retry") {
+    levels[levelNum - 1].resetDynamicState();
+    player.respawn();
+    if (pauseStartedAt !== null) {
+      accumulatedPauseMs += millis() - pauseStartedAt;
+    }
+    pauseStartedAt = null;
+    gameState = "playing";
+  } else if (action === "levelSelect") {
+    const levelNum = handleLevelSelectClick(mouseX, mouseY);
+    if (levelNum) {
+      switchToLevel(levelNum);
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
+      }
+      pauseStartedAt = null;
+      gameState = "playing";
+    }
+  }
+}
+
 function draw() {
   level = levels[levelNum - 1];
   if (camera && level) {
