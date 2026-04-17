@@ -57,7 +57,7 @@ class Player {
     this.animFrame = 0;
     this.animTimer = 0;
     this.highJumpDurationMs = 30000;
-    this.highJumpStrength = 22;
+    this.highJumpStrength = 18;
     this.highJumpExpiresAt = 0;
   }
 
