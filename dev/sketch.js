@@ -76,6 +76,16 @@ function setup() {
     new MovingPlatform(1650, height - 170, 200, 30, brickPlatformImage, "x", 200, 2)
   ]
 
+  level2Platforms = [
+    new Platform(250,  height - 300, 220, 30, brickPlatformImage),
+    new Platform(490,  height - 400, 220, 30, brickPlatformImage),
+    new Platform(730,  height - 430, 220, 30, brickPlatformImage),
+    new Platform(970,  height - 300, 220, 30, brickPlatformImage),
+    new Platform(1210, height - 170, 220, 30, brickPlatformImage),
+    new MovingPlatform(1450, height - 300, 200, 30, brickPlatformImage, "y", 180, 1.5),
+    new MovingPlatform(1650, height - 170, 200, 30, brickPlatformImage, "x", 200, 2)
+  ]
+
   level1Items = [
     new Items(730, height - 460, "health"),
     new Items(970, height - 35, "feather"),
@@ -117,7 +127,7 @@ function setup() {
   ]
   level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits]
   levelTemplates.push(level1Template);
-  level2Template = [level1Platforms, level1Items, level1Traps, level2Boxes, level1Buttons, level1Enemies, level1Doors, level2Pits]
+  level2Template = [level2Platforms, level1Items, level1Traps, level2Boxes, level1Buttons, level1Enemies, level1Doors, level2Pits]
   levelTemplates.push(level2Template);
   setupLevel();
 
@@ -128,6 +138,7 @@ function setupLevel() {
   level1 = new Level(levelTemplates[0][0], backgroundImage, floorTile2, levelTemplates[0][1], levelTemplates[0][2], WORLD_WIDTH, levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7]);
   level2 = new Level(levelTemplates[1][0], backgroundImage, brickFloorImage, levelTemplates[1][1], levelTemplates[1][2], WORLD_WIDTH, levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7]);
   levels.push(level1, level2);
+
   player = new Player(width * .2, height - 100, 80, 120);
   camera = new Camera(WORLD_WIDTH, height * WORLD_HEIGHT_MULTIPLIER);
   abilityUnlockPopup = null;

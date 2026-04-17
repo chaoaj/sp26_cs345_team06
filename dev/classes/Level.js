@@ -24,6 +24,11 @@ class Level {
         this.pushPlatform = function(platform) {
             this.platforms.push(platform);
         }
+        this.floorPlatforms = this.floor.setupFloor();
+        //this.drawFloor();
+        for (const platform of this.floorPlatforms) {
+            this.pushPlatform(platform);
+         }
     }
     drawPlatforms() {
         for (let platform of this.platforms) {
@@ -179,11 +184,7 @@ class Level {
         this.drawTraps();
         this.drawEnemies();
         this.drawDoors();
-        this.floorPlatforms = this.floor.drawFloor();
-        //this.drawFloor();
-        for (const platform of this.floorPlatforms) {
-            this.pushPlatform(platform);
-         }
+
         for (const box of this.boxes) box.draw();
         for (const button of this.buttons) button.draw();
     }
