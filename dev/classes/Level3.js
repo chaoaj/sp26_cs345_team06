@@ -6,6 +6,10 @@ function getLevel3Template() {
   const stairPlatform5 = new MovingPlatform(1370, height - 430, 210, 30, brickPlatformImage, "x", 60, 1.2, false);
   const stairPlatform6 = new MovingPlatform(1660, height - 500, 170, 30, brickPlatformImage, "x", 60, 1.2, true);
   const stairPlatform7 = new MovingPlatform(1940, height - 560, 230, 30, brickPlatformImage, "y", 80, 1, false);
+  const finalPlatformBaseY = height - 620;
+  const finalPlatformLoweredY = finalPlatformBaseY + 150;
+  const finalPlatform = new Platform(2920, finalPlatformBaseY, 220, 30, brickPlatformImage);
+  const finalDoor = new Door(3000, finalPlatformBaseY - 65, 75, 100);
 
   const level3Platforms = [
     // Connected moving staircase with larger gaps and varied step sizes.
@@ -25,7 +29,7 @@ function getLevel3Template() {
     // Post-double-jump section: two vertical movers with large travel, then a final platform.
     new MovingPlatform(2450, height - 430, 180, 30, brickPlatformImage, "y", 260, 1.6, false),
     new MovingPlatform(2720, height - 580, 180, 30, brickPlatformImage, "y", 260, 1.6, true),
-    new Platform(2920, height - 620, 220, 30, brickPlatformImage), // final platform / level end
+    finalPlatform, // final platform / level end
     // Wall blocking the right end of the stationary platforms.
     new Platform(2815, height - 985, 30, 800, brickPlatformImage), // wall S1/s2
   ];
@@ -57,12 +61,38 @@ function getLevel3Template() {
   ];
 
   const level3Buttons = [
-    new Button(1180, height - 35, 80, 20, () => console.log("level 3 button pressed")),
+    new Button(
+      1180,
+      height - 35,
+      80,
+      20,
+      () => {
+        finalPlatform.y = finalPlatformLoweredY;
+        finalDoor.y = finalPlatformLoweredY - 65;
+      },
+      () => {
+        finalPlatform.y = finalPlatformBaseY;
+        finalDoor.y = finalPlatformBaseY - 65;
+      }
+    ),
   ];
 
-  const level3Enemies = [];
+  const level3Enemies = [
+    // Floor slime: sprite-width-aware patrol from spike-trap area to double-jump gate wall.
+    // Hostile is drawn at w*3 with CENTER mode, so half visual width is (40*3)/2 = 60.
+    // Gate wall x is 2100 -> right bound for center is 2100 - 60 = 2040.
+    new Hostile(960, height - 46, 40, 40, 1.6, 880, 2040),
+    // Top slime near the box: patrols flush using rendered sprite width.
+    // Hostile is drawn at w*3 with CENTER mode, so half visual width is (40*3)/2 = 60.
+    // Wall left face is x=2815 -> right bound for slime center is 2815 - 60 = 2755.
+    // Patrols from the stationary platform's left edge to the right wall side.
+    new Hostile(2400, height - 935, 40, 40, 1.6, 2150, 2755),
+  ];
 
-  const level3Doors = [];
+  const level3Doors = [
+    // Door at the end of the final platform.
+    finalDoor,
+  ];
 
   // Floor pits under the two post-double-jump vertical moving platforms.
   // Format: [startTileIndex, tileCount], with each floor tile being 32px wide.
