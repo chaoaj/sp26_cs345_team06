@@ -7,17 +7,42 @@ class Player {
     this.width = width;
     this.height = height;
     this.yVelocity = 0;
-    this.moveSpeed = 5;
+    this.baseMoveSpeed = 5;
+    this.moveSpeed = this.baseMoveSpeed;
+    this.speedPotionMoveSpeed = 8;
+    this.speedPotionDurationMs = 30000;
+    this.speedPotionExpiresAt = 0;
+    this.jumpMomentumX = 0;
+    this.jumpDirectionalBoost = 2.4;
+    this.jumpMomentumDecay = 0.88;
+    this.wasJumpHeld = false;
+    this.jumpBufferDurationMs = 120;
+    this.jumpBufferUntil = 0;
+    this.maxAirJumps = 0;
+    this.remainingAirJumps = this.maxAirJumps;
+    this.canDash = false;
+    this.isDashing = false;
+    this.dashDirection = 1;
+    this.dashSpeed = 14;
+    this.groundDashMultiplier = 1.4;
+    this.dashDurationMs = 140;
+    this.dashCooldownMs = 450;
+    this.dashEndsAt = 0;
+    this.dashCooldownUntil = 0;
+    this.wasDashHeld = false;
     this.baseJumpStrength = 15;
     this.jumpStrength = this.baseJumpStrength;
     this.gravity = 0.6;
     this.isOnGround = false;
+    this.isOnFloor = false;
     this.maxHealth = 3;
     this.health = this.maxHealth;
-    this.abilities = {};
+    this.maxShield = 2;
+    this.shieldHealth = 0;
+    this.onRespawn = null;
 
-    this.hitboxInsetX   = 12;
-    this.hitboxInsetTop = 20;
+    this.hitboxInsetX   = 35;
+    this.hitboxInsetTop = 50;
 
     this.facingLeft = false;
     this.isHurt = false;
@@ -47,11 +72,12 @@ class Player {
 
     this.updateTimedEffects();
     applyPlayerControls(this);
-    this.resolveHorizontalCollisions(platforms, previousX);
+    this.resolveHorizontalCollisions(platforms, previousX, previousY);
 
     this.yVelocity += this.gravity;
     this.y += this.yVelocity;
     this.isOnGround = false;
+    this.isOnFloor = false;
 
     this.resolveVerticalCollisions(platforms, previousY);
     this.constrainToScreen();
@@ -68,19 +94,36 @@ class Player {
         this.highJumpExpiresAt = 0;
       }
     }
+
+    if (this.speedPotionExpiresAt > 0) {
+      if (now >= this.speedPotionExpiresAt) {
+        this.moveSpeed = this.baseMoveSpeed;
+        this.speedPotionExpiresAt = 0;
+      }
+    }
   }
 
-  resolveHorizontalCollisions(platforms, previousX) {
+  resolveHorizontalCollisions(platforms, previousX, previousY) {
+    const previousHitBottom = previousY + this.height / 2;
+    const previousHitTop = previousY - this.height / 2 + this.hitboxInsetTop;
+
     for (const platform of platforms) {
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
       const platformRight = platform.x + platform.w / 2;
+      const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
+      const previousPlatformTop = platformTop - platformYVelocity;
+      const previousPlatformBottom = platformBottom - platformYVelocity;
+      const wasAbovePlatformLastFrame = previousHitBottom <= previousPlatformTop + 2;
+      const wasBelowPlatformLastFrame = previousHitTop >= previousPlatformBottom - 2;
 
       const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
       const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
 
       if (!overlapsX || !overlapsY) continue;
+      if (wasAbovePlatformLastFrame) continue;
+      if (wasBelowPlatformLastFrame) continue;
 
       if (this.x > previousX) {
         this.x = platformLeft - (this.width / 2 - this.hitboxInsetX);
@@ -99,16 +142,40 @@ class Player {
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
       const platformRight = platform.x + platform.w / 2;
+      const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
+      const previousPlatformTop = platformTop - platformYVelocity;
 
       const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
       const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
+      const crossedPlatformTop =
+        this.yVelocity >= 0 &&
+        previousHitBottom <= previousPlatformTop &&
+        this.hitBottom >= platformTop;
+
+      // Swept landing check prevents phasing through platforms at high relative speeds.
+      if (overlapsX && crossedPlatformTop) {
+        this.y = platformTop - this.height / 2;
+        this.yVelocity = 0;
+        this.jumpMomentumX = 0;
+        this.remainingAirJumps = this.maxAirJumps;
+        this.isOnGround = true;
+        if (platform.xVelocity) {
+          this.x += platform.xVelocity;
+        }
+        continue;
+      }
 
       if (!overlapsX || !overlapsY) continue;
 
-      if (this.yVelocity >= 0 && previousHitBottom <= platformTop) {
+      if (this.yVelocity >= 0 && previousHitBottom <= previousPlatformTop) {
         this.y = platformTop - this.height / 2;
         this.yVelocity = 0;
+        this.jumpMomentumX = 0;
+        this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
+        if (platform.xVelocity) {
+          this.x += platform.xVelocity;
+        }
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;
@@ -123,7 +190,10 @@ class Player {
     if (this.y + halfHeight >= height) {
       this.y = height - halfHeight;
       this.yVelocity = 0;
+      this.jumpMomentumX = 0;
+      this.remainingAirJumps = this.maxAirJumps;
       this.isOnGround = true;
+      this.isOnFloor = true;
     }
   }
   updateAnimation() {
@@ -168,7 +238,18 @@ class Player {
   }
 
   takeDamage(amount = 1) {
-    this.health = Math.max(0, this.health - amount);
+    let remainingDamage = amount;
+
+    if (this.shieldHealth > 0) {
+      const blockedDamage = Math.min(this.shieldHealth, remainingDamage);
+      this.shieldHealth -= blockedDamage;
+      remainingDamage -= blockedDamage;
+    }
+
+    if (remainingDamage > 0) {
+      this.health = Math.max(0, this.health - remainingDamage);
+    }
+
     this.isHurt = true;
     this.setAnimState("hurt");
     if (this.health <= 0) {
@@ -177,7 +258,11 @@ class Player {
   }
 
   gainHealth(amount = 1) {
-    this.health += amount;
+    this.health = Math.min(this.maxHealth, this.health + amount);
+  }
+
+  addShield(amount = 2) {
+    this.shieldHealth = Math.min(this.maxShield, this.shieldHealth + amount);
   }
 
   setSpawnPoint(x, y) {
@@ -188,29 +273,40 @@ class Player {
   respawn() {
     this.x = this.spawnX;
     this.y = this.spawnY;
+    this.jumpMomentumX = 0;
+    this.jumpBufferUntil = 0;
+    this.remainingAirJumps = this.maxAirJumps;
+    this.isDashing = false;
+    this.dashEndsAt = 0;
+    this.dashCooldownUntil = 0;
+    this.wasDashHeld = false;
+    this.wasJumpHeld = false;
     this.yVelocity = 0;
     this.isOnGround = false;
     this.health = this.maxHealth;
     this.isHurt = false;
     this.setAnimState("idle");
+
+    if (typeof this.onRespawn === "function") {
+      this.onRespawn(this);
+    }
   }
 
   addPermanentAbility(ability) { // if called will add ability
-    if (!ability || !ability.name) {
+    const didGrant = Ability.grant(this, ability);
+    if (!didGrant) {
       return false;
     }
 
-    if (this.abilities[ability.name]) {
-      return false;
+    if (typeof showAbilityUnlock === "function") {
+      showAbilityUnlock(ability);
     }
 
-    this.abilities[ability.name] = ability;
-    ability.applyTo(this);
     return true;
   }
 
   hasAbility(abilityName) { // check for if player already has it
-    return !!this.abilities[abilityName];
+    return Ability.has(this, abilityName);
   }
 
   activateHighJump() {
@@ -219,12 +315,26 @@ class Player {
     this.highJumpExpiresAt = now + this.highJumpDurationMs;
   }
 
+  activateSpeedPotion() {
+    const now = getGameMillis();
+    this.moveSpeed = this.speedPotionMoveSpeed;
+    this.speedPotionExpiresAt = now + this.speedPotionDurationMs;
+  }
+
   getHighJumpTimeLeftMs() {
     if (this.highJumpExpiresAt <= 0) {
       return 0;
     }
 
     return this.highJumpExpiresAt - getGameMillis();
+  }
+
+  getSpeedPotionTimeLeftMs() {
+    if (this.speedPotionExpiresAt <= 0) {
+      return 0;
+    }
+
+    return this.speedPotionExpiresAt - getGameMillis();
   }
 
   draw() {

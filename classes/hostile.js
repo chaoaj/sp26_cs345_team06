@@ -9,9 +9,15 @@ class Hostile {
     this.rightBound = rightBound;
     this.damage = damage;
     this.direction = 1;
+
+    this.frameCount = 8;
+    this.fps = 8;
+    this.animFrame = 0;
+    this.animTimer = 0;
   }
 
   update() {
+    //copied anim sheet stuff from player
     this.x += this.speed * this.direction;
 
     if (this.x <= this.leftBound) {
@@ -21,11 +27,31 @@ class Hostile {
       this.x = this.rightBound;
       this.direction = -1;
     }
+
+    this.animTimer += deltaTime;
+    const frameDuration = 1000 / this.fps;
+    if (this.animTimer >= frameDuration) {
+      this.animTimer -= frameDuration;
+      this.animFrame = (this.animFrame + 1) % this.frameCount;
+    }
   }
 
   draw() {
-    fill(200, 60, 60);
+    const frameW = greenslimeimage.width / this.frameCount;
+    const sx = this.animFrame * frameW;
+    const drawH = this.h * 3;
+    const yOffset = -this.h; 
+
+    push();
+    imageMode(CENTER);
     noStroke();
-    rect(this.x, this.y, this.w, this.h, 8);
+    if (this.direction === -1) {
+      translate(this.x, this.y + yOffset);
+      scale(-1, 1);
+      image(greenslimeimage, 0, 0, this.w * 3, drawH, sx, 0, frameW, greenslimeimage.height);
+    } else {
+      image(greenslimeimage, this.x, this.y + yOffset, this.w * 3, drawH, sx, 0, frameW, greenslimeimage.height);
+    }
+    pop();
   }
 }

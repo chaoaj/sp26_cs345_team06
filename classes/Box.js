@@ -89,6 +89,7 @@ class Box {
   draw() {
     fill(160, 100, 40);
     noStroke();
-    rect(this.x, this.y, this.w, this.h);
+    //rect(this.x, this.y, this.w, this.h);
+    image(woodenBox, this.x, this.y, this.w, this.h);
   }
 }

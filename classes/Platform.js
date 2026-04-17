@@ -27,6 +27,9 @@ class Platform{
 
         //TODO: make these images into a repeatimng texture
         // in some way, so that they can be any width without looking stretched
-        image(this.platformImage, this.x - this.w / 2, this.y - this.h / 2, this.w, this.h);
+        if (this.platformImage) {
+            imageMode(CENTER);
+            image(this.platformImage, this.x, this.y, this.w, this.h);
+        }
     }
 }

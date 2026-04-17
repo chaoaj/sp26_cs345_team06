@@ -1,18 +1,21 @@
 function preload() {
   //can only have one preload function across all files
   // so preload here
-  
+
   //Music
   backgroundMusic = loadSound("assets/BackgroundMusic.mp3")
-
-  //Player Sprites
-  playerIdleSheet = loadImage("assets/chacter_sprite/1/Idle.png");
-  playerWalkSheet = loadImage("assets/chacter_sprite/1/Walk.png");
-  playerRunSheet  = loadImage("assets/chacter_sprite/1/Run.png");
-  playerJumpSheet = loadImage("assets/chacter_sprite/1/Jump.png");
-  playerHurtSheet = loadImage("assets/chacter_sprite/1/Hurt.png");
+  soliloquyMusic = loadSound("assets/Soliloquy.mp3")
 
   //Sound Effects
+
+  //Items
+  featherImage = loadImage("assets/Feather.png")
+  healthImage = loadImage("assets/Heart.png")
+  speedImage = loadImage("assets/SpeedPotion.png")
+  shieldImage = loadImage("assets/Shield.png")
+    //Ability Items
+  doubleJumpAmuletImage = loadImage("assets/DoubleJumpAmulet.png")
+  dashAmuletImage = loadImage("assets/DashAmulet.png")
 
   //Title Screen
   titleScreenimage = loadImage("assets/Title.png")
@@ -29,9 +32,26 @@ function preload() {
 
   //Floors
   brickFloorImage = loadImage("assets/Floor1.png");
+  floorTileLevel1 = loadImage("assets/FloorTileLvl1.png")
+  floorTileLevel2 = loadImage("assets/FloorTileLvl2.png")
+  floorTileLevel3 = loadImage("assets/FloorTileLvl3.png")
 
   //Platforms
   brickPlatformImage = loadImage("assets/BrickPlatform.png")
+
+  //Object Sprites
+  woodenBox = loadImage("assets/WoodenBox.png")
+  spikeTrap = loadImage("assets/SpikeTrap.png")
+
+  //Player Sprites
+  playerIdleSheet = loadImage("assets/chacter_sprite/1/Idle.png");
+  playerWalkSheet = loadImage("assets/chacter_sprite/1/Walk.png");
+  playerRunSheet  = loadImage("assets/chacter_sprite/1/Run.png");
+  playerJumpSheet = loadImage("assets/chacter_sprite/1/Jump.png");
+  playerHurtSheet = loadImage("assets/chacter_sprite/1/Hurt.png");
+
+  //Enemy Sprites
+  greenslimeimage = loadImage("assets/SlimeWalk.png")
 
   //UI
   heartImage = loadImage("assets/heart.png")

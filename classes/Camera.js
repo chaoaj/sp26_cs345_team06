@@ -11,11 +11,21 @@ class Camera {
     const targetX = player.x - width / 2;
     const targetY = player.y - height / 2;
 
-    this.x = lerp(this.x, targetX, this.lerpFactor);
-    this.y = lerp(this.y, targetY, this.lerpFactor);
+    // Follow more aggressively when player is airborne
+    const isAirborne = !player.isOnFloor;
+    const lerpSpeed = isAirborne ? 0.25 : this.lerpFactor;
+
+    this.x = lerp(this.x, targetX, lerpSpeed);
+    this.y = lerp(this.y, targetY, lerpSpeed);
 
     this.x = constrain(this.x, 0, max(0, this.worldWidth - width));
-    this.y = constrain(this.y, 0, max(0, this.worldHeight - height));
+
+    // Allow camera to scroll up when player is airborne
+    if (isAirborne) {
+      this.y = constrain(this.y, -height, max(0, this.worldHeight - height));
+    } else {
+      this.y = constrain(this.y, 0, max(0, this.worldHeight - height));
+    }
   }
 
   constrainPlayer(player) {
