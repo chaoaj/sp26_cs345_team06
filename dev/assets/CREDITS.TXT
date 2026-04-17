@@ -1,0 +1,1301 @@
+###############################################
+OpenGameArt.org automatically generated credits file notice:
+
+THIS FILE IS FOR INFORMATIONAL PURPOSES ONLY.  NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL OPENGAMEART.ORG BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE USE OF THIS FILE OR THE INFORMATION IN IT.
+
+In plain English:  This credits file is automatically generated to the best of our ability, but it remains YOUR RESPONSIBILITY as a game developer to ensure that the art you use is attributed properly.  That is, we can't be held liable even if all of the information in this file is completely wrong.   In addition, some of the art listed in this file may have SPECIAL ATTRIBUTION INSTRUCTIONS that ask that you credit the artist in a particular way, rather than a verbatim copyright notice.  In those cases, you will probably need to hand-edit this file to comply with their instructions.  In some older art, attribution instructions may be included in the art description itself.  Please check the art page to be sure.
+
+We recommend that you delete this notice when you're sure the information here is correct and the attribution instructions are properly followed.  If you aren't the game developer and you're seeing this notice here in the credits, it probably means that the developer hasn't properly verified the attribution information contained herein even though it said they were supposed to do it right on the page where they downloaded this file.  
+###############################################
+
+Title:
+    Soliloquy
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/soliloquy
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Soliloquy.mp3
+
+----------------------------------------
+
+Title:
+    Orchestral Epic Fantasy Music
+
+Author:
+    Zefz
+
+URL:
+    https://opengameart.org/content/orchestral-epic-fantasy-music
+
+License(s):
+    * CC-BY-SA 3.0 ( http://creativecommons.org/licenses/by-sa/3.0/legalcode )
+    * GPL 3.0 ( http://www.gnu.org/licenses/gpl-3.0.html )
+
+File(s):
+    * DarkWinds.OGG
+    * FoxieEpic.OGG
+
+----------------------------------------
+
+Title:
+    No More Magic
+
+Author:
+    HorrorPen
+
+URL:
+    https://opengameart.org/content/no-more-magic
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * No More Magic.mp3
+    * No More Magic.ogg
+    * No More Magic.mid
+
+----------------------------------------
+
+Title:
+    Magical Theme
+
+Author:
+    remaxim
+
+URL:
+    https://opengameart.org/content/magical-theme
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * magical_theme.flac
+
+----------------------------------------
+
+Title:
+    Heroic Demise [Updated Version]
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/heroic-demise-updated-version
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Heroic Demise (New).mp3
+
+----------------------------------------
+
+Title:
+    The Field Of Dreams
+
+Author:
+    pauliuw
+
+URL:
+    https://opengameart.org/content/the-field-of-dreams
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * the_field_of_dreams.mp3
+    * source.7z
+
+----------------------------------------
+
+Title:
+    NES Shooter Music (5 tracks, 3 jingles)
+
+Author:
+    SketchyLogic
+
+URL:
+    https://opengameart.org/content/nes-shooter-music-5-tracks-3-jingles
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * FTM.zip
+    * WAV.zip
+
+----------------------------------------
+
+Title:
+    Menu Music
+
+Author:
+    mrpoly
+
+URL:
+    https://opengameart.org/content/menu-music
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * awesomeness.wav
+
+----------------------------------------
+
+Title:
+    Loading screen loop
+
+Author:
+    Brandon Morris
+
+URL:
+    https://opengameart.org/content/loading-screen-loop
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * b423b42.wav
+    * TremLoadingloopl.wav
+
+----------------------------------------
+
+Title:
+    Winds Of Stories
+
+Author:
+    HorrorPen
+
+URL:
+    https://opengameart.org/content/winds-of-stories
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Winds Of Stories.mp3
+    * Winds Of Stories.ogg
+    * Winds Of Stories.mid
+
+----------------------------------------
+
+Title:
+    Old City Theme
+
+Author:
+    remaxim
+
+URL:
+    https://opengameart.org/content/old-city-theme
+
+License(s):
+    * CC-BY-SA 3.0 ( http://creativecommons.org/licenses/by-sa/3.0/legalcode )
+
+File(s):
+    * old city theme.flac
+    * old city theme.ogg
+
+----------------------------------------
+
+Title:
+    Tragic ambient main menu
+
+Author:
+    brandon75689
+
+URL:
+    https://opengameart.org/content/tragic-ambient-main-menu
+
+License(s):
+    * OGA-BY 3.0 ( http://static.opengameart.org/OGA-BY-3.0.txt )
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * ambientmain_0.ogg
+
+----------------------------------------
+
+Title:
+    Dream Raid (Cinematic Action Soundtrack)
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/dream-raid-cinematic-action-soundtrack
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * Dream Raid Pack.zip
+
+----------------------------------------
+
+Title:
+    Background space track
+
+Author:
+    yd
+
+URL:
+    https://opengameart.org/content/background-space-track
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * projects.zip
+
+----------------------------------------
+
+Title:
+    rain and thunders
+
+Author:
+    kindland
+
+URL:
+    https://opengameart.org/content/rain-and-thunders
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    none
+
+File(s):
+    * Dark_Rainy_Night(ambience).ogg
+
+----------------------------------------
+
+Title:
+    Soft Mysterious Harp Loop
+
+Author:
+    VWolfdog
+
+URL:
+    https://opengameart.org/content/soft-mysterious-harp-loop
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Harp.mp3
+    * Harp.ogg
+
+----------------------------------------
+
+Title:
+    Fight Them Until We Can&#039;t
+
+Author:
+    Zander Noriega
+
+URL:
+    https://opengameart.org/content/fight-them-until-we-cant
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Credit me as Zander Noriega. Thank you.
+
+File(s):
+    * zander_noriega-fight_them_until_we_cant.zip
+
+----------------------------------------
+
+Title:
+    Loop - House In a Forest
+
+Author:
+    HorrorPen
+
+URL:
+    https://opengameart.org/content/loop-house-in-a-forest
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * House In A Forest Loop.mp3
+    * House In a Forest Loop.ogg
+    * House In a Forest Loop.mid
+
+----------------------------------------
+
+Title:
+    Boss Battle Music
+
+Author:
+    SubspaceAudio
+
+URL:
+    https://opengameart.org/content/boss-battle-music
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * Juhani Junkala - Epic Boss Battle [Seamlessly Looping].wav
+
+----------------------------------------
+
+Title:
+    Forest Ambience
+
+Author:
+    TinyWorlds
+
+URL:
+    https://opengameart.org/content/forest-ambience
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * Forest_Ambience.mp3
+
+----------------------------------------
+
+Title:
+    A Journey Awaits!
+
+Author:
+    pbondoer
+
+URL:
+    https://opengameart.org/content/a-journey-awaits
+
+License(s):
+    * CC-BY-SA 3.0 ( http://creativecommons.org/licenses/by-sa/3.0/legalcode )
+
+Copyright/Attribution Notice:
+    Credit me with the song name, my full name and Twitter handle, like so: "A Journey Awaits" by Pierre Bondoerffer (@pbondoer)
+
+File(s):
+    * A Journey Awaits.ogg
+    * A Journey Awaits.mp3
+    * A Journey Awaits.flac
+    * A Journey Awaits.zip
+
+----------------------------------------
+
+Title:
+    Hero Immortal
+
+Author:
+    Trevor Lentz
+
+URL:
+    https://opengameart.org/content/hero-immortal
+
+License(s):
+    * CC-BY-SA 3.0 ( http://creativecommons.org/licenses/by-sa/3.0/legalcode )
+
+Copyright/Attribution Notice:
+    Please credit me "Trevor Lentz" if you choose to use this. :)
+
+File(s):
+    * Hero Immortal.mp3
+
+----------------------------------------
+
+Title:
+    Breves dies hominis
+
+Author:
+    Magdalen Kadel
+
+URL:
+    https://opengameart.org/content/breves-dies-hominis
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * breves_dies_hominis.ogg
+
+----------------------------------------
+
+Title:
+    Raining Bits
+
+Author:
+    Gundatsch
+
+URL:
+    https://opengameart.org/content/raining-bits
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+    * OGA-BY 3.0 ( http://static.opengameart.org/OGA-BY-3.0.txt )
+
+Copyright/Attribution Notice:
+    Gundatsch - https://soundcloud.com/gundatsch
+
+File(s):
+    * Raining Bits.ogg
+    * Raining Bits LowFi.ogg
+    * Raining Bits.flac
+
+----------------------------------------
+
+Title:
+    Snowfall
+
+Author:
+    Kistol
+
+URL:
+    https://opengameart.org/content/snowfall
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Music by Kistol, but credit is not required.
+
+File(s):
+    * Snowfall (Looped ver.).ogg
+    * Snowfall.ogg
+
+----------------------------------------
+
+Title:
+    Zombies&#039; March
+
+Author:
+    yd
+
+URL:
+    https://opengameart.org/content/zombies-march
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * ZombiesAreComing.ogg
+
+----------------------------------------
+
+Title:
+    Next to You
+
+Author:
+    Joth
+
+URL:
+    https://opengameart.org/content/next-to-you
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * Next to You.mp3
+
+----------------------------------------
+
+Title:
+    Unreleased Game Music Pack
+
+Author:
+    estudiocafofo
+
+URL:
+    https://opengameart.org/content/unreleased-game-music-pack
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+Copyright/Attribution Notice:
+    Music by Estudio Cafofo
+http://estudiocafofo.com
+
+File(s):
+    * Musics.zip
+    * Amb.zip
+    * Bonus Content.zip
+
+----------------------------------------
+
+Title:
+    Bleeding out
+
+Author:
+    Brandon Morris
+
+URL:
+    https://opengameart.org/content/bleeding-out
+
+License(s):
+    * OGA-BY 3.0 ( http://static.opengameart.org/OGA-BY-3.0.txt )
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * bleeding_out2.flac
+    * bleeding_out2.ogg
+
+----------------------------------------
+
+Title:
+    Red Curtain
+
+Author:
+    HorrorPen
+
+URL:
+    https://opengameart.org/content/red-curtain
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Red Curtain.mp3
+    * Red Curtain.ogg
+    * Red Curtain.mid
+    * Red Curtain Fade Out End.ogg
+
+----------------------------------------
+
+Title:
+    Fast fight / battle music (looped)
+
+Author:
+    XCVG
+
+URL:
+    https://opengameart.org/content/fast-fight-battle-music-looped
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+Copyright/Attribution Notice:
+    Same as the original: From the author: If you use this please (totally optional) credit to Ville Nousiainen and/or provide a link to http://soundcloud.com/mutkanto
+
+There is no need to credit me. All I did was a very quick edit. If you do wish to credit me, however, a mention of my website at xcvgsystems.com is much appreciated.
+
+File(s):
+    * fight_looped.wav
+
+----------------------------------------
+
+Title:
+    Skeleton Waltz Theme
+
+Author:
+    Wolfgang_
+
+URL:
+    https://opengameart.org/content/skeleton-waltz-theme
+
+License(s):
+    * CC-BY 4.0 ( https://creativecommons.org/licenses/by/4.0/legalcode )
+
+File(s):
+    * Bone Yard Waltz - Loopable.ogg
+
+----------------------------------------
+
+Title:
+    Journey to the East Rocks
+
+Author:
+    Alexandr Zhelanov
+
+URL:
+    https://opengameart.org/content/journey-to-the-east-rocks
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+Copyright/Attribution Notice:
+    Alexandr Zhelanov, https://soundcloud.com/alexandr-zhelanov
+
+File(s):
+    * Journey to the East Rocks.ogg
+
+----------------------------------------
+
+Title:
+    Desolate
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/desolate
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * Desolate Collection.zip
+
+----------------------------------------
+
+Title:
+    Decision
+
+Author:
+    Alexandr Zhelanov
+
+URL:
+    https://opengameart.org/content/decision
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+Copyright/Attribution Notice:
+    Alexandr Zhelanov, https://soundcloud.com/alexandr-zhelanov
+
+File(s):
+    * Decision.mp3
+
+----------------------------------------
+
+Title:
+    Loop: Lonely Witch
+
+Author:
+    HorrorPen
+
+URL:
+    https://opengameart.org/content/loop-lonely-witch
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Lonely Witch.mp3
+    * Lonely Witch.ogg
+    * Lonely Witch.mid
+
+----------------------------------------
+
+Title:
+    Wasteland Showdown [Battle Music]
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/wasteland-showdown-battle-music
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Wasteland Showdown.mp3
+
+----------------------------------------
+
+Title:
+    Factory ambiance
+
+Author:
+    yd
+
+URL:
+    https://opengameart.org/content/factory-ambiance
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * Factory.ogg
+
+----------------------------------------
+
+Title:
+    I swear I saw it - background track
+
+Author:
+    yd
+
+URL:
+    https://opengameart.org/content/i-swear-i-saw-it-background-track
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * IswearIsawit.zip
+    * IswearIsawit.ogg
+
+----------------------------------------
+
+Title:
+    Bossa Nova
+
+Author:
+    Joth
+
+URL:
+    https://opengameart.org/content/bossa-nova
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * 8bit Bossa.mp3
+
+----------------------------------------
+
+Title:
+    Eye of the Storm
+
+Author:
+    Joth
+
+URL:
+    https://opengameart.org/content/eye-of-the-storm
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * Eye of the Storm.mp3
+
+----------------------------------------
+
+Title:
+    Mythica
+
+Author:
+    congusbongus
+
+URL:
+    https://opengameart.org/content/mythica
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * mythica.mp3
+    * Mythica.mid
+
+----------------------------------------
+
+Title:
+    Please, answer me my friend
+
+Author:
+    Alexandr Zhelanov
+
+URL:
+    https://opengameart.org/content/please-answer-me-my-friend
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+Copyright/Attribution Notice:
+    Alexandr Zhelanov, https://soundcloud.com/alexandr-zhelanov
+
+File(s):
+    * Please, answer me my friend.mp3
+
+----------------------------------------
+
+Title:
+    At the end of hope
+
+Author:
+    Emma_MA
+
+URL:
+    https://opengameart.org/content/at-the-end-of-hope
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+Copyright/Attribution Notice:
+    This song is public domain as of January 2017. No attribution necessary.
+
+File(s):
+    * at the end of hope.mp3
+    * at_the_end_of_hope_intro.wav
+    * at_the_end_of_hope_loop.wav
+
+----------------------------------------
+
+Title:
+    Theme of Com-Mecha
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/theme-of-com-mecha
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions:
+www.matthewpablo.com/services
+
+File(s):
+    * Welcome to Com-Mecha.mp3
+
+----------------------------------------
+
+Title:
+    Happy synths loop with slight christmas feeling
+
+Author:
+    3xBlast
+
+URL:
+    https://opengameart.org/content/happy-synths-loop-with-slight-christmas-feeling
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * Christmas synths.ogg
+
+----------------------------------------
+
+Title:
+    World Map
+
+Author:
+    Scrabbit
+
+URL:
+    https://opengameart.org/content/world-map-1
+
+License(s):
+    * CC-BY 4.0 ( https://creativecommons.org/licenses/by/4.0/legalcode )
+
+Copyright/Attribution Notice:
+    "World Map" by Scott Elliott
+
+File(s):
+    * World Map.mp3
+
+----------------------------------------
+
+Title:
+    Gray Trip
+
+Author:
+    HorrorPen
+
+URL:
+    https://opengameart.org/content/gray-trip
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Gray Trip.mp3
+    * Gray Trip.ogg
+
+----------------------------------------
+
+Title:
+    At Work (Loop)
+
+Author:
+    HorrorPen
+
+URL:
+    https://opengameart.org/content/at-work-loop
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * at_work.mp3
+
+----------------------------------------
+
+Title:
+    Heart of Machine
+
+Author:
+    Alexandr Zhelanov
+
+URL:
+    https://opengameart.org/content/heart-of-machine
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+Copyright/Attribution Notice:
+    Alexandr Zhelanov, https://soundcloud.com/alexandr-zhelanov
+
+File(s):
+    * Heart of Machine.mp3
+    * Heart of Machine.ogg
+
+----------------------------------------
+
+Title:
+    Instrumental music(3)
+
+Author:
+    pauliuw
+
+URL:
+    https://opengameart.org/content/instrumental-music3
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * instrumental.7z
+    * final_bell.mp3
+    * inspiration.mp3
+    * night.mp3
+
+----------------------------------------
+
+Title:
+    Blinding Lights
+
+Author:
+    Zander Noriega
+
+URL:
+    https://opengameart.org/content/blinding-lights
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Credit me as Zander Noriega. And, if possible (i.e. you&#039;re presenting your credits in HTML), link my name to my Soundcloud or my Twitter.
+
+File(s):
+    * Zander Noriega - Blinding Lights.zip
+
+----------------------------------------
+
+Title:
+    Long Away Home [8bit]
+
+Author:
+    nene
+
+URL:
+    https://opengameart.org/content/long-away-home-8bit
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * Long Away Home.mid
+    * Long Away Home.wav
+
+----------------------------------------
+
+Title:
+    Southern Pastures (Miniature Suite for Orchestra)
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/southern-pastures-miniature-suite-for-orchestra
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Southern Pastures (Miniature Suite f.mp3
+
+----------------------------------------
+
+Title:
+    Conquerors
+
+Author:
+    Alexandr Zhelanov
+
+URL:
+    https://opengameart.org/content/conquerors
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+Copyright/Attribution Notice:
+    Alexandr Zhelanov, https://soundcloud.com/alexandr-zhelanov
+
+File(s):
+    * Conquerors.mp3
+    * Conquerors.ogg
+
+----------------------------------------
+
+Title:
+    The Fall of Arcana (New Era Version)
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/the-fall-of-arcana-new-era-version
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * Fall of Arcana (NEV).zip
+
+----------------------------------------
+
+Title:
+    Dark Descent - Extended Cut
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/dark-descent-extended-cut
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * Dark Descent (Extended Cut).mp3
+
+----------------------------------------
+
+Title:
+    Meadow Thoughts
+
+Author:
+    Écrivain
+
+URL:
+    https://opengameart.org/content/meadow-thoughts
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * Meadow Thoughts.ogg
+
+----------------------------------------
+
+Title:
+    Game Music Loop - Intense
+
+Author:
+    HorrorPen
+
+URL:
+    https://opengameart.org/content/game-music-loop-intense
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+File(s):
+    * Intense.mp3
+    * Intense.ogg
+
+----------------------------------------
+
+Title:
+    Story Time
+
+Author:
+    Augmentality
+
+URL:
+    https://opengameart.org/content/story-time
+
+License(s):
+    * OGA-BY 3.0 ( http://static.opengameart.org/OGA-BY-3.0.txt )
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+File(s):
+    * story time.ogg
+
+----------------------------------------
+
+Title:
+    Painted Dreams (Mock-Up)
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/painted-dreams-mock-up
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * Painted Dreams Mock-Up.mp3
+
+----------------------------------------
+
+Title:
+    Trouble Makers (Cool/Riff-Jazz)
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/trouble-makers-coolriff-jazz
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * Trouble Makers Pack.zip
+
+----------------------------------------
+
+Title:
+    Etirwer
+
+Author:
+    Kistol
+
+URL:
+    https://opengameart.org/content/etirwer
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Music by Kistol, but credit is not required.
+
+File(s):
+    * Etirwer (Looped).ogg
+
+----------------------------------------
+
+Title:
+    Salt Marsh Birds - Cute/Playful
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/salt-marsh-birds-cuteplayful
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * Salt Marsh Birds.mp3
+
+----------------------------------------
+
+Title:
+    Sad orchestral theme
+
+Author:
+    obscure music
+
+URL:
+    https://opengameart.org/content/sad-orchestral-theme
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+Copyright/Attribution Notice:
+    You can attribute me as Gichco and give a link to my OGA profile if you want.
+
+File(s):
+    * mess.wav
+
+----------------------------------------
+
+Title:
+    Ireland&#039;s Coast (Game Edition)
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/irelands-coast-game-edition
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * Ireland's Coast.mp3
+
+----------------------------------------
+
+Title:
+    Night Prowler
+
+Author:
+    section31
+
+URL:
+    https://opengameart.org/content/night-prowler
+
+License(s):
+    * CC0 ( http://creativecommons.org/publicdomain/zero/1.0/legalcode )
+
+Copyright/Attribution Notice:
+    No copyright necessary, but if you are feeling generous, credit Section 31 -Tech
+
+File(s):
+    * S31-Night Prowler.ogg
+
+----------------------------------------
+
+Title:
+    The Fall of Arcana (Epic Game Theme Music)
+
+Author:
+    Matthew Pablo
+
+URL:
+    https://opengameart.org/content/the-fall-of-arcana-epic-game-theme-music
+
+License(s):
+    * CC-BY 3.0 ( http://creativecommons.org/licenses/by/3.0/legalcode )
+
+SPECIAL ATTRIBUTION INSTRUCTIONS:
+    Please read this page for attribution instructions: http://www.matthewpablo.com/services
+
+File(s):
+    * The Fall of Arcana.mp3
+
+----------------------------------------
+
+

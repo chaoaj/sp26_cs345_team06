@@ -134,8 +134,39 @@ function windowResized() {
   //TODO: LOGIC ERROR -> resizing makes player respawn
 }
 
+function updateLevelMusic() {
+  const isPlayableState =
+    gameState === "playing" ||
+    gameState === "paused" ||
+    gameState === "abilityUnlock";
+
+  if (!isPlayableState) {
+    return;
+  }
+
+  const isFinalLevel = levelNum === levels.length;
+  if (!isFinalLevel) {
+    if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
+      soliloquyMusic.stop();
+    }
+    return;
+  }
+
+  if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) {
+    backgroundMusic.stop();
+  }
+
+  if (typeof soliloquyMusic !== "undefined") {
+    soliloquyMusic.setLoop(true);
+    if (!soliloquyMusic.isPlaying()) {
+      soliloquyMusic.play();
+    }
+  }
+}
+
 function draw() {
   level = levels[levelNum - 1];
+  updateLevelMusic();
   if (gameState === "title") {
     drawTitleScreen();
   } else if (gameState === "playing") {

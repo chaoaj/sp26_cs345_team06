@@ -4,6 +4,7 @@ function preload() {
 
   //Music
   backgroundMusic = loadSound("assets/BackgroundMusic.mp3")
+  soliloquyMusic = loadSound("assets/Soliloquy.mp3")
 
   //Sound Effects
 
