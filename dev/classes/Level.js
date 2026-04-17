@@ -2,15 +2,15 @@ class Level {
     constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[]) {
         this.worldWidth = worldWidth || width;
         //table of platforms, not drawn yet
-        this.platforms = platforms;
-        this.items = items;
-        this.traps = traps;
-        this.doors = doors;
-        this.boxes = boxes;
-        this.buttons = buttons;
-        this.enemies = enemies;
+        this.platforms = [...platforms];
+        this.items = [...items];
+        this.traps = [...traps];
+        this.doors = [...doors];
+        this.boxes = [...boxes];
+        this.buttons = [...buttons];
+        this.enemies = [...enemies];
         this.background = backgroundimage;
-        this.pits = pits;
+        this.pits = [...pits];
 
         //floor, do not include in level platforms
         this.trapDamageCooldownMs = 400;
@@ -19,16 +19,12 @@ class Level {
         // platforms.push(floorHitbox);
         //10 blocks in, 3 wide
         this.floor = new Floor(0, height + 25, this.worldWidth, floorImage, this.pits);
-        this.platforms.push(...this.floor.floors);
+        this.floorPlatforms = this.floor.drawFloor();
+        this.platforms.push(...this.floorPlatforms);
 
         this.pushPlatform = function(platform) {
             this.platforms.push(platform);
         }
-        this.floorPlatforms = this.floor.setupFloor();
-        //this.drawFloor();
-        for (const platform of this.floorPlatforms) {
-            this.pushPlatform(platform);
-         }
     }
     drawPlatforms() {
         for (let platform of this.platforms) {
@@ -184,7 +180,7 @@ class Level {
         this.drawTraps();
         this.drawEnemies();
         this.drawDoors();
-
+        this.floor.drawFloor();
         for (const box of this.boxes) box.draw();
         for (const button of this.buttons) button.draw();
     }

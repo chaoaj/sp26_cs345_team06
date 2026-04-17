@@ -148,7 +148,9 @@ function setupLevel() {
   level3 = new Level(levelTemplates[2][0], backgroundImage, brickFloorImage, levelTemplates[2][1], levelTemplates[2][2], WORLD_WIDTH, levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7]);
   levels = [];
   levels.push(level1, level2, level3);
-  player = new Player(width * .2, height - 100, 80, 120);
+  const spawnX = width * 0.2;
+  const spawnY = height - 160;
+  player = new Player(spawnX, spawnY, 80, 120);
   camera = new Camera(WORLD_WIDTH, height * WORLD_HEIGHT_MULTIPLIER);
   abilityUnlockPopup = null;
   pauseStartedAt = null;
