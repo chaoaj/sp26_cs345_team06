@@ -149,6 +149,14 @@ function updateLevelMusic() {
     if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
       soliloquyMusic.stop();
     }
+
+    if (typeof backgroundMusic !== "undefined") {
+      backgroundMusic.setLoop(true);
+      if (!backgroundMusic.isPlaying()) {
+        backgroundMusic.play();
+      }
+    }
+
     return;
   }
 
