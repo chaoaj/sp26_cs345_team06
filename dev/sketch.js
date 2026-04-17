@@ -14,12 +14,16 @@ let levels = []
 let levelTemplates = []
 
 let level1Platforms = []
+let level2Platforms = []
 let level1Items = []
 let level1Traps = []
 let level1Boxes = []
+let level2Boxes = []
 let level1Buttons = []
 let level1Enemies = []
 let level1Doors = []
+let level1Pits = []
+let level2Pits = []
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
 let abilityUnlockPopup = null;
@@ -105,6 +109,9 @@ function setup() {
 
   ]
 
+  // Keep level 2 valid even if a dedicated layout isn't configured yet.
+  level2Platforms = [...level1Platforms]
+
   level1Doors = [
     new Door(2800, height - 365, 75, 100)
   ]
@@ -141,6 +148,12 @@ function setupLevel() {
   const spawnX = width * 0.2;
   const spawnY = height - 160;
   player = new Player(spawnX, spawnY, 80, 120);
+  player.onRespawn = () => {
+    const activeLevel = levels[levelNum - 1];
+    if (activeLevel && typeof activeLevel.resetDynamicState === "function") {
+      activeLevel.resetDynamicState();
+    }
+  };
   camera = new Camera(LEVEL_WORLD_WIDTHS[0], height * WORLD_HEIGHT_MULTIPLIER);
   abilityUnlockPopup = null;
   pauseStartedAt = null;
@@ -239,7 +252,7 @@ function draw() {
 
     level.updateMovingPlatforms();
     player.update(level.platforms);
-    player.update(level.platforms);
+    level.applyPitfall(player);
     level.applyTrapDamage(player);
     level.applyEnemyDamage(player);
     level.updateEnemies();
@@ -276,14 +289,7 @@ function draw() {
           playerTop < doorBottom;
 
         if (hit) {
-          levelNum++;
-          player.x = width * 0.2;
-          player.y = height - 100;
-          player.yVelocity = 0;
-          player.isOnGround = false;
-
-          camera.follow(player);
-          camera.constrainPlayer(player);
+          switchToLevel(levelNum + 1);
           break;
         }
       }

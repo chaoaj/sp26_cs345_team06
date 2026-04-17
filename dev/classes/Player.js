@@ -39,6 +39,7 @@ class Player {
     this.health = this.maxHealth;
     this.maxShield = 2;
     this.shieldHealth = 0;
+    this.onRespawn = null;
 
     this.hitboxInsetX   = 35;
     this.hitboxInsetTop = 50;
@@ -285,6 +286,10 @@ class Player {
     this.health = this.maxHealth;
     this.isHurt = false;
     this.setAnimState("idle");
+
+    if (typeof this.onRespawn === "function") {
+      this.onRespawn(this);
+    }
   }
 
   addPermanentAbility(ability) { // if called will add ability

@@ -22,10 +22,55 @@ class Level {
         this.floorPlatforms = this.floor.drawFloor();
         this.platforms.push(...this.floorPlatforms);
 
+        this.initialItemStates = this.items.map((item) => ({
+            x: item.x,
+            y: item.y,
+            isCollected: item.isCollected,
+            collectedUntil: item.collectedUntil,
+        }));
+
+        this.initialBoxStates = this.boxes.map((box) => ({
+            x: box.x,
+            y: box.y,
+            xVelocity: box.xVelocity,
+            yVelocity: box.yVelocity,
+            isOnGround: box.isOnGround,
+        }));
+
         this.pushPlatform = function(platform) {
             this.platforms.push(platform);
         }
     }
+
+    resetDynamicState() {
+        for (let i = 0; i < this.items.length; i++) {
+            const item = this.items[i];
+            const initial = this.initialItemStates[i];
+            if (!item || !initial) {
+                continue;
+            }
+
+            item.x = initial.x;
+            item.y = initial.y;
+            item.isCollected = false;
+            item.collectedUntil = 0;
+        }
+
+        for (let i = 0; i < this.boxes.length; i++) {
+            const box = this.boxes[i];
+            const initial = this.initialBoxStates[i];
+            if (!box || !initial) {
+                continue;
+            }
+
+            box.x = initial.x;
+            box.y = initial.y;
+            box.xVelocity = 0;
+            box.yVelocity = 0;
+            box.isOnGround = false;
+        }
+    }
+
     drawPlatforms() {
         for (let platform of this.platforms) {
             platform.draw();
@@ -36,6 +81,12 @@ class Level {
         for (const platform of this.platforms) {
             if (platform instanceof MovingPlatform) {
                 platform.update();
+            }
+        }
+
+        for (const trap of this.traps) {
+            if (typeof trap.updateAttachedPosition === "function") {
+                trap.updateAttachedPosition();
             }
         }
     }
@@ -108,6 +159,40 @@ class Level {
                     return;
                 }
             }
+        }
+    }
+
+    isPlayerTouchingPit(player) {
+        if (!this.pits || this.pits.length === 0) {
+            return false;
+        }
+
+        // Pits are floor tile gaps; each tile is 32px wide and centered at i*32.
+        const playerLeft = typeof player.hitLeft === "number" ? player.hitLeft : player.x - player.width / 2;
+        const playerRight = typeof player.hitRight === "number" ? player.hitRight : player.x + player.width / 2;
+        const touchingFloorBand = player.y + player.height / 2 >= height - 1;
+
+        if (!touchingFloorBand) {
+            return false;
+        }
+
+        for (const pit of this.pits) {
+            const startTile = pit[0];
+            const tileSpan = pit[1] + 1;
+            const pitLeft = startTile * 32 - 16;
+            const pitRight = pitLeft + tileSpan * 32;
+
+            if (playerRight > pitLeft && playerLeft < pitRight) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    applyPitfall(player) {
+        if (this.isPlayerTouchingPit(player)) {
+            player.respawn();
         }
     }
 
