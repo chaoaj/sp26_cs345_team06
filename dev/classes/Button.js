@@ -1,18 +1,24 @@
 class Button {
-  constructor(x, y, w, h, callback = null) {
+  constructor(x, y, w, h, callback = null, releaseCallback = null) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.isPressed = false;
     this.callback = callback;
+    this.releaseCallback = releaseCallback;
   }
 
   checkPressed(entities) {
     const wasPressed = this.isPressed;
     this.isPressed = entities.some(e => this.isEntityOnTop(e));
+
     if (this.isPressed && !wasPressed && this.callback) {
       this.callback();
+    }
+
+    if (!this.isPressed && wasPressed && this.releaseCallback) {
+      this.releaseCallback();
     }
   }
 
