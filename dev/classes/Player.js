@@ -34,6 +34,7 @@ class Player {
     this.jumpStrength = this.baseJumpStrength;
     this.gravity = 0.6;
     this.isOnGround = false;
+    this.isOnFloor = false;
     this.maxHealth = 3;
     this.health = this.maxHealth;
     this.maxShield = 2;
@@ -75,6 +76,7 @@ class Player {
     this.yVelocity += this.gravity;
     this.y += this.yVelocity;
     this.isOnGround = false;
+    this.isOnFloor = false;
 
     this.resolveVerticalCollisions(platforms, previousY);
     this.constrainToScreen();
@@ -190,6 +192,7 @@ class Player {
       this.jumpMomentumX = 0;
       this.remainingAirJumps = this.maxAirJumps;
       this.isOnGround = true;
+      this.isOnFloor = true;
     }
   }
   updateAnimation() {
