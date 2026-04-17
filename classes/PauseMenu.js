@@ -1,239 +1,137 @@
-class PauseMenu {
-  constructor() {
-    this.resetButtonBounds = null;
-    this.musicToggleBounds = null;
-    this.musicDownBounds = null;
-    this.musicUpBounds = null;
+const PAUSE_ITEMS = ["Resume", "Retry", "Level", "Music"];
 
-    this.musicVolumeLevel = 0.8;
-    this.musicMuted = false;
-  }
+function getPauseItemRects() {
+  const itemW = 320, itemH = 62, gap = 22;
+  const totalH = PAUSE_ITEMS.length * (itemH + gap) - gap;
+  const startY = height / 2 - totalH / 2 + 80;
+  return PAUSE_ITEMS.map((label, i) => ({
+    label,
+    x: width / 2,
+    y: startY + i * (itemH + gap),
+    w: itemW,
+    h: itemH,
+  }));
+}
 
-  applyMusicVolume(backgroundTrack, finalTrack) {
-    const effectiveVolume = this.musicMuted ? 0 : this.musicVolumeLevel;
+function drawPauseOverlay() {
+  push();
+  noStroke();
+  fill(0, 0, 0, 150);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
 
-    if (backgroundTrack && typeof backgroundTrack.setVolume === "function") {
-      backgroundTrack.setVolume(effectiveVolume);
-    }
+  rectMode(CENTER);
+  fill(26, 31, 46);
+  rect(width / 2, height / 2 + 50, 420, 650, 18);
 
-    if (finalTrack && typeof finalTrack.setVolume === "function") {
-      finalTrack.setVolume(effectiveVolume);
-    }
-  }
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(48);
+  text("Paused", width / 2, height / 2 - 200);
 
-  draw(player) {
-    push();
-    noStroke();
-    fill(0, 0, 0, 140);
-    rectMode(CORNER);
-    rect(0, 0, width, height);
-
-    const formatAbilityName = (abilityName) => {
-      if (!abilityName) {
-        return "Unknown Ability";
-      }
-
-      return abilityName
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
-        .replace(/^./, (letter) => letter.toUpperCase());
-    };
-
-    const unlockedAbilities = typeof Ability !== "undefined"
-      ? Ability.getUnlockedAbilities(player)
-      : [];
-    const abilityLabels = unlockedAbilities.length > 0
-      ? unlockedAbilities.map((ability) => formatAbilityName(ability.name))
-      : ["None yet"];
-
-    const abilityLineHeight = 28;
-    const basePanelH = 390;
-    const panelH = min(height - 20, basePanelH + max(0, abilityLabels.length - 1) * abilityLineHeight);
-    const panelW = min(520, width - 60);
-    const panelX = width / 2;
-    const panelY = height / 2;
-    const panelTop = panelY - panelH / 2;
-    const titleY = panelTop + 58;
-    const subtitleY = titleY + 52;
-    const hintY = subtitleY + 42;
-    const musicToggleY = hintY + 38;
-    const volumeRowY = musicToggleY + 42;
-    const abilityHeaderY = volumeRowY + 42;
-    const firstAbilityY = abilityHeaderY + 34;
-
-    const musicToggleW = 200;
-    const musicToggleH = 34;
-    const musicButtonSize = 34;
-
-    const musicToggleHovered =
-      mouseX >= panelX - musicToggleW / 2 &&
-      mouseX <= panelX + musicToggleW / 2 &&
-      mouseY >= musicToggleY - musicToggleH / 2 &&
-      mouseY <= musicToggleY + musicToggleH / 2;
-
-    const musicDownX = panelX - 96;
-    const musicUpX = panelX + 96;
-    const musicDownHovered =
-      mouseX >= musicDownX - musicButtonSize / 2 &&
-      mouseX <= musicDownX + musicButtonSize / 2 &&
-      mouseY >= volumeRowY - musicButtonSize / 2 &&
-      mouseY <= volumeRowY + musicButtonSize / 2;
-    const musicUpHovered =
-      mouseX >= musicUpX - musicButtonSize / 2 &&
-      mouseX <= musicUpX + musicButtonSize / 2 &&
-      mouseY >= volumeRowY - musicButtonSize / 2 &&
-      mouseY <= volumeRowY + musicButtonSize / 2;
-
-    const resetButtonW = 190;
-    const resetButtonH = 44;
-    const resetButtonX = panelX;
-    const resetButtonY = panelY + panelH / 2 - 34;
-    const resetButtonHovered =
-      mouseX >= resetButtonX - resetButtonW / 2 &&
-      mouseX <= resetButtonX + resetButtonW / 2 &&
-      mouseY >= resetButtonY - resetButtonH / 2 &&
-      mouseY <= resetButtonY + resetButtonH / 2;
-
-    this.resetButtonBounds = {
-      x: resetButtonX,
-      y: resetButtonY,
-      w: resetButtonW,
-      h: resetButtonH,
-    };
-
-    this.musicToggleBounds = {
-      x: panelX,
-      y: musicToggleY,
-      w: musicToggleW,
-      h: musicToggleH,
-    };
-
-    this.musicDownBounds = {
-      x: musicDownX,
-      y: volumeRowY,
-      w: musicButtonSize,
-      h: musicButtonSize,
-    };
-
-    this.musicUpBounds = {
-      x: musicUpX,
-      y: volumeRowY,
-      w: musicButtonSize,
-      h: musicButtonSize,
-    };
-
+  const rects = getPauseItemRects();
+  for (const item of rects) {
+    const disabled = item.label === "Music";
     rectMode(CENTER);
-    fill(26, 31, 46);
-    rect(panelX, panelY, panelW, panelH, 18);
-
-    stroke(255, 255, 255, 40);
-    strokeWeight(2);
-    noFill();
-    rect(panelX, panelY, panelW - 12, panelH - 12, 14);
-
-    noStroke();
-    fill(255);
+    fill(disabled ? color(60, 65, 80) : color(50, 55, 75));
+    rect(item.x, item.y, item.w, item.h, 10);
+    fill(disabled ? color(120, 130, 150) : 255);
+    textSize(24);
     textAlign(CENTER, CENTER);
-    textSize(50);
-    text("Paused", panelX, titleY);
+    text(item.label, item.x, item.y);
+  }
 
-    fill(210, 218, 235);
-    textSize(22);
-    text("Game is frozen while paused.", panelX, subtitleY);
+  const lastRect = rects[rects.length - 1];
+  const abilitySectionY = lastRect.y + lastRect.h / 2 + 30;
 
-    fill(255);
-    textSize(18);
-    text("Press P or Esc to resume", panelX, hintY);
+  stroke(255, 255, 255, 40);
+  strokeWeight(1);
+  line(width / 2 - 160, abilitySectionY, width / 2 + 160, abilitySectionY);
+  noStroke();
 
-    // Music controls
+  fill(170, 182, 205);
+  textSize(16);
+  textAlign(CENTER, CENTER);
+  text("Abilities", width / 2, abilitySectionY + 20);
+
+  const abilities = Ability.getUnlockedAbilities(player);
+  const labels = abilities.length > 0
+    ? abilities.map(a => a.name.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, c => c.toUpperCase()))
+    : ["None yet"];
+
+  fill(255);
+  textSize(18);
+  for (let i = 0; i < labels.length; i++) {
+    text(labels[i], width / 2, abilitySectionY + 48 + i * 26);
+  }
+  pop();
+}
+
+function handlePauseMenuClick(mx, my) {
+  for (const item of getPauseItemRects()) {
+    if (item.label === "Music") continue;
+    if (
+      mx >= item.x - item.w / 2 && mx <= item.x + item.w / 2 &&
+      my >= item.y - item.h / 2 && my <= item.y + item.h / 2
+    ) {
+      if (item.label === "Resume") return "resume";
+      if (item.label === "Retry")  return "retry";
+      if (item.label === "Level")  return "levelSelect";
+    }
+  }
+  return null;
+}
+
+function getLevelSelectRects() {
+  const count = 2;
+  const itemW = 120, itemH = 120, gap = 30;
+  const totalW = count * itemW + (count - 1) * gap;
+  const startX = width / 2 - totalW / 2 + itemW / 2;
+  return Array.from({ length: count }, (_, i) => ({
+    num: i + 1,
+    x: startX + i * (itemW + gap),
+    y: height / 2 + 20,
+    w: itemW,
+    h: itemH,
+  }));
+}
+
+function drawLevelSelectOverlay() {
+  push();
+  noStroke();
+  fill(0, 0, 0, 150);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+
+  rectMode(CENTER);
+  fill(26, 31, 46);
+  rect(width / 2, height / 2, 380, 260, 18);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(30);
+  text("Select Level", width / 2, height / 2 - 90);
+
+  for (const r of getLevelSelectRects()) {
     rectMode(CENTER);
-    noStroke();
-    fill(musicToggleHovered ? color(80, 109, 167) : color(64, 91, 145));
-    rect(panelX, musicToggleY, musicToggleW, musicToggleH, 8);
-
+    fill(50, 55, 75);
+    rect(r.x, r.y, r.w, r.h, 12);
     fill(255);
-    textSize(16);
-    text(this.musicMuted ? "Music: Off" : "Music: On", panelX, musicToggleY + 1);
-
-    fill(musicDownHovered ? color(80, 109, 167) : color(64, 91, 145));
-    rect(musicDownX, volumeRowY, musicButtonSize, musicButtonSize, 8);
-    fill(255);
-    textSize(22);
-    text("-", musicDownX, volumeRowY + 1);
-
-    fill(musicUpHovered ? color(80, 109, 167) : color(64, 91, 145));
-    rect(musicUpX, volumeRowY, musicButtonSize, musicButtonSize, 8);
-    fill(255);
-    textSize(22);
-    text("+", musicUpX, volumeRowY + 1);
-
-    const volumePercent = round(this.musicVolumeLevel * 100);
-    textSize(16);
-    text(`Volume: ${volumePercent}%`, panelX, volumeRowY + 1);
-
-    fill(170, 182, 205);
-    textSize(15);
-    text("Unlocked Abilities", panelX, abilityHeaderY);
-
-    fill(255);
-    textSize(17);
-    for (let i = 0; i < abilityLabels.length; i++) {
-      text(abilityLabels[i], panelX, firstAbilityY + i * abilityLineHeight, panelW - 48);
-    }
-
-    // Reset button
-    rectMode(CENTER);
-    noStroke();
-    fill(resetButtonHovered ? color(215, 70, 70) : color(180, 52, 52));
-    rect(resetButtonX, resetButtonY, resetButtonW, resetButtonH, 10);
-
-    fill(255);
-    textSize(18);
-    text("Reset To Title", resetButtonX, resetButtonY + 1);
-    pop();
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text(`Level ${r.num}`, r.x, r.y);
   }
+  pop();
+}
 
-  isInside(bounds, x, y) {
-    if (!bounds) {
-      return false;
+function handleLevelSelectClick(mx, my) {
+  for (const r of getLevelSelectRects()) {
+    if (
+      mx >= r.x - r.w / 2 && mx <= r.x + r.w / 2 &&
+      my >= r.y - r.h / 2 && my <= r.y + r.h / 2
+    ) {
+      return r.num;
     }
-
-    return (
-      x >= bounds.x - bounds.w / 2 &&
-      x <= bounds.x + bounds.w / 2 &&
-      y >= bounds.y - bounds.h / 2 &&
-      y <= bounds.y + bounds.h / 2
-    );
   }
-
-  handleMousePressed(x, y, onReset) {
-    if (this.isInside(this.musicToggleBounds, x, y)) {
-      this.musicMuted = !this.musicMuted;
-      return true;
-    }
-
-    if (this.isInside(this.musicDownBounds, x, y)) {
-      this.musicVolumeLevel = max(0, round((this.musicVolumeLevel - 0.1) * 10) / 10);
-      if (this.musicVolumeLevel === 0) {
-        this.musicMuted = true;
-      } else if (this.musicMuted) {
-        this.musicMuted = false;
-      }
-      return true;
-    }
-
-    if (this.isInside(this.musicUpBounds, x, y)) {
-      this.musicVolumeLevel = min(1, round((this.musicVolumeLevel + 0.1) * 10) / 10);
-      this.musicMuted = false;
-      return true;
-    }
-
-    if (this.isInside(this.resetButtonBounds, x, y)) {
-      if (typeof onReset === "function") {
-        onReset();
-      }
-      return true;
-    }
-
-    return false;
-  }
+  return null;
 }
