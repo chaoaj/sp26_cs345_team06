@@ -130,8 +130,15 @@ function setupLevel() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  setupLevel();
-  //TODO: LOGIC ERROR -> resizing makes player respawn
+
+  // Keep current run state on resize instead of rebuilding levels/player.
+  if (camera) {
+    camera.worldHeight = height * WORLD_HEIGHT_MULTIPLIER;
+    if (player) {
+      camera.follow(player);
+      camera.constrainPlayer(player);
+    }
+  }
 }
 
 function updateLevelMusic() {
