@@ -6,7 +6,7 @@ function drawTitleScreenLayers() {
   const layer3Offset = -normalized * maxShift * 0.5;
   //unused but dont delete
   const layer4Offset = -normalized * maxShift * 0.75;
-
+  
   //i dont know if its better to use var or const
   // i just wanted the variables to be colored
 

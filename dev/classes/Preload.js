@@ -10,7 +10,7 @@ function preload() {
 
   //Items
   featherImage = loadImage("assets/Feather.png")
-  healthImage = loadImage("assets/Heart.png")
+  healthImage = loadImage("assets/heart.png")
   speedImage = loadImage("assets/SpeedPotion.png")
   shieldImage = loadImage("assets/Shield.png")
     //Ability Items
