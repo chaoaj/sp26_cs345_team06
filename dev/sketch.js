@@ -119,7 +119,8 @@ function setup() {
   ]
 
   level1Enemies = [
-    new Hostile(970, height - 295, 40, 40, 1.5, 900, 1040)
+    new Hostile(970, height - 295, 40, 40, 1.5, 900, 1040),
+    new FlyingHostile(520, height - 320, 44, 44, 2.2, 420, 620, 1, 360, 130)
   ]
   level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits]
   levelTemplates.push(level1Template);

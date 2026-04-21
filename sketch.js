@@ -28,6 +28,7 @@ let level2Pits = []
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
 let abilityUnlockPopup = null;
+let pauseLevelSelectActive = false;
 
 function getGameMillis() {
   if ((gameState === "paused" || gameState === "abilityUnlock") && pauseStartedAt !== null) {
@@ -119,7 +120,8 @@ function setup() {
   ]
 
   level1Enemies = [
-    new Hostile(970, height - 295, 40, 40, 1.5, 900, 1040)
+    new Hostile(970, height - 295, 40, 40, 1.5, 900, 1040),
+    new FlyingHostile(520, height - 320, 44, 44, 2.2, 420, 620, 1, 360, 130)
   ]
   level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits]
   levelTemplates.push(level1Template);
@@ -281,6 +283,22 @@ function mousePressed() {
     return;
   }
 
+  if (pauseLevelSelectActive) {
+    // Handle level select click
+    const selectedLevel = handleLevelSelectClick(mouseX, mouseY);
+    if (selectedLevel) {
+      switchToLevel(selectedLevel);
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
+      }
+      pauseStartedAt = null;
+      pauseLevelSelectActive = false;
+      gameState = "playing";
+    }
+    return;
+  }
+
+  // Handle main pause menu click
   const action = handlePauseMenuClick(mouseX, mouseY);
   if (action === "resume") {
     if (pauseStartedAt !== null) {
@@ -295,17 +313,10 @@ function mousePressed() {
       accumulatedPauseMs += millis() - pauseStartedAt;
     }
     pauseStartedAt = null;
+    pauseLevelSelectActive = false;
     gameState = "playing";
   } else if (action === "levelSelect") {
-    const levelNum = handleLevelSelectClick(mouseX, mouseY);
-    if (levelNum) {
-      switchToLevel(levelNum);
-      if (pauseStartedAt !== null) {
-        accumulatedPauseMs += millis() - pauseStartedAt;
-      }
-      pauseStartedAt = null;
-      gameState = "playing";
-    }
+    pauseLevelSelectActive = true;
   }
 }
 
@@ -398,7 +409,12 @@ function draw() {
     player.draw();
     camera.reset();
     level.drawHUD(player);
-    drawPauseOverlay();
+
+    if (pauseLevelSelectActive) {
+      drawLevelSelectOverlay();
+    } else {
+      drawPauseOverlay();
+    }
   } else if (gameState === "abilityUnlock") {
     level.drawBackground();
     camera.apply();
@@ -408,77 +424,6 @@ function draw() {
     level.drawHUD(player);
     drawAbilityUnlockOverlay();
   }
-}
-
-function drawPauseOverlay() {
-  push();
-  noStroke();
-  fill(0, 0, 0, 140);
-  rectMode(CORNER);
-  rect(0, 0, width, height);
-
-  const formatAbilityName = (abilityName) => {
-    if (!abilityName) {
-      return "Unknown Ability";
-    }
-
-    return abilityName
-      .replace(/([a-z])([A-Z])/g, "$1 $2")
-      .replace(/^./, (letter) => letter.toUpperCase());
-  };
-
-  const unlockedAbilities = typeof Ability !== "undefined"
-    ? Ability.getUnlockedAbilities(player)
-    : [];
-  const abilityLabels = unlockedAbilities.length > 0
-    ? unlockedAbilities.map((ability) => formatAbilityName(ability.name))
-    : ["None yet"];
-  const abilityLineHeight = 28;
-  const basePanelH = 320;
-  const panelH = min(height - 20, basePanelH + max(0, abilityLabels.length - 1) * abilityLineHeight);
-  const panelW = min(520, width - 60);
-  const panelX = width / 2;
-  const panelY = height / 2;
-  const panelTop = panelY - panelH / 2;
-  const titleY = panelTop + 58;
-  const subtitleY = titleY + 52;
-  const hintY = subtitleY + 42;
-  const abilityHeaderY = hintY + 48;
-  const firstAbilityY = abilityHeaderY + 34;
-
-  rectMode(CENTER);
-  fill(26, 31, 46);
-  rect(panelX, panelY, panelW, panelH, 18);
-
-  stroke(255, 255, 255, 40);
-  strokeWeight(2);
-  noFill();
-  rect(panelX, panelY, panelW - 12, panelH - 12, 14);
-
-  noStroke();
-  fill(255);
-  textAlign(CENTER, CENTER);
-  textSize(50);
-  text("Paused", panelX, titleY);
-
-  fill(210, 218, 235);
-  textSize(22);
-  text("Game is frozen while paused.", panelX, subtitleY);
-
-  fill(255);
-  textSize(18);
-  text("Press P or Esc to resume", panelX, hintY);
-
-  fill(170, 182, 205);
-  textSize(15);
-  text("Unlocked Abilities", panelX, abilityHeaderY);
-
-  fill(255);
-  textSize(17);
-  for (let i = 0; i < abilityLabels.length; i++) {
-    text(abilityLabels[i], panelX, firstAbilityY + i * abilityLineHeight, panelW - 48);
-  }
-  pop();
 }
 
 function drawAbilityUnlockOverlay() {
@@ -554,13 +499,20 @@ function keyPressed() {
   if (key === "p" || key === "P" || keyCode === ESCAPE) {
     if (gameState === "playing") {
       pauseStartedAt = millis();
+      pauseLevelSelectActive = false;
       gameState = "paused";
     } else if (gameState === "paused") {
-      if (pauseStartedAt !== null) {
-        accumulatedPauseMs += millis() - pauseStartedAt;
+      if (pauseLevelSelectActive) {
+        // Close level select, go back to main pause menu
+        pauseLevelSelectActive = false;
+      } else {
+        // Close pause entirely
+        if (pauseStartedAt !== null) {
+          accumulatedPauseMs += millis() - pauseStartedAt;
+        }
+        pauseStartedAt = null;
+        gameState = "playing";
       }
-      pauseStartedAt = null;
-      gameState = "playing";
     }
   }
 }
