@@ -6,17 +6,6 @@ function preload() {
   backgroundMusic = loadSound("assets/BackgroundMusic.mp3")
   soliloquyMusic = loadSound("assets/Soliloquy.mp3")
 
-  //Terrain
-  step1 = loadImage("assets/step1.png")
-  step2 = loadImage("assets/step2.png")
-  step3 = loadImage("assets/step3.png")
-  step4 = loadImage("assets/step4.png")
-
-  box1 = loadImage("assets/Box1.png")
-  box2 = loadImage("assets/Box2.png")
-  box3 = loadImage("assets/Box3.png")
-  box4 = loadImage("assets/Box4.png")
-
   //Sound Effects
 
   //Items
@@ -24,8 +13,7 @@ function preload() {
   healthImage = loadImage("assets/heart.png")
   speedImage = loadImage("assets/SpeedPotion.png")
   shieldImage = loadImage("assets/Shield.png")
-
-  //Ability Items
+    //Ability Items
   doubleJumpAmuletImage = loadImage("assets/DoubleJumpAmulet.png")
   dashAmuletImage = loadImage("assets/DashAmulet.png")
 

@@ -25,7 +25,6 @@ let level1Enemies = []
 let level1Doors = []
 let level1Pits = []
 let level2Pits = []
-let level1Terrain = []
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
 let abilityUnlockPopup = null;
@@ -124,13 +123,7 @@ function setup() {
     new FlyingHostile(520, height - 320, 44, 44, 2.2, 420, 620, 1, 360, 130),
     new JumpingHostile(1210, height - 210, 40, 40, 2, 1100, 1350, 1, 170, 800, 13)
   ]
-
-
-  level1Terrain = [
-    new Terrain(0, height - 50, width, 50, floorTileLevel1)
-  ]
-
-  level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits, level1Terrain]
+  level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits]
   levelTemplates.push(level1Template);
   level2Template = getLevel2Template();
   levelTemplates.push(level2Template);
@@ -145,8 +138,8 @@ function setup() {
 
 function setupLevel() {
   //level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies, level1Doors);
-  level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8]);
-  level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8]);
+  level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7]);
+  level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7]);
   levels.push(level1, level2);
 
   level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7]);
@@ -334,7 +327,6 @@ function draw() {
     level.applyTrapDamage(player);
     level.applyEnemyDamage(player);
     level.updateEnemies();
-    level.drawTerrain()
     level.updatePuzzleElements(player);
     camera.follow(player);
     camera.constrainPlayer(player);

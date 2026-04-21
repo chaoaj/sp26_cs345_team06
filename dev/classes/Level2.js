@@ -57,10 +57,6 @@ function getLevel2Template() {
     [11, 56],
   ];
 
-  const level2Terrain = [
-    new Terrain(0, height - 50, width, 50, step2)
-  ]
-
   return [
     level2Platforms,
     level2Items,
@@ -70,6 +66,5 @@ function getLevel2Template() {
     level2Enemies,
     level2Doors,
     level2Pits,
-    level2Terrain
   ];
 }
