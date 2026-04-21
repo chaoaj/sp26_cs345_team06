@@ -1,5 +1,5 @@
 class Level {
-    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[]) {
+    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[], terrain = []) {
         this.worldWidth = worldWidth || width;
         //table of platforms, not drawn yet
         this.platforms = [...platforms];
@@ -11,6 +11,7 @@ class Level {
         this.enemies = [...enemies];
         this.background = backgroundimage;
         this.pits = [...pits];
+        this.terrain = [...terrain]
 
         //floor, do not include in level platforms
         this.trapDamageCooldownMs = 400;
@@ -114,6 +115,10 @@ class Level {
             console.log("drawing door")
             door.drawDoor();
         }
+    }
+
+    drawTerrain() {
+        this.terrain.drawTerrain();
     }
 
     updateEnemies() {
