@@ -334,23 +334,51 @@ class Level {
             return;
         }
 
-        for (const enemy of this.enemies) {
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+            const enemy = this.enemies[i];
             const enemyLeft   = enemy.x - enemy.w / 2;
             const enemyRight  = enemy.x + enemy.w / 2;
             const enemyTop    = enemy.y - enemy.h / 2;
             const enemyBottom = enemy.y + enemy.h / 2;
 
-            if (
+            const isOverlapping = (
                 player.hitRight > enemyLeft &&
                 player.hitLeft  < enemyRight &&
                 player.hitBottom > enemyTop &&
                 player.hitTop   < enemyBottom
-            ) {
+            );
+
+            if (!isOverlapping) {
+                continue;
+            }
+
+            if (this.isPlayerStompingEnemy(player, enemy)) {
+                enemy.isDead = true;
+                this.enemies.splice(i, 1);
+                player.yVelocity = -Math.max(8, player.jumpStrength * 0.55);
+                player.isOnGround = false;
+                return;
+            }
+
+            if (!enemy.isDead) {
                 player.takeDamage(enemy.damage);
                 this.lastTrapDamageAt = now;
                 return;
             }
         }
+    }
+
+    isPlayerStompingEnemy(player, enemy) {
+        if (!enemy || !enemy.canBeStomped) {
+            return false;
+        }
+
+        const enemyTop = enemy.y - enemy.h / 2;
+        const stompGracePx = 14;
+        const fallingOntoEnemy = player.yVelocity > 0;
+        const nearTopSurface = player.hitBottom <= enemyTop + stompGracePx;
+
+        return fallingOntoEnemy && nearTopSurface;
     }
 
     drawLevel() {
