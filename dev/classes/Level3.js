@@ -101,6 +101,10 @@ function getLevel3Template() {
     [81, 8],
   ];
 
+  const level3Terrain = [
+    new Terrain(0, height - 50, width, 50, step3)
+  ];
+
   return [
     level3Platforms,
     level3Items,
@@ -110,5 +114,6 @@ function getLevel3Template() {
     level3Enemies,
     level3Doors,
     level3Pits,
+    level3Terrain
   ];
 }
