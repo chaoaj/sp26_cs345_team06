@@ -1,14 +1,14 @@
 function getLevel3Template() {
-  const stairPlatform1 = new MovingPlatform(260, height - 150, 220, 30, brickPlatformImage, "x", 60, 1.2, false);
-  const stairPlatform2 = new MovingPlatform(520, height - 220, 160, 30, brickPlatformImage, "x", 60, 1.2, true);
-  const stairPlatform3 = new MovingPlatform(800, height - 290, 200, 30, brickPlatformImage, "x", 60, 1.2, false);
-  const stairPlatform4 = new MovingPlatform(1080, height - 360, 140, 30, brickPlatformImage, "x", 60, 1.2, true);
-  const stairPlatform5 = new MovingPlatform(1370, height - 430, 210, 30, brickPlatformImage, "x", 60, 1.2, false);
-  const stairPlatform6 = new MovingPlatform(1660, height - 500, 170, 30, brickPlatformImage, "x", 60, 1.2, true);
-  const stairPlatform7 = new MovingPlatform(1940, height - 560, 230, 30, brickPlatformImage, "y", 80, 1, false);
+  const stairPlatform1 = new MovingPlatform(260, height - 150, 220, 32, brickPlatformImage, "x", 60, 1.2, false);
+  const stairPlatform2 = new MovingPlatform(520, height - 220, 160, 32, brickPlatformImage, "x", 60, 1.2, true);
+  const stairPlatform3 = new MovingPlatform(800, height - 290, 200, 32, brickPlatformImage, "x", 60, 1.2, false);
+  const stairPlatform4 = new MovingPlatform(1080, height - 360, 140, 32, brickPlatformImage, "x", 60, 1.2, true);
+  const stairPlatform5 = new MovingPlatform(1370, height - 430, 210, 32, brickPlatformImage, "x", 60, 1.2, false);
+  const stairPlatform6 = new MovingPlatform(1660, height - 500, 170, 32, brickPlatformImage, "x", 60, 1.2, true);
+  const stairPlatform7 = new MovingPlatform(1940, height - 560, 230, 32, brickPlatformImage, "y", 80, 1, false);
   const finalPlatformBaseY = height - 620;
   const finalPlatformLoweredY = finalPlatformBaseY + 150;
-  const finalPlatform = new Platform(2920, finalPlatformBaseY, 220, 30, brickPlatformImage);
+  const finalPlatform = new Platform(2920, finalPlatformBaseY, 220, 32, brickPlatformImage);
   const finalDoor = new Door(3000, finalPlatformBaseY - 65, 75, 100);
 
   const platforms = [
@@ -21,17 +21,17 @@ function getLevel3Template() {
     stairPlatform6, // end of platform staircase
     stairPlatform7,
     // Long stationary platforms at the top of the staircase.
-    new Platform(2450, height - 700, 700, 30, brickPlatformImage), // stationary 1
-    new Platform(2450, height - 900, 700, 30, brickPlatformImage), // stationary 2
+    new Platform(2450, height - 700, 700, 32, brickPlatformImage), // stationary 1
+    new Platform(2450, height - 900, 700, 32, brickPlatformImage), // stationary 2
     // Double-jump gate at ground level: wall plus elevated platform.
     new Platform(2100, height - 142.5, 30, 285, brickPlatformImage),
-    new Platform(2175, height - 300, 180, 30, brickPlatformImage), // double jump platform
+    new Platform(2175, height - 300, 180, 32, brickPlatformImage), // double jump platform
     // Post-double-jump section: two vertical movers with large travel, then a final platform.
-    new MovingPlatform(2450, height - 430, 180, 30, brickPlatformImage, "y", 260, 1.6, false),
-    new MovingPlatform(2720, height - 580, 180, 30, brickPlatformImage, "y", 260, 1.6, true),
+    new MovingPlatform(2450, height - 430, 180, 32, brickPlatformImage, "y", 260, 1.6, false),
+    new MovingPlatform(2720, height - 580, 180, 32, brickPlatformImage, "y", 260, 1.6, true),
     finalPlatform, // final platform / level end
     // Wall blocking the right end of the stationary platforms.
-    new Platform(2815, height - 985, 30, 800, brickPlatformImage), // wall S1/s2
+    new Platform(2815, height - 985, 32, 800, brickPlatformImage), // wall S1/s2
   ];
 
   const items = [

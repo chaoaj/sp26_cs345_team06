@@ -30,7 +30,6 @@ class MovingPlatform extends Platform {
     }
 
     update() {
-        // Reset and recompute per-frame velocity so collision code can rely on true movement.
         this.xVelocity = 0;
         this.yVelocity = 0;
 
@@ -49,7 +48,6 @@ class MovingPlatform extends Platform {
                 this.direction = 1;
             }
 
-            // Use actual displacement after boundary clamping, not intended step.
             this.xVelocity = this.x - previousX;
         } else {
             const step = this.speed * this.direction;
@@ -63,7 +61,6 @@ class MovingPlatform extends Platform {
                 this.direction = 1;
             }
 
-            // Use actual displacement after boundary clamping, not intended step.
             this.yVelocity = this.y - previousY;
         }
     }

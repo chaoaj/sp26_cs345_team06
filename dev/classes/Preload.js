@@ -54,6 +54,7 @@ function preload() {
 
   //Platforms
   brickPlatformImage = loadImage("assets/BrickPlatform.png")
+  brickTileImage = loadImage("assets/bricktile.png")
 
   //Object Sprites
   woodenBox = loadImage("assets/WoodenBox.png")

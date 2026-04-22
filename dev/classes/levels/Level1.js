@@ -1,9 +1,9 @@
 function getLevel1Template() {
 
   const platforms = [
-    new Platform(450, height - 120, 160, 30, brickPlatformImage),
-    new Platform(650, height - 185, 160, 30, brickPlatformImage),
-    new MovingPlatform(1100, height - 185, 160, 30, brickPlatformImage, "x", 600, 3, true),
+    new BrickPlatform(450, height - 120, 160, 32, brickPlatformImage),
+    new Platform(650, height - 185, 160, 32, brickPlatformImage),
+    new MovingPlatform(1100, height - 185, 160, 32, brickPlatformImage, "x", 600, 3, true),
   ];
 
   const items = [
