@@ -11,7 +11,7 @@ function getLevel3Template() {
   const finalPlatform = new Platform(2920, finalPlatformBaseY, 220, 30, brickPlatformImage);
   const finalDoor = new Door(3000, finalPlatformBaseY - 65, 75, 100);
 
-  const level3Platforms = [
+  const platforms = [
     // Connected moving staircase with larger gaps and varied step sizes.
     stairPlatform1,
     stairPlatform2,
@@ -34,13 +34,13 @@ function getLevel3Template() {
     new Platform(2815, height - 985, 30, 800, brickPlatformImage), // wall S1/s2
   ];
 
-  const level3Items = [
+  const items = [
     new Items(770, height - 420, "health"),
     new Items(510, height - 310, "shield"),
     new Items(2750, height - 800, "doubleJumpAbility"),
   ];
 
-  const level3Traps = [
+  const traps = [
     new SpikeTrap(880, height - 45, 120, 40),
     // Two spike sections on stationary 1; gap between them is intended for dash timing.
     new SpikeTrap(2300, height - 735, 140, 40),
@@ -50,17 +50,17 @@ function getLevel3Template() {
 
   const movingTrapA = new SpikeTrap(0, 0, 90, 35);
   movingTrapA.attachToPlatform(stairPlatform3, 0, -(stairPlatform3.h + movingTrapA.h) / 2);
-  level3Traps.push(movingTrapA);
+  traps.push(movingTrapA);
 
   const movingTrapB = new SpikeTrap(0, 0, 90, 35);
   movingTrapB.attachToPlatform(stairPlatform5, 0, -(stairPlatform5.h + movingTrapB.h) / 2);
-  level3Traps.push(movingTrapB);
+  traps.push(movingTrapB);
 
-  const level3Boxes = [
+  const boxes = [
     new Box(2750, height - 930, 30, 30),
   ];
 
-  const level3Buttons = [
+  const buttons = [
     new Button(
       1180,
       height - 35,
@@ -77,7 +77,7 @@ function getLevel3Template() {
     ),
   ];
 
-  const level3Enemies = [
+  const enemies = [
     // Floor slime: sprite-width-aware patrol from spike-trap area to double-jump gate wall.
     // Hostile is drawn at w*3 with CENTER mode, so half visual width is (40*3)/2 = 60.
     // Gate wall x is 2100 -> right bound for center is 2100 - 60 = 2040.
@@ -89,26 +89,31 @@ function getLevel3Template() {
     new Hostile(2400, height - 935, 40, 40, 1.6, 2150, 2755),
   ];
 
-  const level3Doors = [
+  const doors = [
     // Door at the end of the final platform.
     finalDoor,
   ];
 
   // Floor pits under the two post-double-jump vertical moving platforms.
   // Format: [startTileIndex, tileCount], with each floor tile being 32px wide.
-  const level3Pits = [
+  const pits = [
     [73, 7],
     [81, 8],
   ];
 
+  const terrain = [
+    new Terrain(2200, height - 144, 288, 384, step4),
+  ]; 
+
   return [
-    level3Platforms,
-    level3Items,
-    level3Traps,
-    level3Boxes,
-    level3Buttons,
-    level3Enemies,
-    level3Doors,
-    level3Pits,
+    platforms,
+    items,
+    traps,
+    boxes,
+    buttons,
+    enemies,
+    doors,
+    pits,
+    terrain,
   ];
 }

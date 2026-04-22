@@ -1,5 +1,5 @@
 class Level {
-    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[]) {
+    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[], terrain = []) {
         this.worldWidth = worldWidth || width;
         //table of platforms, not drawn yet
         this.platforms = [...platforms];
@@ -11,6 +11,7 @@ class Level {
         this.enemies = [...enemies];
         this.background = backgroundimage;
         this.pits = [...pits];
+        this.terrain = [...terrain];
 
         //floor, do not include in level platforms
         this.trapDamageCooldownMs = 400;
@@ -21,6 +22,13 @@ class Level {
         this.floor = new Floor(0, height + 25, this.worldWidth, floorImage, this.pits);
         this.floorPlatforms = this.floor.drawFloor();
         this.platforms.push(...this.floorPlatforms);
+        this.terrainPlatforms = []
+        for (const terrain of this.terrain) {
+            print(terrain)
+            print("this")
+            this.terrainPlatforms.push(terrain.drawTerrain());
+        }
+        this.platforms.push(...this.terrainPlatforms);
 
         this.initialItemStates = this.items.map((item) => ({
             x: item.x,
