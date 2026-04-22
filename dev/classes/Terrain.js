@@ -22,7 +22,6 @@ class Terrain {
     }
 
     generateTerrain() {
-        print("g")
         if (this.isGenerated) {
             return;
         }
@@ -31,7 +30,6 @@ class Terrain {
     }
 
     drawTerrain() {
-        print("ter")
         this.generateTerrain();
         image(this.image, this.x, this.y, this.width, this.height);
         return this.terrainTile;

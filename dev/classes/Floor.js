@@ -45,7 +45,6 @@ class Floor {
         }
 
         for (const lava of this.lavaTiles) {
-            print(lava.x, lava.y)
             image(lavaImage, lava.x, lava.y, 32, 32);
         }
 

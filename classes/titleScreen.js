@@ -69,7 +69,5 @@ function handleTitleKeyPressed() {
       soliloquyMusic.stop();
     }
     backgroundMusic.play()
-
-    print("Game Started");
   }
 }

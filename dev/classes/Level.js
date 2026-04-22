@@ -31,8 +31,6 @@ class Level {
         this.platforms.push(...this.floorPlatforms);
         this.terrainPlatforms = []
         for (const terrain of this.terrain) {
-            print(terrain)
-            print("this")
             this.terrainPlatforms.push(terrain.drawTerrain());
         }
         this.platforms.push(...this.terrainPlatforms);
