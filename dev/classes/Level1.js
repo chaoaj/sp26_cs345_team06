@@ -3,7 +3,7 @@ function getLevel1Template() {
   const platforms = [
     new Platform(450, height - 120, 160, 30, brickPlatformImage),
     new Platform(650, height - 185, 160, 30, brickPlatformImage),
-    new MovingPlatform(1900, height - 300, 160, 30, brickPlatformImage, "x", 200, 1.5, true),
+    new MovingPlatform(1100, height - 185, 160, 30, brickPlatformImage, "x", 600, 3, true),
   ];
 
   const items = [
@@ -32,7 +32,6 @@ function getLevel1Template() {
   ];
 
   const pits = [
-
     [29, 56],
   ];
 
