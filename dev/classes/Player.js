@@ -45,6 +45,7 @@ class Player extends Actor {
     this.isOnFloor = false;
     this.maxShield = 2;
     this.shieldHealth = 0;
+    this.onBeforeRespawn = null;
     this.onRespawn = null;
 
     this.hitboxInsetX   = 35;
@@ -290,6 +291,10 @@ class Player extends Actor {
   }
 
   respawn() {
+    if (typeof this.onBeforeRespawn === "function") {
+      this.onBeforeRespawn(this);
+    }
+
     this.x = this.spawnX;
     this.y = this.spawnY;
     this.jumpMomentumX = 0;
