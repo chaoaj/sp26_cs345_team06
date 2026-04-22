@@ -2,7 +2,7 @@ let gameState = "title";
 
 const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT_MULTIPLIER = 1;
-const LEVEL_WORLD_WIDTHS = [1800, 2600, 3300];
+const LEVEL_WORLD_WIDTHS = [3000, 2600, 3300];
 
 let platforms = [];
 let players;
@@ -25,6 +25,7 @@ let level1Enemies = []
 let level1Doors = []
 let level1Pits = []
 let level2Pits = []
+let level1LaserPuzzles = null
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
 let abilityUnlockPopup = null;
@@ -118,6 +119,28 @@ function setup() {
     new Button(1100, height - 35, 80, 20, () => console.log("button pressed"))
   ]
 
+  level1LaserPuzzles = {
+    lasers: [
+      new Laser(1685, height - 193, "right", color(255, 50, 50), 4, 900)
+    ],
+    mirrors: [
+      new LaserMirror(1650, height - 199, 28, 45)
+    ],
+    collectors: [
+      new LaserCollector(2010, height - 330, 30, 30, () => {
+        const door = level1Doors[0];
+        if (door) {
+          door.isOpen = true;
+        }
+      }, () => {
+        const door = level1Doors[0];
+        if (door) {
+          door.isOpen = false;
+        }
+      })
+    ]
+  }
+
   level1Enemies = [
     new Hostile(970, height - 295, 40, 40, 1.5, 900, 1040),
     new FlyingHostile(520, height - 320, 44, 44, 2.2, 420, 620, 1, 360, 130),
@@ -128,13 +151,19 @@ function setup() {
     // new Terrain(0, height - 32, 96, 32, step1),
   ]
 
-  level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits, level1Terrain]
+  level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits, level1Terrain, level1LaserPuzzles]
   levelTemplates.push(level1Template);
   level2Template = getLevel2Template();
+  if (level2Template.length < 10) {
+    level2Template.push(null);
+  }
   levelTemplates.push(level2Template);
   level3Template = getLevel3Template();
   if (level3Template.length < 8) {
     level3Template.push([]);
+  }
+  if (level3Template.length < 10) {
+    level3Template.push(null);
   }
   levelTemplates.push(level3Template);
   setupLevel();
@@ -143,9 +172,9 @@ function setup() {
 
 function setupLevel() {
   //level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies, level1Doors);
-  level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8]);
-  level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8]);
-  level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8]);
+  level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8], levelTemplates[0][9]);
+  level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8], levelTemplates[1][9]);
+  level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8], levelTemplates[2][9]);
   levels.push(level1, level2, level3);
 
   endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);

@@ -1,5 +1,6 @@
 class Level {
-    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[], terrain = []) {
+    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[], terrain = [], laserPuzzles = {}) {
+        laserPuzzles = laserPuzzles || {};
         this.worldWidth = worldWidth || width;
         //table of platforms, not drawn yet
         this.platforms = [...platforms];
@@ -12,6 +13,9 @@ class Level {
         this.background = backgroundimage;
         this.pits = [...pits];
         this.terrain = [...terrain];
+        this.lasers = [...(laserPuzzles.lasers || [])];
+        this.laserCollectors = [...(laserPuzzles.collectors || [])];
+        this.laserMirrors = [...(laserPuzzles.mirrors || [])];
 
         //floor, do not include in level platforms
         this.trapDamageCooldownMs = 400;
@@ -45,6 +49,14 @@ class Level {
             isOnGround: box.isOnGround,
         }));
 
+        this.initialLaserMirrorStates = this.laserMirrors.map((mirror) => ({
+            x: mirror.x,
+            y: mirror.y,
+            xVelocity: mirror.xVelocity,
+            yVelocity: mirror.yVelocity,
+            isOnGround: mirror.isOnGround,
+        }));
+
         this.pushPlatform = function(platform) {
             this.platforms.push(platform);
         }
@@ -76,6 +88,29 @@ class Level {
             box.xVelocity = 0;
             box.yVelocity = 0;
             box.isOnGround = false;
+        }
+
+        for (let i = 0; i < this.laserMirrors.length; i++) {
+            const mirror = this.laserMirrors[i];
+            const initial = this.initialLaserMirrorStates[i];
+            if (!mirror || !initial) {
+                continue;
+            }
+
+            mirror.x = initial.x;
+            mirror.y = initial.y;
+            mirror.xVelocity = 0;
+            mirror.yVelocity = 0;
+            mirror.isOnGround = false;
+        }
+
+        for (const collector of this.laserCollectors) {
+            collector.isHit = false;
+            collector._hitThisFrame = false;
+        }
+
+        for (const laser of this.lasers) {
+            laser.segments = [];
         }
     }
 
@@ -276,18 +311,27 @@ class Level {
         this.floor.drawFloor();
         for (const box of this.boxes) box.draw();
         for (const button of this.buttons) button.draw();
+        for (const mirror of this.laserMirrors) mirror.draw();
+        for (const collector of this.laserCollectors) collector.draw();
+        for (const laser of this.lasers) laser.draw();
     }
 
     updatePuzzleElements(player) {
-        this.resolvePlayerBoxCollisions(player);
+        const dynamicObjects = [...this.boxes, ...this.laserMirrors];
+
+        this.resolvePlayerDynamicCollisions(player, dynamicObjects);
 
         for (const box of this.boxes) {
             box.update(this.platforms);
         }
 
-        for (let i = 0; i < this.boxes.length; i++) {
-            for (let j = i + 1; j < this.boxes.length; j++) {
-                this.boxes[i].resolveBoxCollision(this.boxes[j]);
+        for (const mirror of this.laserMirrors) {
+            mirror.update(this.platforms);
+        }
+
+        for (let i = 0; i < dynamicObjects.length; i++) {
+            for (let j = i + 1; j < dynamicObjects.length; j++) {
+                this.resolveDynamicObjectCollision(dynamicObjects[i], dynamicObjects[j]);
             }
         }
 
@@ -295,24 +339,29 @@ class Level {
         for (const button of this.buttons) {
             button.checkPressed(entities);
         }
+
+        const laserBlockers = [...this.platforms, ...this.boxes];
+        for (const laser of this.lasers) {
+            laser.update(this.laserMirrors, this.laserCollectors, laserBlockers);
+        }
     }
 
-    resolvePlayerBoxCollisions(player) {
-        for (const box of this.boxes) {
-            const boxLeft = box.x - box.w / 2;
-            const boxRight = box.x + box.w / 2;
-            const boxTop = box.y - box.h / 2;
-            const boxBottom = box.y + box.h / 2;
+    resolvePlayerDynamicCollisions(player, dynamicObjects) {
+        for (const object of dynamicObjects) {
+            const objectLeft = object.x - object.w / 2;
+            const objectRight = object.x + object.w / 2;
+            const objectTop = object.y - object.h / 2;
+            const objectBottom = object.y + object.h / 2;
 
-            if (player.hitRight <= boxLeft || player.hitLeft >= boxRight ||
-                player.hitBottom <= boxTop || player.hitTop >= boxBottom) {
+            if (player.hitRight <= objectLeft || player.hitLeft >= objectRight ||
+                player.hitBottom <= objectTop || player.hitTop >= objectBottom) {
                 continue;
             }
 
-            const overlapLeft = player.hitRight - boxLeft;
-            const overlapRight = boxRight - player.hitLeft;
-            const overlapTop = player.hitBottom - boxTop;
-            const overlapBottom = boxBottom - player.hitTop;
+            const overlapLeft = player.hitRight - objectLeft;
+            const overlapRight = objectRight - player.hitLeft;
+            const overlapTop = player.hitBottom - objectTop;
+            const overlapBottom = objectBottom - player.hitTop;
             const minX = Math.min(overlapLeft, overlapRight);
             const minY = Math.min(overlapTop, overlapBottom);
 
@@ -327,11 +376,53 @@ class Level {
             } else {
                 if (overlapLeft <= overlapRight) {
                     player.x -= overlapLeft;
-                    box.xVelocity = 4;
+                    object.xVelocity = 4;
                 } else {
                     player.x += overlapRight;
-                    box.xVelocity = -4;
+                    object.xVelocity = -4;
                 }
+            }
+        }
+    }
+
+    resolveDynamicObjectCollision(first, second) {
+        const firstLeft = first.x - first.w / 2;
+        const firstRight = first.x + first.w / 2;
+        const firstTop = first.y - first.h / 2;
+        const firstBottom = first.y + first.h / 2;
+        const secondLeft = second.x - second.w / 2;
+        const secondRight = second.x + second.w / 2;
+        const secondTop = second.y - second.h / 2;
+        const secondBottom = second.y + second.h / 2;
+
+        if (firstRight <= secondLeft || firstLeft >= secondRight || firstBottom <= secondTop || firstTop >= secondBottom) {
+            return;
+        }
+
+        const overlapLeft = firstRight - secondLeft;
+        const overlapRight = secondRight - firstLeft;
+        const overlapTop = firstBottom - secondTop;
+        const overlapBottom = secondBottom - firstTop;
+        const minX = Math.min(overlapLeft, overlapRight);
+        const minY = Math.min(overlapTop, overlapBottom);
+
+        if (minY <= minX) {
+            if (overlapTop <= overlapBottom) {
+                first.y -= overlapTop;
+                first.yVelocity = 0;
+                first.isOnGround = true;
+            } else {
+                second.y -= overlapBottom;
+                second.yVelocity = 0;
+                second.isOnGround = true;
+            }
+        } else {
+            if (overlapLeft <= overlapRight) {
+                first.x -= overlapLeft / 2;
+                second.x += overlapLeft / 2;
+            } else {
+                first.x += overlapRight / 2;
+                second.x -= overlapRight / 2;
             }
         }
     }

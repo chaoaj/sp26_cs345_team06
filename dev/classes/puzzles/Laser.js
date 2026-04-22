@@ -2,7 +2,7 @@
 //
 // Laser(x, y, direction, color)
 //   Emits a beam from (x, y) in a given direction.
-//   Each frame call: laser.update(mirrors, collectors)
+//   Each frame call: laser.update(mirrors, collectors, blockers)
 //   Then call:       laser.draw()
 //   direction: "right" | "left" | "up" | "down"
 //
@@ -20,7 +20,7 @@
 //   const mirror    = new LaserMirror(600, height-120, 24, 45);
 //   const laser     = new Laser(400, height-120, "right", color(255,50,50));
 //   // in draw loop:
-//   laser.update([mirror], [collector]);
+//   laser.update([mirror], [collector], platforms);
 //   laser.draw();
 //   collector.draw();
 //   mirror.draw();
@@ -41,8 +41,9 @@ class Laser {
   }
 
   // Call once per frame before draw().
-  // mirrors: array of LaserMirror  collectors: array of LaserCollector
-  update(mirrors = [], collectors = []) {
+  // mirrors: array of LaserMirror, collectors: array of LaserCollector,
+  // blockers: array of AABB objects with x/y/w/h that stop the beam.
+  update(mirrors = [], collectors = [], blockers = []) {
     this.segments = [];
 
     // Mark all collectors as not hit this frame
@@ -54,16 +55,21 @@ class Laser {
     let cy = this.y;
     let dir = this.direction;
     let remaining = this.maxLength;
+    let lastReflectedMirror = null;
 
     for (let bounce = 0; bounce <= this.maxBounces; bounce++) {
       const { dx, dy } = this._dirVec(dir);
 
-      // Find the closest mirror or collector along this ray
+      // Find the closest mirror, collector, or blocker along this ray
       let closest = null;
       let closestDist = remaining;
       let closestType = null;
 
       for (const mirror of mirrors) {
+        if (mirror === lastReflectedMirror) {
+          continue;
+        }
+
         const d = this._rayBoxIntersect(cx, cy, dx, dy, mirror.x, mirror.y, mirror.size, mirror.size);
         if (d !== null && d < closestDist) {
           closestDist = d;
@@ -81,6 +87,19 @@ class Laser {
         }
       }
 
+      for (const blocker of blockers) {
+        if (!blocker || typeof blocker.w !== "number" || typeof blocker.h !== "number") {
+          continue;
+        }
+
+        const d = this._rayBoxIntersect(cx, cy, dx, dy, blocker.x, blocker.y, blocker.w, blocker.h);
+        if (d !== null && d < closestDist) {
+          closestDist = d;
+          closest = blocker;
+          closestType = "blocker";
+        }
+      }
+
       const ex = cx + dx * closestDist;
       const ey = cy + dy * closestDist;
       this.segments.push({ x1: cx, y1: cy, x2: ex, y2: ey });
@@ -91,11 +110,17 @@ class Laser {
         break;
       }
 
+      if (closestType === "blocker") {
+        break;
+      }
+
       if (closestType === "mirror") {
         dir = closest.reflect(dir);
-        cx = ex;
-        cy = ey;
+        cx = closest.x;
+        cy = closest.y;
+        lastReflectedMirror = closest;
       } else {
+        lastReflectedMirror = null;
         break;
       }
     }
@@ -256,6 +281,8 @@ class LaserMirror {
     const platRight  = platform.x + platform.w / 2;
     const platTop    = platform.y - platform.h / 2;
     const platBottom = platform.y + platform.h / 2;
+    const platformXVelocity = typeof platform.xVelocity === "number" ? platform.xVelocity : 0;
+    const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
     const myLeft   = this.x - this.size / 2;
     const myRight  = this.x + this.size / 2;
     const myTop    = this.y - this.size / 2;
@@ -283,6 +310,8 @@ class LaserMirror {
         this.y -= overlapTop;
         this.yVelocity = 0;
         this.isOnGround = true;
+        this.x += platformXVelocity;
+        this.y += platformYVelocity;
       } else {
         // Hitting the underside
         this.y += overlapBottom;

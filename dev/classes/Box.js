@@ -27,6 +27,8 @@ class Box {
     const platRight  = platform.x + platform.w / 2;
     const platTop    = platform.y - platform.h / 2;
     const platBottom = platform.y + platform.h / 2;
+    const platformXVelocity = typeof platform.xVelocity === "number" ? platform.xVelocity : 0;
+    const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
     const myLeft   = this.x - this.w / 2;
     const myRight  = this.x + this.w / 2;
     const myTop    = this.y - this.h / 2;
@@ -54,6 +56,8 @@ class Box {
         this.y -= overlapTop;
         this.yVelocity = 0;
         this.isOnGround = true;
+        this.x += platformXVelocity;
+        this.y += platformYVelocity;
       } else {
         // Hitting the underside
         this.y += overlapBottom;
