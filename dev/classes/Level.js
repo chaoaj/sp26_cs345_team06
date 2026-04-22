@@ -20,6 +20,8 @@ class Level {
         this.abilityToImageMap = [
             { ability: "doubleJump", image: doublejumpui },
             { ability: "dash", image: dashui },
+            { ability: "highJump", image: speedImage },
+            { ability: "speed", image: speedImage },
         ]
 
         //floor, do not include in level platforms
@@ -530,16 +532,20 @@ class Level {
             fill(255);
         }
 
+        let timedAbilities = [];
+
         if (player.highJumpExpiresAt > 0) {
             const highJumpTimeLeftMs = player.getHighJumpTimeLeftMs();
             const highJumpTimeLeftSeconds = ceil(highJumpTimeLeftMs / 1000);
+            timedAbilities.push("highJump")
             text(`High Jump: ${highJumpTimeLeftSeconds}s`, 20, 100);
         }
 
         if (player.speedPotionExpiresAt > 0) {
             const speedPotionTimeLeftMs = player.getSpeedPotionTimeLeftMs();
             const speedPotionTimeLeftSeconds = ceil(speedPotionTimeLeftMs / 1000);
-            text(`Speed: ${speedPotionTimeLeftSeconds}s`, 20, 135);
+            timedAbilities.push("speed")
+            text(`${speedPotionTimeLeftSeconds}s`, 35, 120);
         }
 
         for (let i = 0; i < abilities.length; i++) {
@@ -547,6 +553,14 @@ class Level {
             const imageToDisplay = this.abilityToImageMap.find((mapping) => mapping.ability === ability);
             if (imageToDisplay) {
                 image(imageToDisplay.image, 20 + i * 50, 170, 50, 50);
+            }
+        }
+
+        for (let i = 0; i < timedAbilities.length; i++) {
+            const ability = timedAbilities[i];
+            const imageToDisplay = this.abilityToImageMap.find((mapping) => mapping.ability === ability);
+            if (imageToDisplay) {
+                image(imageToDisplay.image, 20 + i * 50, 120, 50, 50);
             }
         }
 
