@@ -158,16 +158,19 @@ class Player extends Actor {
       const previousPlatformTop = platformTop - platformYVelocity;
 
       const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
+      // When platform moves down it pulls away from the player, so also check overlap using old top.
       const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
+      const downwardCarry = Math.max(0, platformYVelocity); // how far platform moved down this frame
       const crossedPlatformTop =
         this.yVelocity >= 0 &&
-        previousHitBottom <= previousPlatformTop &&
-        this.hitBottom >= platformTop;
+        previousHitBottom <= previousPlatformTop + 2 &&
+        this.hitBottom >= platformTop - downwardCarry;
 
       // Swept landing check prevents phasing through platforms at high relative speeds.
       if (overlapsX && crossedPlatformTop) {
         this.y = platformTop - this.height / 2;
-        this.yVelocity = 0;
+        // Inherit downward platform velocity so player rides it next frame.
+        this.yVelocity = downwardCarry > 0 ? downwardCarry : 0;
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
@@ -179,9 +182,9 @@ class Player extends Actor {
 
       if (!overlapsX || !overlapsY) continue;
 
-      if (this.yVelocity >= 0 && previousHitBottom <= previousPlatformTop) {
+      if (this.yVelocity >= 0 && previousHitBottom <= previousPlatformTop + 2) {
         this.y = platformTop - this.height / 2;
-        this.yVelocity = 0;
+        this.yVelocity = downwardCarry > 0 ? downwardCarry : 0;
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
