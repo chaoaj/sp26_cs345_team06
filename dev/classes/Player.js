@@ -1,14 +1,22 @@
-class Player {
+class Player extends Actor {
   constructor(x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.spawnX = x;
-    this.spawnY = y;
-    this.width = width;
-    this.height = height;
-    this.yVelocity = 0;
+    super(x, y, width, height);
+
     this.baseMoveSpeed = 5;
     this.moveSpeed = this.baseMoveSpeed;
+
+    this.jumpStrength = 15;
+
+    this.maxAirJumps = 0;
+    this.remainingAirJumps = 0;
+
+    this.canDash = false;
+
+    this.isHurt = false;
+
+    this.spawnX = x;
+    this.spawnY = y;
+
     this.speedPotionMoveSpeed = 8;
     this.speedPotionDurationMs = 30000;
     this.speedPotionExpiresAt = 0;
@@ -18,9 +26,8 @@ class Player {
     this.wasJumpHeld = false;
     this.jumpBufferDurationMs = 120;
     this.jumpBufferUntil = 0;
-    this.maxAirJumps = 0;
-    this.remainingAirJumps = this.maxAirJumps;
-    this.canDash = false;
+
+
     this.isDashing = false;
     this.dashDirection = 1;
     this.dashSpeed = 14;
@@ -30,13 +37,12 @@ class Player {
     this.dashEndsAt = 0;
     this.dashCooldownUntil = 0;
     this.wasDashHeld = false;
+
     this.baseJumpStrength = 15;
     this.jumpStrength = this.baseJumpStrength;
     this.gravity = 0.6;
     this.isOnGround = false;
     this.isOnFloor = false;
-    this.maxHealth = 3;
-    this.health = this.maxHealth;
     this.maxShield = 2;
     this.shieldHealth = 0;
     this.onRespawn = null;
@@ -45,7 +51,7 @@ class Player {
     this.hitboxInsetTop = 50;
 
     this.facingLeft = false;
-    this.isHurt = false;
+
     this.animations = {
       idle: { sheet: playerIdleSheet, frameCount: 4, fps: 8,  loop: true  },
       walk: { sheet: playerWalkSheet, frameCount: 6, fps: 10, loop: true  },
@@ -71,15 +77,20 @@ class Player {
     const previousY = this.y;
 
     this.updateTimedEffects();
+
     applyPlayerControls(this);
+
+    this.applyPhysics();
+
     this.resolveHorizontalCollisions(platforms, previousX, previousY);
 
-    this.yVelocity += this.gravity;
-    this.y += this.yVelocity;
+    this.move();
+
     this.isOnGround = false;
     this.isOnFloor = false;
 
     this.resolveVerticalCollisions(platforms, previousY);
+
     this.constrainToScreen();
     this.updateAnimation();
     this.advanceFrame();
@@ -183,7 +194,6 @@ class Player {
     }
   }
 
-
   constrainToScreen() {
     const halfHeight = this.height / 2;
 
@@ -196,6 +206,7 @@ class Player {
       this.isOnFloor = true;
     }
   }
+
   updateAnimation() {
     if (this.isHurt) {
       if (this.animFrame >= this.animations.hurt.frameCount - 1) {

@@ -1,9 +1,6 @@
-class Hostile {
+class Hostile extends Actor {
   constructor(x, y, w = 40, h = 40, speed = 2, leftBound = x - 100, rightBound = x + 100, damage = 1) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
+    super(x, y, w, h);
     this.speed = speed;
     this.leftBound = leftBound;
     this.rightBound = rightBound;
@@ -40,7 +37,7 @@ class Hostile {
     const frameW = greenslimeimage.width / this.frameCount;
     const sx = this.animFrame * frameW;
     const drawH = this.h * 3;
-    const yOffset = -this.h; 
+    const yOffset = -this.h;
 
     push();
     imageMode(CENTER);
