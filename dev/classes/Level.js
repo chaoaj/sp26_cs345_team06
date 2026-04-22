@@ -17,6 +17,11 @@ class Level {
         this.laserCollectors = [...(laserPuzzles.collectors || [])];
         this.laserMirrors = [...(laserPuzzles.mirrors || [])];
 
+        this.abilityToImageMap = [
+            { ability: "doubleJump", image: doublejumpui },
+            { ability: "dash", image: dashui },
+        ]
+
         //floor, do not include in level platforms
         this.trapDamageCooldownMs = 400;
         this.lastTrapDamageAt = -Infinity;
@@ -496,6 +501,13 @@ class Level {
         player.draw();
     }
     drawHUD(player) {
+        let abilities = []
+        if (Ability.has(player, "doubleJump")) {
+            abilities.push("doubleJump");
+        }
+        if (Ability.has(player, "dash")) {
+            abilities.push("dash");
+        }
         noSmooth()
         fill(255);
         textSize(24);
@@ -528,6 +540,14 @@ class Level {
             const speedPotionTimeLeftMs = player.getSpeedPotionTimeLeftMs();
             const speedPotionTimeLeftSeconds = ceil(speedPotionTimeLeftMs / 1000);
             text(`Speed: ${speedPotionTimeLeftSeconds}s`, 20, 135);
+        }
+
+        for (let i = 0; i < abilities.length; i++) {
+            const ability = abilities[i];
+            const imageToDisplay = this.abilityToImageMap.find((mapping) => mapping.ability === ability);
+            if (imageToDisplay) {
+                image(imageToDisplay.image, 20 + i * 50, 170, 50, 50);
+            }
         }
 
         if (typeof levelNum === "number") {

@@ -14,6 +14,10 @@ function preload() {
   speedImage = loadImage("assets/SpeedPotion.png")
   shieldImage = loadImage("assets/Shield.png")
   
+  //Ability UI
+  doublejumpui = loadImage("assets/doublejumpui.png")
+  dashui = loadImage("assets/dashui.png")
+
   //Ability Items
   doubleJumpAmuletImage = loadImage("assets/DoubleJumpAmulet.png")
   dashAmuletImage = loadImage("assets/DashAmulet.png")

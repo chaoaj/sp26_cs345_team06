@@ -8,7 +8,9 @@ function getLevel1Template() {
 
   const items = [
     new Items(220, height - 40, "potion"),
-    new Items(2260, height - 805, "dashAbility"),
+    new Items(100, height - 40, "dashAbility"),
+    new Items(80, height - 40, "doubleJumpAbility"),
+
   ];
 
   const traps = [
