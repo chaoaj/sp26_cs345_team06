@@ -72,15 +72,15 @@ class JumpingHostile extends Hostile {
     noStroke();
 
     fill(isAirborne ? color(255, 190, 80) : color(235, 150, 50));
-    ellipse(this.x, this.y, this.w, this.h * 0.8);
+    ellipse(this.x, this.y, this.width, this.height * 0.8);
 
     fill(45);
-    const eyeOffsetX = this.direction === -1 ? -this.w * 0.17 : this.w * 0.17;
-    ellipse(this.x + eyeOffsetX, this.y - this.h * 0.1, this.w * 0.12, this.w * 0.12);
+    const eyeOffsetX = this.direction === -1 ? -this.width * 0.17 : this.width * 0.17;
+    ellipse(this.x + eyeOffsetX, this.y - this.height * 0.1, this.width * 0.12, this.width * 0.12);
 
     fill(185, 95, 30);
-    rect(this.x - this.w * 0.18, this.y + this.h * 0.25, this.w * 0.16, this.h * 0.22, 3);
-    rect(this.x + this.w * 0.18, this.y + this.h * 0.25, this.w * 0.16, this.h * 0.22, 3);
+    rect(this.x - this.width * 0.18, this.y + this.height * 0.25, this.width * 0.16, this.height * 0.22, 3);
+    rect(this.x + this.width * 0.18, this.y + this.height * 0.25, this.width * 0.16, this.height * 0.22, 3);
     pop();
   }
 }

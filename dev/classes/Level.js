@@ -344,10 +344,10 @@ class Level {
 
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i];
-            const enemyLeft   = enemy.x - enemy.w / 2;
-            const enemyRight  = enemy.x + enemy.w / 2;
-            const enemyTop    = enemy.y - enemy.h / 2;
-            const enemyBottom = enemy.y + enemy.h / 2;
+            const enemyLeft   = enemy.x - enemy.width / 2;
+            const enemyRight  = enemy.x + enemy.width / 2;
+            const enemyTop    = enemy.y - enemy.height / 2;
+            const enemyBottom = enemy.y + enemy.height / 2;
 
             const isOverlapping = (
                 player.hitRight > enemyLeft &&
@@ -381,7 +381,7 @@ class Level {
             return false;
         }
 
-        const enemyTop = enemy.y - enemy.h / 2;
+        const enemyTop = enemy.y - enemy.height / 2;
         const stompGracePx = 14;
         const fallingOntoEnemy = player.yVelocity > 0;
         const nearTopSurface = player.hitBottom <= enemyTop + stompGracePx;

@@ -155,10 +155,10 @@ class FlyingHostile extends Hostile {
       return false;
     }
 
-    const enemyLeft = this.x - this.w / 2;
-    const enemyRight = this.x + this.w / 2;
-    const enemyTop = this.y - this.h / 2;
-    const enemyBottom = this.y + this.h / 2;
+    const enemyLeft = this.x - this.width / 2;
+    const enemyRight = this.x + this.width / 2;
+    const enemyTop = this.y - this.height / 2;
+    const enemyBottom = this.y + this.height / 2;
 
     const playerLeft = typeof target.hitLeft === "number" ? target.hitLeft : target.x - target.width / 2;
     const playerRight = typeof target.hitRight === "number" ? target.hitRight : target.x + target.width / 2;
@@ -186,35 +186,35 @@ class FlyingHostile extends Hostile {
       stroke(255, 210, 90, 190);
       strokeWeight(2);
       noFill();
-      ellipse(this.x, this.y, this.w + 8 + windupPulse * 14, this.h + 8 + windupPulse * 14);
+      ellipse(this.x, this.y, this.width + 8 + windupPulse * 14, this.height + 8 + windupPulse * 14);
       noStroke();
     }
 
     fill(isDashing ? color(255, 95, 65) : isWindup ? color(255, 170, 70) : color(215, 70, 70));
-    ellipse(this.x, this.y, this.w, this.h * 0.75);
+    ellipse(this.x, this.y, this.width, this.height * 0.75);
 
     fill(isDashing ? color(255, 210, 160) : color(245, 230, 205));
-    const wingSpread = isDashing ? this.w * 0.75 : this.w * 0.55;
+    const wingSpread = isDashing ? this.width * 0.75 : this.width * 0.55;
     triangle(
-      this.x - this.w * 0.1,
-      this.y - this.h * 0.1,
+      this.x - this.width * 0.1,
+      this.y - this.height * 0.1,
       this.x - wingSpread,
-      this.y - this.h * 0.45,
+      this.y - this.height * 0.45,
       this.x - wingSpread,
-      this.y + this.h * 0.3
+      this.y + this.height * 0.3
     );
     triangle(
-      this.x + this.w * 0.1,
-      this.y - this.h * 0.1,
+      this.x + this.width * 0.1,
+      this.y - this.height * 0.1,
       this.x + wingSpread,
-      this.y - this.h * 0.45,
+      this.y - this.height * 0.45,
       this.x + wingSpread,
-      this.y + this.h * 0.3
+      this.y + this.height * 0.3
     );
 
     fill(30);
-    const eyeOffsetX = this.direction === -1 ? -this.w * 0.15 : this.w * 0.15;
-    ellipse(this.x + eyeOffsetX, this.y - this.h * 0.08, this.w * 0.1, this.w * 0.1);
+    const eyeOffsetX = this.direction === -1 ? -this.width * 0.15 : this.width * 0.15;
+    ellipse(this.x + eyeOffsetX, this.y - this.height * 0.08, this.width * 0.1, this.width * 0.1);
     pop();
   }
 }
