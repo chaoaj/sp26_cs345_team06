@@ -21,7 +21,6 @@ class Terrain {
         this.isGenerated = false;
     }
 
-    // copied alex's floor stuff
     generateTerrain() {
         print("g")
         if (this.isGenerated) {

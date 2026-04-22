@@ -1,6 +1,5 @@
 class Floor {
     constructor(x, y, width, floorImage, pits = []) {
-        //32x32px
         this.x = x;
         this.y = y;
         this.width = width;

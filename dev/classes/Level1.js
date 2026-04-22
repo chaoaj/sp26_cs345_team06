@@ -8,25 +8,26 @@ function getLevel1Template() {
 
   const items = [
     new Items(220, height - 40, "potion"),
+    new Items(200, height - 40, "feather"),
     new Items(100, height - 40, "dashAbility"),
     new Items(80, height - 40, "doubleJumpAbility"),
 
   ];
 
   const traps = [
-    // TODO: add Level 2 traps
+
   ];
 
   const boxes = [
-    // TODO: add Level 2 boxes
+
   ];
 
   const buttons = [
-    // TODO: add Level 2 buttons
+
   ];
 
   const enemies = [
-    // TODO: add Level 2 enemies
+
   ];
 
   const doors = [

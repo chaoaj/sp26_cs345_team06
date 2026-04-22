@@ -94,8 +94,6 @@ function getLevel3Template() {
     finalDoor,
   ];
 
-  // Floor pits under the two post-double-jump vertical moving platforms.
-  // Format: [startTileIndex, tileCount], with each floor tile being 32px wide.
   const pits = [
     [73, 7],
     [81, 8],

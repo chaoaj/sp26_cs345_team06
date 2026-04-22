@@ -2,7 +2,6 @@ class Level {
     constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[], terrain = [], laserPuzzles = {}) {
         laserPuzzles = laserPuzzles || {};
         this.worldWidth = worldWidth || width;
-        //table of platforms, not drawn yet
         this.platforms = [...platforms];
         this.items = [...items];
         this.traps = [...traps];
@@ -20,16 +19,13 @@ class Level {
         this.abilityToImageMap = [
             { ability: "doubleJump", image: doublejumpui },
             { ability: "dash", image: dashui },
-            { ability: "highJump", image: speedImage },
+            { ability: "highJump", image: featherImage },
             { ability: "speed", image: speedImage },
         ]
 
-        //floor, do not include in level platforms
         this.trapDamageCooldownMs = 400;
         this.lastTrapDamageAt = -Infinity;
-        // var floorHitbox = new Platform(this.worldWidth / 2, height, this.worldWidth, 50, null);
-        // platforms.push(floorHitbox);
-        //10 blocks in, 3 wide
+
         this.floor = new Floor(0, height + 25, this.worldWidth, floorImage, this.pits);
         this.floorPlatforms = this.floor.drawFloor();
         this.platforms.push(...this.floorPlatforms);
@@ -186,15 +182,6 @@ class Level {
         }
 
         for (const trap of this.traps) {
-            // if (!(trap instanceof SpikeTrap)) {
-            //     continue;
-            // }
-
-            // if (this.isPlayerTouchingTrap(player, trap)) {
-            //     player.takeDamage(trap.damage);
-            //     this.lastTrapDamageAt = now;
-            //     return;
-            // }
             if (trap instanceof SpikeTrap) {
                 if (this.isPlayerTouchingTrap(player, trap)) {
                     player.takeDamage(trap.damage);
@@ -222,7 +209,6 @@ class Level {
             return false;
         }
 
-        // Pits are floor tile gaps; each tile is 32px wide and centered at i*32.
         const playerLeft = typeof player.hitLeft === "number" ? player.hitLeft : player.x - player.width / 2;
         const playerRight = typeof player.hitRight === "number" ? player.hitRight : player.x + player.width / 2;
         const touchingFloorBand = player.y + player.height / 2 >= height - 1;
@@ -526,7 +512,6 @@ class Level {
         if (player.shieldHealth > 0) {
             fill(80, 170, 255);
             for (let i = 0; i < player.shieldHealth; i++) {
-                //rect(35 + i * 40, 70, 24, 24, 5);
                 image(shieldImage, 20 + i * 40, 60, 30, 30);
             }
             fill(255);
@@ -537,15 +522,14 @@ class Level {
         if (player.highJumpExpiresAt > 0) {
             const highJumpTimeLeftMs = player.getHighJumpTimeLeftMs();
             const highJumpTimeLeftSeconds = ceil(highJumpTimeLeftMs / 1000);
-            timedAbilities.push("highJump")
-            text(`High Jump: ${highJumpTimeLeftSeconds}s`, 20, 100);
+            timedAbilities.push({ ability: "highJump", timeLeft: highJumpTimeLeftSeconds })
+            
         }
 
         if (player.speedPotionExpiresAt > 0) {
             const speedPotionTimeLeftMs = player.getSpeedPotionTimeLeftMs();
             const speedPotionTimeLeftSeconds = ceil(speedPotionTimeLeftMs / 1000);
-            timedAbilities.push("speed")
-            text(`${speedPotionTimeLeftSeconds}s`, 35, 120);
+            timedAbilities.push({ ability: "speed", timeLeft: speedPotionTimeLeftSeconds })
         }
 
         for (let i = 0; i < abilities.length; i++) {
@@ -558,9 +542,14 @@ class Level {
 
         for (let i = 0; i < timedAbilities.length; i++) {
             const ability = timedAbilities[i];
-            const imageToDisplay = this.abilityToImageMap.find((mapping) => mapping.ability === ability);
+            const imageToDisplay = this.abilityToImageMap.find((mapping) => mapping.ability === ability.ability);
             if (imageToDisplay) {
                 image(imageToDisplay.image, 20 + i * 50, 120, 50, 50);
+                stroke(0,0,0)
+                strokeWeight(3)
+                text(`${ability.timeLeft}s`, 32 + i * 50, 132)
+                noStroke()
+
             }
         }
 
