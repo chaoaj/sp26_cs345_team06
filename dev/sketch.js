@@ -91,92 +91,15 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
-  level1Platforms = [
-    new Platform(250,  height - 170, 220, 30, brickPlatformImage),
-    new Platform(490,  height - 260, 220, 30, brickPlatformImage),
-    new Platform(730,  height - 350, 220, 30, brickPlatformImage),
-    new Platform(970,  height - 260, 220, 30, brickPlatformImage),
-    new Platform(1210, height - 170, 220, 30, brickPlatformImage),
-    new MovingPlatform(1450, height - 300, 200, 30, brickPlatformImage, "y", 180, 1.5),
-    new MovingPlatform(1650, height - 170, 200, 30, brickPlatformImage, "x", 700, 2),
-    new Platform(2000, height - 300, 220, 30, brickPlatformImage),
-    new Platform(2450, height - 350, 220, 30, brickPlatformImage),
-    new Platform(2600, height - 170, 220, 30, brickPlatformImage),
-    new Platform(2800, height - 300, 220, 30, brickPlatformImage)
-  ]
 
-  level1Items = [
-    new Items(730, height - 420, "health"),
-    new Items(970, height - 280, "feather"),
-    new Items(490, height - 330, "shield"),
-    new Items(1210, height - 200, "potion"),
-    new Items(250, height - 220, "doubleJumpAbility"),
-    new Items(1210, height - 220, "dashAbility")
-  ]
-
-  level1Traps = [
-    new SpikeTrap(730, height - 45, 120, 40),
-    new LaserTrap(610, height - 285, 160, 14),
-    new SpikeTrap(1900, height - 45, 120, 30)
-  ]
-
-  level1Boxes = [
-    new Box(490, height - 360, 50),
-    new Box(700, height - 490, 50)
-  ]
-
-  level2Boxes = [
-
-  ]
-
-  level1Doors = [
-    new Door(2800, height - 365, 75, 100)
-  ]
-
-  level1Buttons = [
-    new Button(1100, height - 35, 80, 20, () => console.log("button pressed"))
-  ]
-
-  level1LaserPuzzles = {
-    lasers: [
-      new Laser(1685, height - 193, "right", color(255, 50, 50), 4, 900)
-    ],
-    mirrors: [
-      new LaserMirror(1650, height - 199, 28, 45)
-    ],
-    collectors: [
-      new LaserCollector(2010, height - 330, 30, 30, () => {
-        const door = level1Doors[0];
-        if (door) {
-          door.isOpen = true;
-        }
-      }, () => {
-        const door = level1Doors[0];
-        if (door) {
-          door.isOpen = false;
-        }
-      })
-    ]
-  }
-
-  level1Enemies = [
-    new Hostile(970, height - 295, 40, 40, 1.5, 900, 1040),
-    new FlyingHostile(520, height - 320, 44, 44, 2.2, 420, 620, 1, 360, 130),
-    new JumpingHostile(1210, height - 210, 40, 40, 2, 1100, 1350, 1, 170, 800, 13)
-  ]
-
-  level1Terrain = [
-    // new Terrain(0, height - 32, 96, 32, step1),
-  ]
-
-  level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits, level1Terrain, level1LaserPuzzles]
+  const level1Template = getLevel1Template()
   levelTemplates.push(level1Template);
-  level2Template = getLevel2Template();
+  const level2Template = getLevel2Template();
   if (level2Template.length < 10) {
     level2Template.push(null);
   }
   levelTemplates.push(level2Template);
-  level3Template = getLevel3Template();
+  const level3Template = getLevel3Template();
   if (level3Template.length < 8) {
     level3Template.push([]);
   }

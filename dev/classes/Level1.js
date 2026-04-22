@@ -1,0 +1,54 @@
+function getLevel1Template() {
+
+  const platforms = [
+    new Platform(450, height - 120, 160, 30, brickPlatformImage),
+    new Platform(650, height - 185, 160, 30, brickPlatformImage),
+    new MovingPlatform(1900, height - 300, 160, 30, brickPlatformImage, "x", 200, 1.5, true),
+  ];
+
+  const items = [
+    new Items(220, height - 40, "potion"),
+    new Items(2260, height - 805, "dashAbility"),
+  ];
+
+  const traps = [
+    // TODO: add Level 2 traps
+  ];
+
+  const boxes = [
+    // TODO: add Level 2 boxes
+  ];
+
+  const buttons = [
+    // TODO: add Level 2 buttons
+  ];
+
+  const enemies = [
+    // TODO: add Level 2 enemies
+  ];
+
+  const doors = [
+    new Door(2260, height - 770 - 65, 75, 100),
+  ];
+
+  const pits = [
+
+    [29, 56],
+  ];
+
+  const terrain = [
+    new Terrain(826, height - 72, 192, 256, step4),
+  ]
+
+  return [
+    platforms,
+    items,
+    traps,
+    boxes,
+    buttons,
+    enemies,
+    doors,
+    pits,
+    terrain,
+  ];
+}
