@@ -165,8 +165,6 @@ class Level {
         }
     }
 
-
-
     applyTrapDamage(player) {
         const now = typeof getGameMillis === "function" ? getGameMillis() : millis();
         if (now - this.lastTrapDamageAt < this.trapDamageCooldownMs) {
