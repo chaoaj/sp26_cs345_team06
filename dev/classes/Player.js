@@ -281,6 +281,14 @@ class Player extends Actor {
     this.spawnY = y;
   }
 
+  clearTemporaryItemEffects() {
+    this.jumpStrength = this.baseJumpStrength;
+    this.highJumpExpiresAt = 0;
+    this.moveSpeed = this.baseMoveSpeed;
+    this.speedPotionExpiresAt = 0;
+    this.shieldHealth = 0;
+  }
+
   respawn() {
     this.x = this.spawnX;
     this.y = this.spawnY;
@@ -294,6 +302,7 @@ class Player extends Actor {
     this.wasJumpHeld = false;
     this.yVelocity = 0;
     this.isOnGround = false;
+    this.clearTemporaryItemEffects();
     this.health = this.maxHealth;
     this.isHurt = false;
     this.setAnimState("idle");
