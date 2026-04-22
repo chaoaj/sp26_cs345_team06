@@ -29,12 +29,30 @@ let level1LaserPuzzles = null
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
 let abilityUnlockPopup = null;
+let runStartedAt = null;
+let runCompletedAt = null;
 
 function getGameMillis() {
   if ((gameState === "paused" || gameState === "abilityUnlock") && pauseStartedAt !== null) {
     return pauseStartedAt - accumulatedPauseMs;
   }
   return millis() - accumulatedPauseMs;
+}
+
+function getRunElapsedMs() {
+  if (runStartedAt === null) {
+    return 0;
+  }
+
+  const currentTime = runCompletedAt !== null ? runCompletedAt : getGameMillis();
+  return Math.max(0, currentTime - runStartedAt);
+}
+
+function formatElapsedTime(totalMs) {
+  const totalSeconds = Math.floor(Math.max(0, totalMs) / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 function showAbilityUnlock(ability) {
@@ -193,6 +211,8 @@ function setupLevel() {
   abilityUnlockPopup = null;
   pauseStartedAt = null;
   accumulatedPauseMs = 0;
+  runStartedAt = null;
+  runCompletedAt = null;
 }
 
 function startEndGame() {
@@ -413,6 +433,10 @@ function draw() {
     camera.reset();
 
     if (endGameLevel.hasCollectedTreasure(player)) {
+      if (runCompletedAt === null) {
+        runCompletedAt = getGameMillis();
+      }
+
       push();
       fill(255);
       textAlign(CENTER, CENTER);
@@ -420,7 +444,8 @@ function draw() {
       text("You Win!", width / 2, height / 2 - 20);
       textSize(18);
       text("Treasure recovered.", width / 2, height / 2 + 18);
-      text("Press R to return to title", width / 2, height / 2 + 52);
+      text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, width / 2, height / 2 + 40);
+      text("Press R to return to title", width / 2, height / 2 + 74);
       pop();
     }
   } else if (gameState === "paused") {
@@ -499,8 +524,12 @@ function drawPauseOverlay() {
   text("Game is frozen while paused.", panelX, subtitleY);
 
   fill(255);
+  textSize(24);
+  text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, panelX, subtitleY + 36);
+
+  fill(255);
   textSize(18);
-  text("Press P or Esc to resume", panelX, hintY);
+  text("Press P or Esc to resume", panelX, hintY + 18);
 
   fill(170, 182, 205);
   textSize(15);

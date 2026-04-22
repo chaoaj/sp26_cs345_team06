@@ -529,5 +529,10 @@ class Level {
             textAlign(RIGHT, TOP);
             text(`Level ${levelNum}`, width - 20, 20);
         }
+
+        if (typeof getRunElapsedMs === "function" && typeof formatElapsedTime === "function") {
+            textAlign(RIGHT, TOP);
+            text(`Time ${formatElapsedTime(getRunElapsedMs())}`, width - 20, 52);
+        }
     }
 }

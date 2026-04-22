@@ -29,6 +29,11 @@ function drawPauseOverlay() {
   textSize(48);
   text("Paused", width / 2, height / 2 - 200);
 
+  if (typeof getRunElapsedMs === "function" && typeof formatElapsedTime === "function") {
+    textSize(24);
+    text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, width / 2, height / 2 - 158);
+  }
+
   const rects = getPauseItemRects();
   for (const item of rects) {
     const disabled = item.label === "Music";

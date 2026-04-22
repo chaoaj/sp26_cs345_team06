@@ -64,6 +64,8 @@ function drawTitleScreen() {
 
 function handleTitleKeyPressed() {
   if (keyCode === 32) {
+    runStartedAt = getGameMillis();
+    runCompletedAt = null;
     gameState = "playing";
     if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
       soliloquyMusic.stop();
