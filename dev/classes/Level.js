@@ -58,6 +58,12 @@ class Level {
             isOnGround: mirror.isOnGround,
         }));
 
+        this.initialEnemyStates = this.enemies.map((enemy) => ({
+            x: enemy.x,
+            y: enemy.y,
+            direction: enemy.direction,
+        }));
+
         this.pushPlatform = function(platform) {
             this.platforms.push(platform);
         }
@@ -112,6 +118,24 @@ class Level {
 
         for (const laser of this.lasers) {
             laser.segments = [];
+        }
+
+        for (let i = 0; i < this.enemies.length; i++) {
+            const enemy = this.enemies[i];
+            const initial = this.initialEnemyStates[i];
+            if (!enemy || !initial) {
+                continue;
+            }
+
+            if (typeof enemy.reset === "function") {
+                enemy.reset();
+                continue;
+            }
+
+            enemy.x = initial.x;
+            enemy.y = initial.y;
+            enemy.direction = initial.direction;
+            enemy.isDead = false;
         }
     }
 
@@ -431,6 +455,33 @@ class Level {
 
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i];
+
+            if (enemy.projectiles && enemy.projectiles.length > 0) {
+                for (let j = enemy.projectiles.length - 1; j >= 0; j--) {
+                    const projectile = enemy.projectiles[j];
+                    const projectileLeft = projectile.x - projectile.radius;
+                    const projectileRight = projectile.x + projectile.radius;
+                    const projectileTop = projectile.y - projectile.radius;
+                    const projectileBottom = projectile.y + projectile.radius;
+
+                    const hitByProjectile = (
+                        player.hitRight > projectileLeft &&
+                        player.hitLeft < projectileRight &&
+                        player.hitBottom > projectileTop &&
+                        player.hitTop < projectileBottom
+                    );
+
+                    if (!hitByProjectile) {
+                        continue;
+                    }
+
+                    player.takeDamage(projectile.damage);
+                    enemy.projectiles.splice(j, 1);
+                    this.lastTrapDamageAt = now;
+                    return;
+                }
+            }
+
             const enemyLeft   = enemy.x - enemy.width / 2;
             const enemyRight  = enemy.x + enemy.width / 2;
             const enemyTop    = enemy.y - enemy.height / 2;

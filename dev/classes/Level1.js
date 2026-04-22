@@ -27,7 +27,7 @@ function getLevel1Template() {
   ];
 
   const enemies = [
-
+    new RangedHostile(700, height - 40, 44, 44, 1.1, 620, 820, 1, 280, 1100, 5.5, 1),
   ];
 
   const doors = [
