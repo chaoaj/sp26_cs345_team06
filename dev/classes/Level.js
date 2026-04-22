@@ -114,6 +114,13 @@ class Level {
         }
     }
 
+    getSpawnPoint() {
+        return {
+            x: width * 0.12,
+            y: height - 160,
+        };
+    }
+
     drawPlatforms() {
         for (let platform of this.platforms) {
             platform.draw();

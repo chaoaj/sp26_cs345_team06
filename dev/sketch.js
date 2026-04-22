@@ -201,10 +201,33 @@ function setupLevel() {
   const spawnX = width * 0.12;
   const spawnY = height - 160;
   player = new Player(spawnX, spawnY, 80, 120);
+  player.onBeforeRespawn = () => {
+    if (gameState === "endgame" && endGameLevel && typeof endGameLevel.getSpawnPoint === "function") {
+      const spawn = endGameLevel.getSpawnPoint();
+      player.setSpawnPoint(spawn.x, spawn.y);
+      return;
+    }
+
+    const activeLevel = levels[levelNum - 1];
+    if (activeLevel && typeof activeLevel.getSpawnPoint === "function") {
+      const spawn = activeLevel.getSpawnPoint();
+      player.setSpawnPoint(spawn.x, spawn.y);
+    }
+  };
   player.onRespawn = () => {
     const activeLevel = levels[levelNum - 1];
     if (activeLevel && typeof activeLevel.resetDynamicState === "function") {
       activeLevel.resetDynamicState();
+    }
+
+    if (camera) {
+      if (gameState === "endgame" && endGameLevel) {
+        camera.worldWidth = endGameLevel.worldWidth;
+      } else if (activeLevel) {
+        camera.worldWidth = activeLevel.worldWidth;
+      }
+      camera.x = 0;
+      camera.y = 0;
     }
   };
   camera = new Camera(LEVEL_WORLD_WIDTHS[0], height * WORLD_HEIGHT_MULTIPLIER);
