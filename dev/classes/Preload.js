@@ -31,6 +31,7 @@ function preload() {
   box2 = loadImage("assets/box2.png")
   box3 = loadImage("assets/box3.png")
   box4 = loadImage("assets/box4.png")
+  box4long = loadImage("assets/box4-long.png")
 
   //Title Screen
   titleScreenimage = loadImage("assets/Title.png")

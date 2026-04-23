@@ -3,7 +3,9 @@ function getLevel1Template() {
   const platforms = [
     new BrickPlatform(450, height - 120, 160, 32, brickTileImage),
     new BrickPlatform(650, height - 185, 160, 32, brickTileImage),
-    new MovingPlatform(1100, height - 185, 160, 32, brickTileImage, "x", 600, 3, true),
+    new MovingPlatform(1100, height - 185, 160, 32, brickTileImage, "x", 700, 3, true),
+    new BrickPlatform(2100, height - 185, 160, 32, brickTileImage),
+
   ];
 
   const items = [
@@ -35,11 +37,13 @@ function getLevel1Template() {
   ];
 
   const pits = [
-    [29, 56],
+    [29, 40],
   ];
 
   const terrain = [
     new Terrain(826, height - 72, 192, 256, step4),
+    new Terrain(2600, height - 72, 704, 256, box4long),
+
   ]
 
   return [
