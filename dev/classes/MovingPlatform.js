@@ -1,4 +1,4 @@
-class MovingPlatform extends Platform {
+class MovingPlatform extends BrickPlatform {
     // axis:     "x" for left/right,  "y" for up/down
     // distance: how many pixels to travel away from the start position (positive)
     // speed:    pixels per frame

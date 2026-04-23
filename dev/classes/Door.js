@@ -8,7 +8,6 @@ class Door {
 
     drawDoor() {
         if (typeof doorImage !== "undefined" && doorImage) {
-            imageMode(CENTER);
             image(doorImage, this.x, this.y, this.w, this.h);
             return;
         }

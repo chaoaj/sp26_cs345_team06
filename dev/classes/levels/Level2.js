@@ -1,20 +1,20 @@
 function getLevel2Template() {
-  const leftLow   = new MovingPlatform(1510, height - 330, 180, 32, brickPlatformImage, "y", 200, 1.5, false);
-  const leftHigh  = new MovingPlatform(1510, height - 570, 180, 32, brickPlatformImage, "y", 200, 1.5, false);
-  const rightLow  = new MovingPlatform(1900, height - 450, 180, 32, brickPlatformImage, "y", 200, 1.5, true);
-  const rightHigh = new MovingPlatform(1900, height - 690, 180, 32, brickPlatformImage, "y", 200, 1.5, true);
+  const leftLow   = new MovingPlatform(1510, height - 330, 180, 32, brickTileImage, "y", 200, 1.5, false);
+  const leftHigh  = new MovingPlatform(1510, height - 570, 180, 32, brickTileImage, "y", 200, 1.5, false);
+  const rightLow  = new MovingPlatform(1900, height - 450, 180, 32, brickTileImage, "y", 200, 1.5, true);
+  const rightHigh = new MovingPlatform(1900, height - 690, 180, 32, brickTileImage, "y", 200, 1.5, true);
 
   const platforms = [
-    new Platform(320, height - 120, 64, 64, brickPlatformImage),
-    new Platform(560, height - 185, 64, 64, brickPlatformImage),
-    new Platform(430, height - 245, 64, 64, brickPlatformImage),
-    new Platform(700, height - 300, 64, 64, brickPlatformImage),
-    new Platform(980, height - 340, 64, 64, brickPlatformImage),
+    new BrickPlatform(320, height - 120, 64, 64, brickTileImage),
+    new BrickPlatform(560, height - 185, 64, 64, brickTileImage),
+    new BrickPlatform(430, height - 245, 64, 64, brickTileImage),
+    new BrickPlatform(700, height - 300, 64, 64, brickTileImage),
+    new BrickPlatform(980, height - 340, 64, 64, brickTileImage),
     leftLow,
     leftHigh,
     rightLow,
     rightHigh,
-    new Platform(2180, height - 770, 240, 32, brickPlatformImage),
+    new BrickPlatform(2180, height - 770, 240, 32, brickTileImage),
   ];
 
   const items = [
