@@ -8,6 +8,7 @@ class BrickPlatform extends Platform {
 
     drawPlatform() {
         for (let i = 0; i < this.tiles, i++;) {
+            image()
             print(this.w) 
             print("platform")
         }

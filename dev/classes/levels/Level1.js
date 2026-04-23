@@ -15,7 +15,7 @@ function getLevel1Template() {
   ];
 
   const traps = [
-
+    
   ];
 
   const boxes = [
