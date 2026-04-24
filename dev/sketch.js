@@ -2,7 +2,7 @@ let gameState = "title";
 
 const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT_MULTIPLIER = 1;
-const LEVEL_WORLD_WIDTHS = [3000, 2600, 3300];
+const LEVEL_WORLD_WIDTHS = [4160, 2592, 3296];
 
 let platforms = [];
 let players;
