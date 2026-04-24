@@ -7,6 +7,10 @@ function preload() {
   soliloquyMusic = loadSound("assets/audio/Soliloquy.mp3")
 
   //Sound Effects
+  damageSound = loadSound("assets/audio/damage1.wav")
+  collectSound = loadSound("assets/audio/collect.wav")
+  deathSound = loadSound("assets/audio/death1.wav")
+
 
   //Items
   featherImage = loadImage("assets/abilities/collectibles/Feather.png")
@@ -60,7 +64,7 @@ function preload() {
   //Object Sprites
   woodenBox = loadImage("assets/objects/WoodenBox.png")
   spikeTrap = loadImage("assets/objects/SpikeTrap.png")
-  doorImage = loadImage("assets/objects/door.png")
+  doorImage = loadImage("assets/objects/door2.png")
 
   //Player Sprites
   playerIdleSheet = loadImage("assets/characters/player/1/Idle.png");
@@ -71,6 +75,7 @@ function preload() {
 
   //Enemy Sprites
   greenslimeimage = loadImage("assets/enemies/SlimeWalk.png")
+  jumpingHostileImage = loadImage("assets/enemies/Jump.png")
 
   const loadFrameSequence = (basePath, filePrefix, frameCount) => {
     const frames = []

@@ -73,6 +73,7 @@
 
   const enemies = [
     new Hostile(960, height - 46, 40, 40, 1.6, 880, 2040),
+    new JumpingHostile(2175, height - 336, 40, 40, 0, 2085, 2265, 1, 140, 950, 11),
     new Hostile(2400, height - 935, 40, 40, 1.6, 2150, 2755),
     new FlyingHostile(1680, height - 560, 44, 44, 2.2, 1500, 2000, 1, 420, 150),
   ];

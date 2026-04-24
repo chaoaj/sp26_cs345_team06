@@ -264,7 +264,7 @@
 
   takeDamage(amount = 1) {
     let remainingDamage = amount;
-
+    damageSound.play()
     if (this.shieldHealth > 0) {
       const blockedDamage = Math.min(this.shieldHealth, remainingDamage);
       this.shieldHealth -= blockedDamage;
@@ -278,6 +278,7 @@
     this.isHurt = true;
     this.setAnimState("hurt");
     if (this.health <= 0) {
+      deathSound.play()
       this.respawn();
     }
   }
