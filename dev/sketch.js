@@ -34,6 +34,7 @@ let abilityUnlockPopup = null;
 let runStartedAt = null;
 let runCompletedAt = null;
 
+let last5KeysTyped = "";
 
 function getGameMillis() {
   if ((gameState === "paused" || gameState === "abilityUnlock") && pauseStartedAt !== null) {
@@ -46,7 +47,6 @@ function getRunElapsedMs() {
   if (runStartedAt === null) {
     return 0;
   }
-
   const currentTime = runCompletedAt !== null ? runCompletedAt : getGameMillis();
   return Math.max(0, currentTime - runStartedAt);
 }
@@ -62,12 +62,10 @@ function showAbilityUnlock(ability) {
   if (!ability || !ability.name || gameState !== "playing") {
     return;
   }
-
   abilityUnlockPopup = {
     name: ability.name,
     description: ability.description || "New ability unlocked.",
   };
-
   pauseStartedAt = millis();
   gameState = "abilityUnlock";
 }
@@ -76,23 +74,21 @@ function closeAbilityUnlockPopup() {
   if (!abilityUnlockPopup || gameState !== "abilityUnlock") {
     return;
   }
-
   if (pauseStartedAt !== null) {
     accumulatedPauseMs += millis() - pauseStartedAt;
   }
-
   pauseStartedAt = null;
   abilityUnlockPopup = null;
   gameState = "playing";
 }
 
 function setup() {
-  noSmooth()
+  noSmooth();
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
 
-  const level1Template = getLevel1Template()
+  const level1Template = getLevel1Template();
   levelTemplates.push(level1Template);
   const level2Template = getLevel2Template();
   if (level2Template.length < 10) {
@@ -108,7 +104,6 @@ function setup() {
   }
   levelTemplates.push(level3Template);
   setupLevel();
-
 }
 
 function setupLevel() {
@@ -130,7 +125,6 @@ function setupLevel() {
       player.setSpawnPoint(spawn.x, spawn.y);
       return;
     }
-
     const activeLevel = levels[levelNum - 1];
     if (activeLevel && typeof activeLevel.getSpawnPoint === "function") {
       const spawn = activeLevel.getSpawnPoint();
@@ -142,7 +136,6 @@ function setupLevel() {
     if (activeLevel && typeof activeLevel.resetDynamicState === "function") {
       activeLevel.resetDynamicState();
     }
-
     if (camera) {
       if (gameState === "endgame" && endGameLevel) {
         camera.worldWidth = endGameLevel.worldWidth;
@@ -165,17 +158,14 @@ function startEndGame() {
   if (!endGameLevel || !player) {
     return;
   }
-
   const spawn = endGameLevel.getSpawnPoint();
   player.setSpawnPoint(spawn.x, spawn.y);
   player.respawn();
-
   if (camera) {
     camera.worldWidth = endGameLevel.worldWidth;
     camera.x = 0;
     camera.y = 0;
   }
-
   if (runStartedAt === null) {
     runStartedAt = getGameMillis();
   }
@@ -188,14 +178,12 @@ function restartToTitle() {
   levels = [];
   levelTemplates = [];
   setup();
-
   if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) {
     backgroundMusic.stop();
   }
   if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
     soliloquyMusic.stop();
   }
-
   gameState = "title";
 }
 
@@ -203,21 +191,17 @@ function switchToLevel(nextLevelNum) {
   if (!levels || levels.length === 0) {
     return;
   }
-
   const clampedLevelNum = constrain(nextLevelNum, 1, levels.length);
   if (levelNum === clampedLevelNum) {
     return;
   }
-
   levelNum = clampedLevelNum;
-
   const spawnX = width * 0.12;
   const spawnY = height - 160;
   if (player) {
     player.setSpawnPoint(spawnX, spawnY);
     player.respawn();
   }
-
   if (camera) {
     const activeLevel = levels[levelNum - 1];
     if (activeLevel) {
@@ -230,7 +214,6 @@ function switchToLevel(nextLevelNum) {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-
   if (camera) {
     camera.worldHeight = height * WORLD_HEIGHT_MULTIPLIER;
     if (player) {
@@ -245,31 +228,25 @@ function updateLevelMusic() {
     gameState === "playing" ||
     gameState === "paused" ||
     gameState === "abilityUnlock";
-
   if (!isPlayableState) {
     return;
   }
-
   const isFinalLevel = levelNum === levels.length;
   if (!isFinalLevel) {
     if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
       soliloquyMusic.stop();
     }
-
     if (typeof backgroundMusic !== "undefined") {
       backgroundMusic.setLoop(true);
       if (!backgroundMusic.isPlaying()) {
         backgroundMusic.play();
       }
     }
-
     return;
   }
-
   if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) {
     backgroundMusic.stop();
   }
-
   if (typeof soliloquyMusic !== "undefined") {
     soliloquyMusic.setLoop(true);
     if (!soliloquyMusic.isPlaying()) {
@@ -321,7 +298,7 @@ function mousePressed() {
       const bx = panelX;
       const by = firstButtonY + i * lineHeight;
       if (mouseX > bx - bw / 2 && mouseX < bx + bw / 2 &&
-        mouseY > by - bh / 2 && mouseY < by + bh / 2) {
+          mouseY > by - bh / 2 && mouseY < by + bh / 2) {
         toggleCheat(cheats[i]);
       }
     }
@@ -351,10 +328,10 @@ function draw() {
   if (levelNum === levels.length && gameState !== "endgame") {
     gameState = "endgame";
   }
+
   if (gameState === "title") {
     drawTitleScreen();
   } else if (gameState === "playing") {
-
     level.updateMovingPlatforms(player);
     player.update(level.platforms);
     level.applyPitfall(player);
@@ -366,7 +343,6 @@ function draw() {
     camera.constrainPlayer(player);
 
     level.drawBackground();
-
     camera.apply();
     level.drawWorld();
     player.draw();
@@ -414,7 +390,6 @@ function draw() {
     camera.constrainPlayer(player);
 
     endGameLevel.drawBackground();
-
     camera.apply();
     endGameLevel.drawWorld();
     player.draw();
@@ -427,7 +402,6 @@ function draw() {
       if (runCompletedAt === null) {
         runCompletedAt = getGameMillis();
       }
-
       push();
       fill(255);
       textAlign(CENTER, CENTER);
@@ -437,10 +411,10 @@ function draw() {
       text("Treasure recovered.", width / 2, height / 2 + 18);
       text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, width / 2, height / 2 + 40);
       text("Press R to return to title", width / 2, height / 2 + 74);
-      if (hasCheated) {
-        drawCheaterOverlay()
-      }
       pop();
+      if (hasCheated) {
+        drawCheaterOverlay();
+      }
     }
   } else if (gameState === "paused") {
     level.drawBackground();
@@ -459,7 +433,6 @@ function draw() {
     level.drawHUD(player);
     drawCheatMenuOverlay();
   } else if (gameState === "levelSelect") {
-    // Render current world without simulation updates while showing level select
     level.drawBackground();
     camera.apply();
     level.drawWorld();
@@ -478,12 +451,10 @@ function draw() {
   }
 }
 
-
 function drawAbilityUnlockOverlay() {
   if (!abilityUnlockPopup) {
     return;
   }
-
   push();
   noStroke();
   fill(0, 0, 0, 165);
@@ -503,13 +474,10 @@ function drawAbilityUnlockOverlay() {
   textAlign(CENTER, CENTER);
   textSize(34);
   text("Ability Unlocked", panelX, panelY - 65);
-
   textSize(28);
   text(abilityUnlockPopup.name, panelX, panelY - 20);
-
   textSize(20);
   text(abilityUnlockPopup.description, panelX, panelY + 24);
-
   textSize(16);
   text("Press any key to continue", panelX, panelY + 78);
   pop();
@@ -521,9 +489,6 @@ function drawGamePrototype() {
   textSize(24);
   text("Game Prototype Running", width / 2, height / 2);
 }
-
-let last5KeysTyped = "";
-
 
 function keyPressed() {
   if (gameState === "title") {
@@ -548,30 +513,29 @@ function keyPressed() {
     if (key === '1') Ability.grant(player, DOUBLE_JUMP_ABILITY);
     if (key === '2') Ability.grant(player, DASH_ABILITY);
     if (key === 'r' || key === 'R') player.respawn();
-  }
 
-  if (CHEAT_MODE && gameState == "playing") {
     last5KeysTyped += key.toLowerCase();
-    print(last5KeysTyped)
     if (last5KeysTyped.length > 5) {
       last5KeysTyped = last5KeysTyped.slice(-5);
     }
     if (last5KeysTyped === "cheat") {
-      gameState = "cheatMenu"
+      gameState = "cheatMenu";
       last5KeysTyped = "";
     }
   }
+
   if (gameState === "cheatMenu") {
     if (key === "Escape" || key === "c" || key === "C") {
       gameState = "playing";
     }
   }
-  //TEMPORARY
+
+  // TEMPORARY
   if (key === 'l' || key === 'L') {
     const nextLevelNum = (levelNum % levels.length) + 1;
     switchToLevel(nextLevelNum);
   }
-  //TEMPORARY
+
   if (key === "p" || key === "P" || keyCode === ESCAPE) {
     if (gameState === "playing") {
       pauseStartedAt = millis();
