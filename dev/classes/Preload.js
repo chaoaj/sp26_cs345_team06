@@ -64,7 +64,7 @@ function preload() {
   //Object Sprites
   woodenBox = loadImage("assets/objects/WoodenBox.png")
   spikeTrap = loadImage("assets/objects/SpikeTrap.png")
-  doorImage = loadImage("assets/objects/door.png")
+  doorImage = loadImage("assets/objects/door2.png")
 
   //Player Sprites
   playerIdleSheet = loadImage("assets/characters/player/1/Idle.png");
