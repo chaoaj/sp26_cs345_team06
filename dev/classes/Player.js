@@ -185,6 +185,7 @@ class Player extends Actor {
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
+        if (platform.onLand) platform.onLand(this);
         continue;
       }
 
@@ -199,6 +200,7 @@ class Player extends Actor {
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
+        if (platform.onLand) platform.onLand(this);
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;
