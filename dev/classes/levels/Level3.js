@@ -8,8 +8,12 @@ function getLevel3Template() {
   const stairPlatform7 = new MovingPlatform(1940, height - 560, 230, 32, brickTileImage, "y", 80, 1, false);
   const finalPlatformBaseY = height - 620;
   const finalPlatformLoweredY = finalPlatformBaseY + 150;
-  const finalPlatform = new BrickPlatform(2920, finalPlatformBaseY, 220, 32, brickTileImage);
-  const finalDoor = new Door(3000, finalPlatformBaseY - 65, 75, 100);
+  // Move final platform so its left edge is flush with the right side of the wall at x=2800 (wall width 32)
+  // Wall right edge: 2800 + 16 = 2816; Platform width = 220; center x = 2816 + 220/2 = 2926
+  const finalPlatform = new BrickPlatform(2906, finalPlatformBaseY, 220, 32, brickTileImage);
+  // Move the door left so it sits on the platform (platform center is 2906, width 220, so platform spans 2796 to 3016)
+  // Door width is 75, so center at 2906+50 = 2956 keeps it on the right half, or 2906 for center
+  const finalDoor = new Door(2906, finalPlatformBaseY - 65, 75, 100);
 
   const platforms = [
     stairPlatform1,
@@ -26,7 +30,7 @@ function getLevel3Template() {
     new MovingPlatform(2450, height - 430, 180, 32, brickTileImage, "y", 260, 1.6, false),
     new MovingPlatform(2720, height - 580, 180, 32, brickTileImage, "y", 260, 1.6, true),
     finalPlatform,
-    new BrickPlatform (2815, height - 985, 32, 800, brickTileImage),
+    new BrickPlatform (2800, height - 985, 32, 800, brickTileImage),
   ];
 
   const items = [
@@ -80,6 +84,20 @@ function getLevel3Template() {
       () => {
         finalPlatform.y = finalPlatformLoweredY;
         finalDoor.y = finalPlatformLoweredY - 65;
+        // Spawn 3 FlyingHostiles around the player
+        if (typeof player !== "undefined" && player) {
+          const px = player.x;
+          const py = player.y;
+          // Add to the current level's enemies array
+          const currentLevel = typeof level !== "undefined" ? level : (levels && levels[2]);
+          if (currentLevel && currentLevel.enemies) {
+            currentLevel.enemies.push(
+              new FlyingHostile(px - 100, py - 60, 44, 44, 2.2, px - 200, px, 1, 420, 150),
+              new FlyingHostile(px + 100, py - 60, 44, 44, 2.2, px, px + 200, 1, 420, 150),
+              new FlyingHostile(px, py - 140, 44, 44, 2.2, px - 100, px + 100, 1, 420, 150)
+            );
+          }
+        }
       }
     ),
   ];
