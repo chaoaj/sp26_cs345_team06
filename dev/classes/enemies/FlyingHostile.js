@@ -43,9 +43,22 @@ class FlyingHostile extends Hostile {
     this.dashConnected = false;
     this.canBeStomped = true;
     this.isDead = false;
+    this.pendingRemoval = false;
+
+    this.animFrame = 0;
+    this.animTimer = 0;
+    this.currentAnimationKey = "idle";
   }
 
   update() {
+    if (this.state === "dying") {
+      this.updateAnimation();
+      if (this.isDeathAnimationComplete()) {
+        this.pendingRemoval = true;
+      }
+      return;
+    }
+
     const target = this.getTargetPlayer();
     const now = typeof getGameMillis === "function" ? getGameMillis() : millis();
 
@@ -99,6 +112,8 @@ class FlyingHostile extends Hostile {
     } else if (this.dashVx > 0 || (this.state !== "dash" && target.x > this.x)) {
       this.direction = 1;
     }
+
+    this.updateAnimation();
   }
 
   getTargetPlayer() {
@@ -173,6 +188,104 @@ class FlyingHostile extends Hostile {
     );
   }
 
+  startDeathAnimation() {
+    if (this.state === "dying") {
+      return;
+    }
+
+    this.isDead = true;
+    this.state = "dying";
+    this.canBeStomped = false;
+    this.damage = 0;
+    this.dashVx = 0;
+    this.dashVy = 0;
+    this.animFrame = 0;
+    this.animTimer = 0;
+  }
+
+  getActiveAnimation() {
+    if (this.state === "dying" && Array.isArray(flyingHostileDeathFrames) && flyingHostileDeathFrames.length > 0) {
+      return {
+        key: "dying",
+        frames: flyingHostileDeathFrames,
+        fps: 14,
+        loop: false,
+      };
+    }
+
+    if (this.state === "dash" && Array.isArray(flyingHostileAttackFrames) && flyingHostileAttackFrames.length > 0) {
+      return {
+        key: "dash",
+        frames: flyingHostileAttackFrames,
+        fps: 20,
+        loop: true,
+      };
+    }
+
+    if (Array.isArray(flyingHostileIdleFrames) && flyingHostileIdleFrames.length > 0) {
+      return {
+        key: "idle",
+        frames: flyingHostileIdleFrames,
+        fps: 10,
+        loop: true,
+      };
+    }
+
+    return {
+      key: "fallback",
+      frames: [],
+      fps: 10,
+      loop: true,
+    };
+  }
+
+  updateAnimation() {
+    const animation = this.getActiveAnimation();
+    if (!animation.frames || animation.frames.length === 0) {
+      return;
+    }
+
+    if (this.currentAnimationKey !== animation.key) {
+      this.currentAnimationKey = animation.key;
+      this.animFrame = 0;
+      this.animTimer = 0;
+    }
+
+    this.animTimer += deltaTime;
+    const frameDuration = 1000 / animation.fps;
+    while (this.animTimer >= frameDuration) {
+      this.animTimer -= frameDuration;
+      if (animation.loop) {
+        this.animFrame = (this.animFrame + 1) % animation.frames.length;
+      } else {
+        this.animFrame = Math.min(this.animFrame + 1, animation.frames.length - 1);
+      }
+    }
+  }
+
+  isDeathAnimationComplete() {
+    const deathFrames = Array.isArray(flyingHostileDeathFrames) ? flyingHostileDeathFrames : [];
+    return this.state === "dying" && deathFrames.length > 0 && this.animFrame >= deathFrames.length - 1;
+  }
+
+  reset() {
+    this.x = this.homeX;
+    this.y = this.homeY;
+    this.direction = 1;
+    this.state = "idle";
+    this.isDead = false;
+    this.canBeStomped = true;
+    this.pendingRemoval = false;
+    this.dashVx = 0;
+    this.dashVy = 0;
+    this.dashUntil = 0;
+    this.nextDashAllowedAt = -Infinity;
+    this.windupUntil = 0;
+    this.animFrame = 0;
+    this.animTimer = 0;
+    this.currentAnimationKey = "idle";
+  }
+
   draw() {
     const isDashing = this.state === "dash";
     const isWindup = this.state === "windup";
@@ -190,31 +303,50 @@ class FlyingHostile extends Hostile {
       noStroke();
     }
 
-    fill(isDashing ? color(255, 95, 65) : isWindup ? color(255, 170, 70) : color(215, 70, 70));
-    ellipse(this.x, this.y, this.width, this.height * 0.75);
+    const animation = this.getActiveAnimation();
+    const frame = animation.frames && animation.frames.length > 0
+      ? animation.frames[Math.min(this.animFrame, animation.frames.length - 1)]
+      : null;
 
-    fill(isDashing ? color(255, 210, 160) : color(245, 230, 205));
-    const wingSpread = isDashing ? this.width * 0.75 : this.width * 0.55;
-    triangle(
-      this.x - this.width * 0.1,
-      this.y - this.height * 0.1,
-      this.x - wingSpread,
-      this.y - this.height * 0.45,
-      this.x - wingSpread,
-      this.y + this.height * 0.3
-    );
-    triangle(
-      this.x + this.width * 0.1,
-      this.y - this.height * 0.1,
-      this.x + wingSpread,
-      this.y - this.height * 0.45,
-      this.x + wingSpread,
-      this.y + this.height * 0.3
-    );
+    if (frame) {
+      imageMode(CENTER);
+      const drawW = this.width * 2.6;
+      const drawH = this.height * 2.6;
 
-    fill(30);
-    const eyeOffsetX = this.direction === -1 ? -this.width * 0.15 : this.width * 0.15;
-    ellipse(this.x + eyeOffsetX, this.y - this.height * 0.08, this.width * 0.1, this.width * 0.1);
+      if (this.direction === -1) {
+        translate(this.x, this.y);
+        scale(-1, 1);
+        image(frame, 0, 0, drawW, drawH);
+      } else {
+        image(frame, this.x, this.y, drawW, drawH);
+      }
+    } else {
+      fill(isDashing ? color(255, 95, 65) : isWindup ? color(255, 170, 70) : color(215, 70, 70));
+      ellipse(this.x, this.y, this.width, this.height * 0.75);
+
+      fill(isDashing ? color(255, 210, 160) : color(245, 230, 205));
+      const wingSpread = isDashing ? this.width * 0.75 : this.width * 0.55;
+      triangle(
+        this.x - this.width * 0.1,
+        this.y - this.height * 0.1,
+        this.x - wingSpread,
+        this.y - this.height * 0.45,
+        this.x - wingSpread,
+        this.y + this.height * 0.3
+      );
+      triangle(
+        this.x + this.width * 0.1,
+        this.y - this.height * 0.1,
+        this.x + wingSpread,
+        this.y - this.height * 0.45,
+        this.x + wingSpread,
+        this.y + this.height * 0.3
+      );
+
+      fill(30);
+      const eyeOffsetX = this.direction === -1 ? -this.width * 0.15 : this.width * 0.15;
+      ellipse(this.x + eyeOffsetX, this.y - this.height * 0.08, this.width * 0.1, this.width * 0.1);
+    }
     pop();
   }
 }

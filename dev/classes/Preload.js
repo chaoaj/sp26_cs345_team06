@@ -72,6 +72,32 @@ function preload() {
   //Enemy Sprites
   greenslimeimage = loadImage("assets/enemies/SlimeWalk.png")
 
+  const loadFrameSequence = (basePath, filePrefix, frameCount) => {
+    const frames = []
+    for (let i = 0; i < frameCount; i++) {
+      const frameNumber = String(i).padStart(3, "0")
+      frames.push(loadImage(`${basePath}/${filePrefix}${frameNumber}.png`))
+    }
+    return frames
+  }
+
+  flyingHostileIdleFrames = loadFrameSequence(
+    "assets/enemies/Wraith_02/PNG Sequences/Idle",
+    "Wraith_02_Idle_",
+    12
+  )
+  flyingHostileAttackFrames = loadFrameSequence(
+    "assets/enemies/Wraith_02/PNG Sequences/Attacking",
+    "Wraith_02_Attack_",
+    12
+  )
+  flyingHostileDeathFrames = loadFrameSequence(
+    "assets/enemies/Wraith_02/PNG Sequences/Dying",
+    "Wraith_02_Dying_",
+    15
+  )
+  flyingHostileImage = flyingHostileIdleFrames[0]
+
   //UI
   heartImage = loadImage("assets/abilities/collectibles/heart.png")
 }

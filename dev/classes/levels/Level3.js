@@ -19,14 +19,14 @@ function getLevel3Template() {
     stairPlatform5,
     stairPlatform6,
     stairPlatform7,
-    new BrickPlatform(2450, height - 700, 700, 32, brickTileImage), 
-    new BrickPlatform(2450, height - 900, 700, 32, brickTileImage), 
+    new BrickPlatform(2450, height - 700, 700, 32, brickTileImage),
+    new BrickPlatform(2450, height - 900, 700, 32, brickTileImage),
     new BrickPlatform(2100, height - 142.5, 30, 285, brickTileImage),
-    new BrickPlatform(2175, height - 300, 180, 32, brickTileImage), 
+    new BrickPlatform(2175, height - 300, 180, 32, brickTileImage),
     new MovingPlatform(2450, height - 430, 180, 32, brickTileImage, "y", 260, 1.6, false),
     new MovingPlatform(2720, height - 580, 180, 32, brickTileImage, "y", 260, 1.6, true),
-    finalPlatform, 
-    new BrickPlatform (2815, height - 985, 32, 800, brickTileImage), 
+    finalPlatform,
+    new BrickPlatform (2815, height - 985, 32, 800, brickTileImage),
   ];
 
   const items = [
@@ -38,7 +38,7 @@ function getLevel3Template() {
   const traps = [
     new SpikeTrap(880, height - 45, 120, 40),
     new SpikeTrap(2300, height - 735, 140, 40),
-    new LaserTrap(2450, height - 805, 14, 180, 1, 2000, 5000, 800, "y"), 
+    new LaserTrap(2450, height - 805, 14, 180, 1, 2000, 5000, 800, "y"),
     new SpikeTrap(2600, height - 735, 140, 40),
   ];
 
@@ -74,6 +74,7 @@ function getLevel3Template() {
   const enemies = [
     new Hostile(960, height - 46, 40, 40, 1.6, 880, 2040),
     new Hostile(2400, height - 935, 40, 40, 1.6, 2150, 2755),
+    new FlyingHostile(1680, height - 560, 44, 44, 2.2, 1500, 2000, 1, 420, 150),
   ];
 
   const doors = [
@@ -87,7 +88,7 @@ function getLevel3Template() {
 
   const terrain = [
     new Terrain(2200, height - 144, 288, 384, step4),
-  ]; 
+  ];
 
   return [
     platforms,

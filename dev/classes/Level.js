@@ -200,8 +200,13 @@ class Level {
     }
 
     updateEnemies() {
-        for (const enemy of this.enemies) {
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+            const enemy = this.enemies[i];
             enemy.update();
+
+            if (enemy.pendingRemoval) {
+                this.enemies.splice(i, 1);
+            }
         }
     }
 
@@ -507,8 +512,12 @@ class Level {
             }
 
             if (this.isPlayerStompingEnemy(player, enemy)) {
-                enemy.isDead = true;
-                this.enemies.splice(i, 1);
+                if (typeof enemy.startDeathAnimation === "function") {
+                    enemy.startDeathAnimation();
+                } else {
+                    enemy.isDead = true;
+                    this.enemies.splice(i, 1);
+                }
                 player.yVelocity = -Math.max(8, player.jumpStrength * 0.55);
                 player.isOnGround = false;
                 return;
@@ -580,7 +589,7 @@ class Level {
             const highJumpTimeLeftMs = player.getHighJumpTimeLeftMs();
             const highJumpTimeLeftSeconds = ceil(highJumpTimeLeftMs / 1000);
             timedAbilities.push({ ability: "highJump", timeLeft: highJumpTimeLeftSeconds })
-            
+
         }
 
         if (player.speedPotionExpiresAt > 0) {
