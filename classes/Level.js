@@ -425,6 +425,34 @@ class Level {
 
         for (const box of this.boxes) {
             box.update(this.platforms);
+            // Box pitfall respawn logic (Level 2)
+            if (this.pits && this.pits.length > 0) {
+                // Use the same pitfall logic as player, but for the box
+                const boxLeft = box.x - box.w / 2;
+                const boxRight = box.x + box.w / 2;
+                const touchingFloorBand = box.y + box.h / 2 >= height - 1;
+                if (touchingFloorBand) {
+                    for (const pit of this.pits) {
+                        const startTile = pit[0];
+                        const tileSpan = pit[1] + 1;
+                        const pitLeft = startTile * 32 - 16;
+                        const pitRight = pitLeft + tileSpan * 32;
+                        if (boxRight > pitLeft && boxLeft < pitRight) {
+                            // Respawn box at its initial position
+                            const idx = this.boxes.indexOf(box);
+                            if (this.initialBoxStates && this.initialBoxStates[idx]) {
+                                const initial = this.initialBoxStates[idx];
+                                box.x = initial.x;
+                                box.y = initial.y;
+                                box.xVelocity = 0;
+                                box.yVelocity = 0;
+                                box.isOnGround = false;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         for (const mirror of this.laserMirrors) {
