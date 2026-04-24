@@ -330,16 +330,13 @@ function draw() {
     camera.worldWidth = level.worldWidth;
   }
   updateLevelMusic();
-  console.log('[draw] gameState:', gameState, 'levelNum:', levelNum, 'levels.length:', levels.length);
   // Failsafe: force endgame state if on final level
   if (levelNum === levels.length && gameState !== "endgame") {
     gameState = "endgame";
   }
   if (gameState === "title") {
-    console.log('[draw] branch: title');
     drawTitleScreen();
   } else if (gameState === "playing") {
-    console.log('[draw] branch: playing');
 
     level.updateMovingPlatforms(player);
     player.update(level.platforms);
@@ -395,7 +392,6 @@ function draw() {
       }
     }
   } else if (gameState === "endgame") {
-    console.log('[draw] branch: endgame');
     player.update(endGameLevel.platforms);
     camera.follow(player);
     camera.constrainPlayer(player);
@@ -410,7 +406,6 @@ function draw() {
     endGameLevel.collectTouchedItems(player);
 
     const win = endGameLevel.hasCollectedTreasure(player);
-    console.log('[draw] endgame branch. endGameLevel:', endGameLevel, 'win:', win);
     if (win) {
       if (runCompletedAt === null) {
         runCompletedAt = getGameMillis();

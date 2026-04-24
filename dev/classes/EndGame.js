@@ -53,7 +53,6 @@ class EndGame {
   }
 
   hasCollectedTreasure(player) {
-    console.log('[EndGame] hasCollectedTreasure called. Instance:', this, 'Treasure collected:', this.treasure ? this.treasure.collected : undefined);
     if (!this.treasure) {
       return false;
     }
@@ -74,7 +73,6 @@ class EndGame {
       player.hitTop < chestBottom;
 
     if (touchingChest) {
-      console.log('[EndGame] Player touched chest. Setting collected = true');
       this.treasure.collected = true;
       return true;
     }
