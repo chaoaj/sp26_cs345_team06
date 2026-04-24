@@ -42,6 +42,10 @@ class Level {
             collectedUntil: item.collectedUntil,
         }));
 
+        this.initialDoorStates = this.doors.map((door) => ({
+            isVisible: door.isVisible,
+        }));
+
         this.initialBoxStates = this.boxes.map((box) => ({
             x: box.x,
             y: box.y,
@@ -111,6 +115,13 @@ class Level {
     }
 
     resetDynamicState() {
+        // Reset doors
+        for (let i = 0; i < this.doors.length; i++) {
+            if (this.initialDoorStates[i]) {
+                this.doors[i].isVisible = this.initialDoorStates[i].isVisible;
+            }
+        }
+
                 // Reset all buttons to unpressed state
                 for (const button of this.buttons) {
                     button.isPressed = false;
