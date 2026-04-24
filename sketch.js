@@ -34,6 +34,8 @@ let abilityUnlockPopup = null;
 let runStartedAt = null;
 let runCompletedAt = null;
 
+let last5KeysTyped = "";
+
 function getGameMillis() {
   if ((gameState === "paused" || gameState === "abilityUnlock") && pauseStartedAt !== null) {
     return pauseStartedAt - accumulatedPauseMs;
@@ -45,7 +47,6 @@ function getRunElapsedMs() {
   if (runStartedAt === null) {
     return 0;
   }
-
   const currentTime = runCompletedAt !== null ? runCompletedAt : getGameMillis();
   return Math.max(0, currentTime - runStartedAt);
 }
@@ -61,12 +62,10 @@ function showAbilityUnlock(ability) {
   if (!ability || !ability.name || gameState !== "playing") {
     return;
   }
-
   abilityUnlockPopup = {
     name: ability.name,
     description: ability.description || "New ability unlocked.",
   };
-
   pauseStartedAt = millis();
   gameState = "abilityUnlock";
 }
@@ -75,26 +74,21 @@ function closeAbilityUnlockPopup() {
   if (!abilityUnlockPopup || gameState !== "abilityUnlock") {
     return;
   }
-
   if (pauseStartedAt !== null) {
     accumulatedPauseMs += millis() - pauseStartedAt;
   }
-
   pauseStartedAt = null;
   abilityUnlockPopup = null;
   gameState = "playing";
 }
 
 function setup() {
-  noSmooth()
-  //TODO: make a table in a different class for
-  // different levels (maybe, it is here because setup runs after
-  // preload, otherwise it was using image variables before they were loaded)
+  noSmooth();
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
 
-  const level1Template = getLevel1Template()
+  const level1Template = getLevel1Template();
   levelTemplates.push(level1Template);
   const level2Template = getLevel2Template();
   if (level2Template.length < 10) {
@@ -110,17 +104,14 @@ function setup() {
   }
   levelTemplates.push(level3Template);
   setupLevel();
-
 }
 
 function setupLevel() {
-  //level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies, level1Doors);
   level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8], levelTemplates[0][9]);
   level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8], levelTemplates[1][9]);
   level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8], levelTemplates[2][9]);
   levels.push(level1, level2, level3);
 
-  // Add final level as level 4
   endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
   endGameLevel.setup();
   levels.push(endGameLevel);
@@ -134,7 +125,6 @@ function setupLevel() {
       player.setSpawnPoint(spawn.x, spawn.y);
       return;
     }
-
     const activeLevel = levels[levelNum - 1];
     if (activeLevel && typeof activeLevel.getSpawnPoint === "function") {
       const spawn = activeLevel.getSpawnPoint();
@@ -146,7 +136,6 @@ function setupLevel() {
     if (activeLevel && typeof activeLevel.resetDynamicState === "function") {
       activeLevel.resetDynamicState();
     }
-
     if (camera) {
       if (gameState === "endgame" && endGameLevel) {
         camera.worldWidth = endGameLevel.worldWidth;
@@ -169,17 +158,14 @@ function startEndGame() {
   if (!endGameLevel || !player) {
     return;
   }
-
   const spawn = endGameLevel.getSpawnPoint();
   player.setSpawnPoint(spawn.x, spawn.y);
   player.respawn();
-
   if (camera) {
     camera.worldWidth = endGameLevel.worldWidth;
     camera.x = 0;
     camera.y = 0;
   }
-
   if (runStartedAt === null) {
     runStartedAt = getGameMillis();
   }
@@ -192,14 +178,12 @@ function restartToTitle() {
   levels = [];
   levelTemplates = [];
   setup();
-
   if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) {
     backgroundMusic.stop();
   }
   if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
     soliloquyMusic.stop();
   }
-
   gameState = "title";
 }
 
@@ -207,21 +191,17 @@ function switchToLevel(nextLevelNum) {
   if (!levels || levels.length === 0) {
     return;
   }
-
   const clampedLevelNum = constrain(nextLevelNum, 1, levels.length);
   if (levelNum === clampedLevelNum) {
     return;
   }
-
   levelNum = clampedLevelNum;
-
   const spawnX = width * 0.12;
   const spawnY = height - 160;
   if (player) {
     player.setSpawnPoint(spawnX, spawnY);
     player.respawn();
   }
-
   if (camera) {
     const activeLevel = levels[levelNum - 1];
     if (activeLevel) {
@@ -234,8 +214,6 @@ function switchToLevel(nextLevelNum) {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-
-  // Keep current run state on resize instead of rebuilding levels/player.
   if (camera) {
     camera.worldHeight = height * WORLD_HEIGHT_MULTIPLIER;
     if (player) {
@@ -250,31 +228,25 @@ function updateLevelMusic() {
     gameState === "playing" ||
     gameState === "paused" ||
     gameState === "abilityUnlock";
-
   if (!isPlayableState) {
     return;
   }
-
   const isFinalLevel = levelNum === levels.length;
   if (!isFinalLevel) {
     if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
       soliloquyMusic.stop();
     }
-
     if (typeof backgroundMusic !== "undefined") {
       backgroundMusic.setLoop(true);
       if (!backgroundMusic.isPlaying()) {
         backgroundMusic.play();
       }
     }
-
     return;
   }
-
   if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) {
     backgroundMusic.stop();
   }
-
   if (typeof soliloquyMusic !== "undefined") {
     soliloquyMusic.setLoop(true);
     if (!soliloquyMusic.isPlaying()) {
@@ -301,11 +273,38 @@ function mousePressed() {
       pauseStartedAt = null;
       gameState = "playing";
     } else if (action === "levelSelect") {
-      // Show the level navigation menu
       gameState = "levelSelect";
     }
     return;
   }
+
+  if (gameState === "cheatMenu") {
+    const cheats = [
+      "infiniteHealth", "infiniteJumps", "unlockAll",
+      "skipLevel", "unlockItems"
+    ];
+    const lineHeight = 38;
+    const panelW = min(520, width - 60);
+    const basePanelH = 340;
+    const panelH = min(height - 20, basePanelH + max(0, cheats.length - 4) * lineHeight);
+    const panelX = width / 2;
+    const panelY = height / 2;
+    const panelTop = panelY - panelH / 2;
+    const firstButtonY = panelTop + 154;
+    const bw = panelW - 48;
+    const bh = 30;
+
+    for (let i = 0; i < cheats.length; i++) {
+      const bx = panelX;
+      const by = firstButtonY + i * lineHeight;
+      if (mouseX > bx - bw / 2 && mouseX < bx + bw / 2 &&
+          mouseY > by - bh / 2 && mouseY < by + bh / 2) {
+        toggleCheat(cheats[i]);
+      }
+    }
+    return;
+  }
+
   if (gameState === "levelSelect") {
     const selectedLevel = handleLevelSelectClick(mouseX, mouseY);
     if (selectedLevel) {
@@ -314,11 +313,7 @@ function mousePressed() {
         accumulatedPauseMs += millis() - pauseStartedAt;
       }
       pauseStartedAt = null;
-      if (selectedLevel === levels.length) {
-        gameState = "endgame";
-      } else {
-        gameState = "playing";
-      }
+      gameState = selectedLevel === levels.length ? "endgame" : "playing";
     }
     return;
   }
@@ -330,14 +325,13 @@ function draw() {
     camera.worldWidth = level.worldWidth;
   }
   updateLevelMusic();
-  // Failsafe: force endgame state if on final level
   if (levelNum === levels.length && gameState !== "endgame") {
     gameState = "endgame";
   }
+
   if (gameState === "title") {
     drawTitleScreen();
   } else if (gameState === "playing") {
-
     level.updateMovingPlatforms(player);
     player.update(level.platforms);
     level.applyPitfall(player);
@@ -349,7 +343,6 @@ function draw() {
     camera.constrainPlayer(player);
 
     level.drawBackground();
-
     camera.apply();
     level.drawWorld();
     player.draw();
@@ -397,7 +390,6 @@ function draw() {
     camera.constrainPlayer(player);
 
     endGameLevel.drawBackground();
-
     camera.apply();
     endGameLevel.drawWorld();
     player.draw();
@@ -410,7 +402,6 @@ function draw() {
       if (runCompletedAt === null) {
         runCompletedAt = getGameMillis();
       }
-
       push();
       fill(255);
       textAlign(CENTER, CENTER);
@@ -421,9 +412,11 @@ function draw() {
       text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, width / 2, height / 2 + 40);
       text("Press R to return to title", width / 2, height / 2 + 74);
       pop();
+      if (hasCheated) {
+        drawCheaterOverlay();
+      }
     }
   } else if (gameState === "paused") {
-    // Render current world without simulation updates while paused.
     level.drawBackground();
     camera.apply();
     level.drawWorld();
@@ -431,8 +424,15 @@ function draw() {
     camera.reset();
     level.drawHUD(player);
     drawPauseOverlay();
+  } else if (gameState === "cheatMenu") {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawCheatMenuOverlay();
   } else if (gameState === "levelSelect") {
-    // Render current world without simulation updates while showing level select
     level.drawBackground();
     camera.apply();
     level.drawWorld();
@@ -455,7 +455,6 @@ function drawAbilityUnlockOverlay() {
   if (!abilityUnlockPopup) {
     return;
   }
-
   push();
   noStroke();
   fill(0, 0, 0, 165);
@@ -475,13 +474,10 @@ function drawAbilityUnlockOverlay() {
   textAlign(CENTER, CENTER);
   textSize(34);
   text("Ability Unlocked", panelX, panelY - 65);
-
   textSize(28);
   text(abilityUnlockPopup.name, panelX, panelY - 20);
-
   textSize(20);
   text(abilityUnlockPopup.description, panelX, panelY + 24);
-
   textSize(16);
   text("Press any key to continue", panelX, panelY + 78);
   pop();
@@ -497,8 +493,6 @@ function drawGamePrototype() {
 function keyPressed() {
   if (gameState === "title") {
     handleTitleKeyPressed();
-    //handleTitleKeyPressed();
-    //  why are there two?
     return;
   }
 
@@ -519,14 +513,29 @@ function keyPressed() {
     if (key === '1') Ability.grant(player, DOUBLE_JUMP_ABILITY);
     if (key === '2') Ability.grant(player, DASH_ABILITY);
     if (key === 'r' || key === 'R') player.respawn();
+
+    last5KeysTyped += key.toLowerCase();
+    if (last5KeysTyped.length > 5) {
+      last5KeysTyped = last5KeysTyped.slice(-5);
+    }
+    if (last5KeysTyped === "cheat") {
+      gameState = "cheatMenu";
+      last5KeysTyped = "";
+    }
   }
 
-  //TEMPORARY
+  if (gameState === "cheatMenu") {
+    if (key === "Escape" || key === "c" || key === "C") {
+      gameState = "playing";
+    }
+  }
+
+  // TEMPORARY
   if (key === 'l' || key === 'L') {
     const nextLevelNum = (levelNum % levels.length) + 1;
     switchToLevel(nextLevelNum);
   }
-  //TEMPORARY
+
   if (key === "p" || key === "P" || keyCode === ESCAPE) {
     if (gameState === "playing") {
       pauseStartedAt = millis();
