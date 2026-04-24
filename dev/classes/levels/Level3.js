@@ -54,7 +54,9 @@ function getLevel3Template() {
     new Box(2750, height - 930, 30, 30),
   ];
 
+  let secondButtonActivated = false;
   const buttons = [
+    // Original: must be held
     new Button(
       1180,
       height - 35,
@@ -69,11 +71,22 @@ function getLevel3Template() {
         finalDoor.y = finalPlatformBaseY - 65;
       }
     ),
+    // Second button: press once, turns green, stays down
+    new SinglePressButton(
+      1300,
+      height - 35,
+      80,
+      20,
+      () => {
+        finalPlatform.y = finalPlatformLoweredY;
+        finalDoor.y = finalPlatformLoweredY - 65;
+      }
+    ),
   ];
 
   const enemies = [
     new Hostile(960, height - 46, 40, 40, 1.6, 880, 2040),
-    new JumpingHostile(2175, height - 336, 40, 40, 0, 2085, 2265, 1, 140, 950, 11),
+    new JumpingHostile(2175, height - 387, 40, 40, 0, 2085, 2265, 1, 140, 1800, 11),
     new Hostile(2400, height - 935, 40, 40, 1.6, 2150, 2755),
     new FlyingHostile(1680, height - 560, 44, 44, 2.2, 1500, 2000, 1, 420, 150),
   ];
