@@ -268,6 +268,7 @@ class Level {
 
     applyPitfall(player) {
         if (this.isPlayerTouchingPit(player)) {
+            deathSound.play()
             player.respawn();
         }
     }
