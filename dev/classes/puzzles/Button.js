@@ -26,18 +26,20 @@ class Button {
   isEntityOnTop(entity) {
     const eHalfW = (entity.w || entity.width) / 2;
     const eHalfH = (entity.h || entity.height) / 2;
-    const eLeft = entity.x - eHalfW;
-    const eRight = entity.x + eHalfW;
+    const eLeft   = entity.x - eHalfW;
+    const eRight  = entity.x + eHalfW;
+    const eTop    = entity.y - eHalfH;
     const eBottom = entity.y + eHalfH;
-    const buttonTop = this.y - this.h / 2;
-    const buttonLeft = this.x - this.w / 2;
-    const buttonRight = this.x + this.w / 2;
+    const buttonLeft   = this.x - this.w / 2;
+    const buttonRight  = this.x + this.w / 2;
+    const buttonTop    = this.y - this.h / 2;
+    const buttonBottom = this.y + this.h / 2;
 
     return (
-      eRight > buttonLeft &&
-      eLeft < buttonRight &&
-      eBottom >= buttonTop - 2 &&
-      eBottom <= buttonTop + this.h
+      eRight  > buttonLeft   &&
+      eLeft   < buttonRight  &&
+      eBottom > buttonTop    &&
+      eBottom < buttonBottom + 8
     );
   }
 
