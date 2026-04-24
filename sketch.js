@@ -120,8 +120,10 @@ function setupLevel() {
   level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8], levelTemplates[2][9]);
   levels.push(level1, level2, level3);
 
+  // Add final level as level 4
   endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
   endGameLevel.setup();
+  levels.push(endGameLevel);
 
   const spawnX = width * 0.12;
   const spawnY = height - 160;
@@ -178,6 +180,10 @@ function startEndGame() {
     camera.y = 0;
   }
 
+  if (runStartedAt === null) {
+    runStartedAt = getGameMillis();
+  }
+  runCompletedAt = null;
   gameState = "endgame";
 }
 
@@ -278,35 +284,43 @@ function updateLevelMusic() {
 }
 
 function mousePressed() {
-  if (gameState !== "paused") {
-    return;
-  }
-
-  const action = handlePauseMenuClick(mouseX, mouseY);
-  if (action === "resume") {
-    if (pauseStartedAt !== null) {
-      accumulatedPauseMs += millis() - pauseStartedAt;
-    }
-    pauseStartedAt = null;
-    gameState = "playing";
-  } else if (action === "retry") {
-    levels[levelNum - 1].resetDynamicState();
-    player.respawn();
-    if (pauseStartedAt !== null) {
-      accumulatedPauseMs += millis() - pauseStartedAt;
-    }
-    pauseStartedAt = null;
-    gameState = "playing";
-  } else if (action === "levelSelect") {
-    const levelNum = handleLevelSelectClick(mouseX, mouseY);
-    if (levelNum) {
-      switchToLevel(levelNum);
+  if (gameState === "paused") {
+    const action = handlePauseMenuClick(mouseX, mouseY);
+    if (action === "resume") {
       if (pauseStartedAt !== null) {
         accumulatedPauseMs += millis() - pauseStartedAt;
       }
       pauseStartedAt = null;
       gameState = "playing";
+    } else if (action === "retry") {
+      levels[levelNum - 1].resetDynamicState();
+      player.respawn();
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
+      }
+      pauseStartedAt = null;
+      gameState = "playing";
+    } else if (action === "levelSelect") {
+      // Show the level navigation menu
+      gameState = "levelSelect";
     }
+    return;
+  }
+  if (gameState === "levelSelect") {
+    const selectedLevel = handleLevelSelectClick(mouseX, mouseY);
+    if (selectedLevel) {
+      switchToLevel(selectedLevel);
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
+      }
+      pauseStartedAt = null;
+      if (selectedLevel === levels.length) {
+        gameState = "endgame";
+      } else {
+        gameState = "playing";
+      }
+    }
+    return;
   }
 }
 
@@ -316,6 +330,10 @@ function draw() {
     camera.worldWidth = level.worldWidth;
   }
   updateLevelMusic();
+  // Failsafe: force endgame state if on final level
+  if (levelNum === levels.length && gameState !== "endgame") {
+    gameState = "endgame";
+  }
   if (gameState === "title") {
     drawTitleScreen();
   } else if (gameState === "playing") {
@@ -342,6 +360,7 @@ function draw() {
 
     if (level.doors.length > 0) {
       for (const door of level.doors) {
+        if (door.isVisible === false) continue;
         const playerLeft = typeof player.hitLeft === "number" ? player.hitLeft : player.x - player.width / 2;
         const playerRight = typeof player.hitRight === "number" ? player.hitRight : player.x + player.width / 2;
         const playerTop = typeof player.hitTop === "number" ? player.hitTop : player.y - player.height / 2;
@@ -361,8 +380,12 @@ function draw() {
         if (hit) {
           if (levelNum >= levels.length) {
             startEndGame();
+            gameState = "endgame";
           } else {
             switchToLevel(levelNum + 1);
+            if (levelNum === levels.length) {
+              gameState = "endgame";
+            }
           }
           break;
         }
@@ -380,7 +403,10 @@ function draw() {
     player.draw();
     camera.reset();
 
-    if (endGameLevel.hasCollectedTreasure(player)) {
+    endGameLevel.collectTouchedItems(player);
+
+    const win = endGameLevel.hasCollectedTreasure(player);
+    if (win) {
       if (runCompletedAt === null) {
         runCompletedAt = getGameMillis();
       }
@@ -405,6 +431,15 @@ function draw() {
     camera.reset();
     level.drawHUD(player);
     drawPauseOverlay();
+  } else if (gameState === "levelSelect") {
+    // Render current world without simulation updates while showing level select
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawLevelSelectOverlay();
   } else if (gameState === "abilityUnlock") {
     level.drawBackground();
     camera.apply();

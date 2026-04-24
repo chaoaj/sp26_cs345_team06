@@ -16,7 +16,7 @@ function getLevel2Template() {
 
   const farPlatform = new BrickPlatform(3116, height - 770, 240, 32, brickTileImage);
 
-  // Button platform 
+  // Button platform
   const buttonPlatform = new BrickPlatform(2646, height - 516, 192, 32, brickTileImage);
 
   const exitDoor     = new Door(3116, height - 851, 75, 130);
@@ -45,6 +45,8 @@ function getLevel2Template() {
   // ── ITEMS ─────────────────────────────────────────────────────────────────
   const items = [
     new Items(220, height - 40, "potion"),
+    // Dash ability next to the box on the same platform
+    new Items(2180 + 50, height - 806, "dashAbility"),
   ];
 
   // ── TRAPS ─────────────────────────────────────────────────────────────────
@@ -66,7 +68,7 @@ function getLevel2Template() {
 
   // ── PITS ──────────────────────────────────────────────────────────────────
   const pits = [
-    [11,   56],
+    [11, 2200],
     [2200, 3400],
   ];
 
