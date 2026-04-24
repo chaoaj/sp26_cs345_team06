@@ -412,7 +412,7 @@ function draw() {
       text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, width / 2, height / 2 + 40);
       text("Press R to return to title", width / 2, height / 2 + 74);
       pop();
-      if (hasCheated) {
+      if (hasCheated && cheatDetectionOn) {
         drawCheaterOverlay();
       }
     }
