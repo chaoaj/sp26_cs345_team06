@@ -71,6 +71,7 @@ function preload() {
 
   //Enemy Sprites
   greenslimeimage = loadImage("assets/enemies/SlimeWalk.png")
+  jumpingHostileImage = loadImage("assets/enemies/Jump.png")
 
   const loadFrameSequence = (basePath, filePrefix, frameCount) => {
     const frames = []

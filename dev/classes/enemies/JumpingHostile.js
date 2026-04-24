@@ -31,6 +31,11 @@ class JumpingHostile extends Hostile {
       : Math.max(1, jumpSpeed);
     this.nextJumpAt = 0;
     this.canBeStomped = false;
+
+    this.animFrame = 0;
+    this.animTimer = 0;
+    this.frameCount = 13;
+    this.fps = 10;
   }
 
   update() {
@@ -57,6 +62,13 @@ class JumpingHostile extends Hostile {
       this.x = this.rightBound;
       this.direction = -1;
     }
+
+    this.animTimer += deltaTime;
+    const frameDuration = 1000 / this.fps;
+    if (this.animTimer >= frameDuration) {
+      this.animTimer -= frameDuration;
+      this.animFrame = (this.animFrame + 1) % this.frameCount;
+    }
   }
 
   startJump(now) {
@@ -71,16 +83,33 @@ class JumpingHostile extends Hostile {
     rectMode(CENTER);
     noStroke();
 
-    fill(isAirborne ? color(255, 190, 80) : color(235, 150, 50));
-    ellipse(this.x, this.y, this.width, this.height * 0.8);
+    if (typeof jumpingHostileImage !== "undefined" && jumpingHostileImage) {
+      imageMode(CENTER);
+      const sourceFrameW = jumpingHostileImage.width / this.frameCount;
+      const sourceX = this.animFrame * sourceFrameW;
+      const drawW = this.width * 2.6;
+      const drawH = this.height * 2.6;
+      const yOffset = isAirborne ? -this.height * 0.08 : 0;
 
-    fill(45);
-    const eyeOffsetX = this.direction === -1 ? -this.width * 0.17 : this.width * 0.17;
-    ellipse(this.x + eyeOffsetX, this.y - this.height * 0.1, this.width * 0.12, this.width * 0.12);
+      if (this.direction === -1) {
+        translate(this.x, this.y + yOffset);
+        scale(-1, 1);
+        image(jumpingHostileImage, 0, 0, drawW, drawH, sourceX, 0, sourceFrameW, jumpingHostileImage.height);
+      } else {
+        image(jumpingHostileImage, this.x, this.y + yOffset, drawW, drawH, sourceX, 0, sourceFrameW, jumpingHostileImage.height);
+      }
+    } else {
+      fill(isAirborne ? color(255, 190, 80) : color(235, 150, 50));
+      ellipse(this.x, this.y, this.width, this.height * 0.8);
 
-    fill(185, 95, 30);
-    rect(this.x - this.width * 0.18, this.y + this.height * 0.25, this.width * 0.16, this.height * 0.22, 3);
-    rect(this.x + this.width * 0.18, this.y + this.height * 0.25, this.width * 0.16, this.height * 0.22, 3);
+      fill(45);
+      const eyeOffsetX = this.direction === -1 ? -this.width * 0.17 : this.width * 0.17;
+      ellipse(this.x + eyeOffsetX, this.y - this.height * 0.1, this.width * 0.12, this.width * 0.12);
+
+      fill(185, 95, 30);
+      rect(this.x - this.width * 0.18, this.y + this.height * 0.25, this.width * 0.16, this.height * 0.22, 3);
+      rect(this.x + this.width * 0.18, this.y + this.height * 0.25, this.width * 0.16, this.height * 0.22, 3);
+    }
     pop();
   }
 }
