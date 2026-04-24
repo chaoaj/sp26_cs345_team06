@@ -142,6 +142,7 @@ class Ability {
       movingLeft = false,
       movingRight = false,
       directionalBoost = 1.8,
+      coyoteGrounded = false,
     } = context || {};
 
     const maxAirJumps = typeof player?.maxAirJumps === "number" ? player.maxAirJumps : 1;
@@ -164,6 +165,13 @@ class Ability {
     if (hasBufferedJump && player.isOnGround) {
       triggerJump();
       player.jumpBufferUntil = 0;
+      player.coyoteUntil = 0;
+      return true;
+    }
+
+    if (jumpPressed && coyoteGrounded) {
+      triggerJump();
+      player.coyoteUntil = 0;
       return true;
     }
 
