@@ -58,11 +58,52 @@ class Level {
             isOnGround: mirror.isOnGround,
         }));
 
-        this.initialEnemyStates = this.enemies.map((enemy) => ({
-            x: enemy.x,
-            y: enemy.y,
-            direction: enemy.direction,
-        }));
+        this.initialEnemyStates = this.enemies.map((enemy) => {
+            const base = {
+                type: enemy.constructor.name,
+                x: enemy.x,
+                y: enemy.y,
+                direction: enemy.direction
+            };
+            if (enemy.constructor.name === "FlyingHostile") {
+                return {
+                    ...base,
+                    w: enemy.width || enemy.w,
+                    h: enemy.height || enemy.h,
+                    speed: enemy.speed,
+                    leftBound: enemy.leftBound,
+                    rightBound: enemy.rightBound,
+                    damage: enemy.damage,
+                    detectionRange: enemy.detectionRange,
+                    dashRange: enemy.dashRange
+                };
+            } else if (enemy.constructor.name === "JumpingHostile") {
+                return {
+                    ...base,
+                    w: enemy.width || enemy.w,
+                    h: enemy.height || enemy.h,
+                    speed: enemy.speed,
+                    leftBound: enemy.leftBound,
+                    rightBound: enemy.rightBound,
+                    damage: enemy.damage,
+                    jumpHeight: enemy.jumpHeight,
+                    jumpInterval: enemy.jumpInterval,
+                    jumpDuration: enemy.jumpDuration
+                };
+            } else if (enemy.constructor.name === "Hostile") {
+                return {
+                    ...base,
+                    w: enemy.width || enemy.w,
+                    h: enemy.height || enemy.h,
+                    speed: enemy.speed,
+                    leftBound: enemy.leftBound,
+                    rightBound: enemy.rightBound,
+                    damage: enemy.damage
+                };
+            } else {
+                return base;
+            }
+        });
 
         this.pushPlatform = function(platform) {
             this.platforms.push(platform);
@@ -70,26 +111,29 @@ class Level {
     }
 
     resetDynamicState() {
+                // Reset all buttons to unpressed state
+                for (const button of this.buttons) {
+                    button.isPressed = false;
+                    if (typeof button.permaPressed !== 'undefined') {
+                        button.permaPressed = false;
+                    }
+                }
+        // Reset items
         for (let i = 0; i < this.items.length; i++) {
             const item = this.items[i];
             const initial = this.initialItemStates[i];
-            if (!item || !initial) {
-                continue;
-            }
-
+            if (!item || !initial) continue;
             item.x = initial.x;
             item.y = initial.y;
             item.isCollected = false;
             item.collectedUntil = 0;
         }
 
+        // Reset boxes
         for (let i = 0; i < this.boxes.length; i++) {
             const box = this.boxes[i];
             const initial = this.initialBoxStates[i];
-            if (!box || !initial) {
-                continue;
-            }
-
+            if (!box || !initial) continue;
             box.x = initial.x;
             box.y = initial.y;
             box.xVelocity = 0;
@@ -97,13 +141,11 @@ class Level {
             box.isOnGround = false;
         }
 
+        // Reset laser mirrors
         for (let i = 0; i < this.laserMirrors.length; i++) {
             const mirror = this.laserMirrors[i];
             const initial = this.initialLaserMirrorStates[i];
-            if (!mirror || !initial) {
-                continue;
-            }
-
+            if (!mirror || !initial) continue;
             mirror.x = initial.x;
             mirror.y = initial.y;
             mirror.xVelocity = 0;
@@ -111,33 +153,59 @@ class Level {
             mirror.isOnGround = false;
         }
 
+        // Reset laser collectors
         for (const collector of this.laserCollectors) {
             collector.isHit = false;
             collector._hitThisFrame = false;
         }
 
+        // Reset lasers
         for (const laser of this.lasers) {
             laser.segments = [];
         }
 
-        for (let i = 0; i < this.enemies.length; i++) {
-            const enemy = this.enemies[i];
-            const initial = this.initialEnemyStates[i];
-            if (!enemy || !initial) {
-                continue;
-            }
 
-            if (typeof enemy.reset === "function") {
-                enemy.reset();
-                continue;
+        // Remove dynamically spawned enemies (those not in initialEnemyStates)
+        if (Array.isArray(this.initialEnemyStates) && this.initialEnemyStates.length > 0) {
+            this.enemies = [];
+            for (let i = 0; i < this.initialEnemyStates.length; i++) {
+                const initial = this.initialEnemyStates[i];
+                let newEnemy;
+                if (initial.type === "FlyingHostile") {
+                    newEnemy = new FlyingHostile(
+                        initial.x, initial.y,
+                        initial.w, initial.h,
+                        initial.speed, initial.leftBound, initial.rightBound,
+                        initial.damage, initial.detectionRange, initial.dashRange
+                    );
+                } else if (initial.type === "JumpingHostile") {
+                    newEnemy = new JumpingHostile(
+                        initial.x, initial.y,
+                        initial.w, initial.h,
+                        initial.speed, initial.leftBound, initial.rightBound,
+                        initial.damage, initial.jumpHeight, initial.jumpInterval, initial.jumpDuration
+                    );
+                } else if (initial.type === "Hostile") {
+                    newEnemy = new Hostile(
+                        initial.x, initial.y,
+                        initial.w, initial.h,
+                        initial.speed, initial.leftBound, initial.rightBound,
+                        initial.damage
+                    );
+                } else {
+                    // fallback: do nothing
+                    continue;
+                }
+                newEnemy.isDead = false;
+                newEnemy.pendingRemoval = false;
+                if (newEnemy.constructor && newEnemy.constructor.name === "FlyingHostile") {
+                    newEnemy.state = "idle";
+                }
+                this.enemies.push(newEnemy);
             }
-
-            enemy.x = initial.x;
-            enemy.y = initial.y;
-            enemy.direction = initial.direction;
-            enemy.isDead = false;
         }
 
+        // Reset platforms
         for (const platform of this.platforms) {
             if (platform && typeof platform.reset === "function") {
                 platform.reset();
