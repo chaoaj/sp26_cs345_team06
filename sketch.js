@@ -1,4 +1,4 @@
-﻿const CHEAT_MODE = true;
+const CHEAT_MODE = true;
 
 let gameState = "title";
 
@@ -224,10 +224,13 @@ function windowResized() {
 }
 
 function updateLevelMusic() {
-  const isPlayableState =
-    gameState === "playing" ||
-    gameState === "paused" ||
-    gameState === "abilityUnlock";
+  if (gameState === "paused" || gameState === "levelSelect" || gameState === "cheatMenu") {
+    if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) backgroundMusic.pause();
+    if (typeof soliloquyMusic  !== "undefined" && soliloquyMusic.isPlaying())  soliloquyMusic.pause();
+    return;
+  }
+
+  const isPlayableState = gameState === "playing" || gameState === "abilityUnlock";
   if (!isPlayableState) {
     return;
   }
@@ -267,10 +270,10 @@ function mousePressed() {
     } else if (action === "retry") {
       levels[levelNum - 1].resetDynamicState();
       player.respawn();
-      if (pauseStartedAt !== null) {
-        accumulatedPauseMs += millis() - pauseStartedAt;
-      }
+      accumulatedPauseMs = 0;
       pauseStartedAt = null;
+      runStartedAt = getGameMillis();
+      runCompletedAt = null;
       gameState = "playing";
     } else if (action === "levelSelect") {
       gameState = "levelSelect";
@@ -512,7 +515,14 @@ function keyPressed() {
   if (CHEAT_MODE && gameState === "playing") {
     if (key === '1') Ability.grant(player, DOUBLE_JUMP_ABILITY);
     if (key === '2') Ability.grant(player, DASH_ABILITY);
-    if (key === 'r' || key === 'R') player.respawn();
+    if (key === 'r' || key === 'R') {
+      levels[levelNum - 1].resetDynamicState();
+      player.respawn();
+      accumulatedPauseMs = 0;
+      pauseStartedAt = null;
+      runStartedAt = getGameMillis();
+      runCompletedAt = null;
+    }
 
     last5KeysTyped += key.toLowerCase();
     if (last5KeysTyped.length > 5) {

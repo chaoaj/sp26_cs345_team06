@@ -127,7 +127,7 @@ function drawLevelSelectOverlay() {
   const count = (typeof levels !== 'undefined' && Array.isArray(levels)) ? levels.length : 3;
   const perRow = Math.min(4, count);
   const rows = Math.ceil(count / perRow);
-  const panelW = Math.max(380, perRow * 140);
+  const panelW = Math.max(500, perRow * 160);
   const panelH = Math.max(260, rows * 140);
   rect(width / 2, height / 2, panelW, panelH, 18);
 
