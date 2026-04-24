@@ -34,6 +34,7 @@ let abilityUnlockPopup = null;
 let runStartedAt = null;
 let runCompletedAt = null;
 
+
 function getGameMillis() {
   if ((gameState === "paused" || gameState === "abilityUnlock") && pauseStartedAt !== null) {
     return pauseStartedAt - accumulatedPauseMs;
@@ -87,9 +88,6 @@ function closeAbilityUnlockPopup() {
 
 function setup() {
   noSmooth()
-  //TODO: make a table in a different class for
-  // different levels (maybe, it is here because setup runs after
-  // preload, otherwise it was using image variables before they were loaded)
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
@@ -114,13 +112,11 @@ function setup() {
 }
 
 function setupLevel() {
-  //level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies, level1Doors);
   level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8], levelTemplates[0][9]);
   level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8], levelTemplates[1][9]);
   level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8], levelTemplates[2][9]);
   levels.push(level1, level2, level3);
 
-  // Add final level as level 4
   endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
   endGameLevel.setup();
   levels.push(endGameLevel);
@@ -235,7 +231,6 @@ function switchToLevel(nextLevelNum) {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 
-  // Keep current run state on resize instead of rebuilding levels/player.
   if (camera) {
     camera.worldHeight = height * WORLD_HEIGHT_MULTIPLIER;
     if (player) {
@@ -301,11 +296,38 @@ function mousePressed() {
       pauseStartedAt = null;
       gameState = "playing";
     } else if (action === "levelSelect") {
-      // Show the level navigation menu
       gameState = "levelSelect";
     }
     return;
   }
+
+  if (gameState === "cheatMenu") {
+    const cheats = [
+      "infiniteHealth", "infiniteJumps", "unlockAll",
+      "skipLevel", "unlockItems"
+    ];
+    const lineHeight = 38;
+    const panelW = min(520, width - 60);
+    const basePanelH = 340;
+    const panelH = min(height - 20, basePanelH + max(0, cheats.length - 4) * lineHeight);
+    const panelX = width / 2;
+    const panelY = height / 2;
+    const panelTop = panelY - panelH / 2;
+    const firstButtonY = panelTop + 154;
+    const bw = panelW - 48;
+    const bh = 30;
+
+    for (let i = 0; i < cheats.length; i++) {
+      const bx = panelX;
+      const by = firstButtonY + i * lineHeight;
+      if (mouseX > bx - bw / 2 && mouseX < bx + bw / 2 &&
+        mouseY > by - bh / 2 && mouseY < by + bh / 2) {
+        toggleCheat(cheats[i]);
+      }
+    }
+    return;
+  }
+
   if (gameState === "levelSelect") {
     const selectedLevel = handleLevelSelectClick(mouseX, mouseY);
     if (selectedLevel) {
@@ -314,11 +336,7 @@ function mousePressed() {
         accumulatedPauseMs += millis() - pauseStartedAt;
       }
       pauseStartedAt = null;
-      if (selectedLevel === levels.length) {
-        gameState = "endgame";
-      } else {
-        gameState = "playing";
-      }
+      gameState = selectedLevel === levels.length ? "endgame" : "playing";
     }
     return;
   }
@@ -330,7 +348,6 @@ function draw() {
     camera.worldWidth = level.worldWidth;
   }
   updateLevelMusic();
-  // Failsafe: force endgame state if on final level
   if (levelNum === levels.length && gameState !== "endgame") {
     gameState = "endgame";
   }
@@ -420,10 +437,12 @@ function draw() {
       text("Treasure recovered.", width / 2, height / 2 + 18);
       text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, width / 2, height / 2 + 40);
       text("Press R to return to title", width / 2, height / 2 + 74);
+      if (hasCheated) {
+        drawCheaterOverlay()
+      }
       pop();
     }
   } else if (gameState === "paused") {
-    // Render current world without simulation updates while paused.
     level.drawBackground();
     camera.apply();
     level.drawWorld();
@@ -431,6 +450,14 @@ function draw() {
     camera.reset();
     level.drawHUD(player);
     drawPauseOverlay();
+  } else if (gameState === "cheatMenu") {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawCheatMenuOverlay();
   } else if (gameState === "levelSelect") {
     // Render current world without simulation updates while showing level select
     level.drawBackground();
@@ -450,6 +477,7 @@ function draw() {
     drawAbilityUnlockOverlay();
   }
 }
+
 
 function drawAbilityUnlockOverlay() {
   if (!abilityUnlockPopup) {
@@ -494,11 +522,12 @@ function drawGamePrototype() {
   text("Game Prototype Running", width / 2, height / 2);
 }
 
+let last5KeysTyped = "";
+
+
 function keyPressed() {
   if (gameState === "title") {
     handleTitleKeyPressed();
-    //handleTitleKeyPressed();
-    //  why are there two?
     return;
   }
 
@@ -521,6 +550,22 @@ function keyPressed() {
     if (key === 'r' || key === 'R') player.respawn();
   }
 
+  if (CHEAT_MODE && gameState == "playing") {
+    last5KeysTyped += key.toLowerCase();
+    print(last5KeysTyped)
+    if (last5KeysTyped.length > 5) {
+      last5KeysTyped = last5KeysTyped.slice(-5);
+    }
+    if (last5KeysTyped === "cheat") {
+      gameState = "cheatMenu"
+      last5KeysTyped = "";
+    }
+  }
+  if (gameState === "cheatMenu") {
+    if (key === "Escape" || key === "c" || key === "C") {
+      gameState = "playing";
+    }
+  }
   //TEMPORARY
   if (key === 'l' || key === 'L') {
     const nextLevelNum = (levelNum % levels.length) + 1;
