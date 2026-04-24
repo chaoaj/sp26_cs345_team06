@@ -13,10 +13,10 @@ function getLevel1Template() {
   ];
 
   const items = [
-    new Items(420, height - 40, "potion"),
-    new Items(400, height - 40, "feather"),
-    new Items(300, height - 40, "dashAbility"),
-    new Items(280, height - 40, "doubleJumpAbility"),
+    // new Items(420, height - 40, "potion"),
+    // new Items(400, height - 40, "feather"),
+    // new Items(300, height - 40, "dashAbility"),
+    // new Items(280, height - 40, "doubleJumpAbility"),
 
   ];
 
