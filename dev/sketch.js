@@ -1,3 +1,5 @@
+﻿const CHEAT_MODE = true;
+
 let gameState = "title";
 
 const WORLD_WIDTH = 3000;
@@ -476,6 +478,12 @@ function keyPressed() {
       restartToTitle();
     }
     return;
+  }
+
+  if (CHEAT_MODE && gameState === "playing") {
+    if (key === '1') Ability.grant(player, DOUBLE_JUMP_ABILITY);
+    if (key === '2') Ability.grant(player, DASH_ABILITY);
+    if (key === 'r' || key === 'R') player.respawn();
   }
 
   //TEMPORARY
