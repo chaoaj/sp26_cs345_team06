@@ -7,6 +7,10 @@ function preload() {
   soliloquyMusic = loadSound("assets/audio/Soliloquy.mp3")
 
   //Sound Effects
+  damageSound = loadSound("assets/audio/damage1.wav")
+  collectSound = loadSound("assets/audio/collect.wav")
+  deathSound = loadSound("assets/audio/death1.wav")
+
 
   //Items
   featherImage = loadImage("assets/abilities/collectibles/Feather.png")
