@@ -1,4 +1,4 @@
-class EndGame {
+﻿class EndGame {
   constructor(worldWidth, floorImage, platformImage) {
     this.worldWidth = worldWidth;
     this.floorImage = floorImage;
@@ -38,10 +38,10 @@ class EndGame {
       return !!(this.treasure && this.treasure.collected);
     }
 
-    const chestLeft = this.treasure.x - this.treasure.w / 2;
-    const chestRight = this.treasure.x + this.treasure.w / 2;
-    const chestTop = this.treasure.y - this.treasure.h / 2;
-    const chestBottom = this.treasure.y + this.treasure.h / 2;
+    const chestLeft = this.treasure.x - this.treasure.width / 2;
+    const chestRight = this.treasure.x + this.treasure.width / 2;
+    const chestTop = this.treasure.y - this.treasure.height / 2;
+    const chestBottom = this.treasure.y + this.treasure.height / 2;
 
     const touchingChest =
       player.hitRight > chestLeft &&
@@ -72,8 +72,8 @@ class EndGame {
 
     const x = this.treasure.x;
     const y = this.treasure.y;
-    const w = this.treasure.w;
-    const h = this.treasure.h;
+    const w = this.treasure.width;
+    const h = this.treasure.height;
 
     push();
     rectMode(CENTER);

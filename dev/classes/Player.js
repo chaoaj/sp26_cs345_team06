@@ -1,4 +1,4 @@
-class Player extends Actor {
+﻿class Player extends Actor {
   constructor(x, y, width, height) {
     super(x, y, width, height);
 
@@ -124,10 +124,10 @@ class Player extends Actor {
         continue;
       }
 
-      const platformTop = platform.y - platform.h / 2;
-      const platformBottom = platform.y + platform.h / 2;
-      const platformLeft = platform.x - platform.w / 2;
-      const platformRight = platform.x + platform.w / 2;
+      const platformTop = platform.y - platform.height / 2;
+      const platformBottom = platform.y + platform.height / 2;
+      const platformLeft = platform.x - platform.width / 2;
+      const platformRight = platform.x + platform.width / 2;
       const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
       const previousPlatformTop = platformTop - platformYVelocity;
       const previousPlatformBottom = platformBottom - platformYVelocity;
@@ -158,10 +158,10 @@ class Player extends Actor {
         continue;
       }
 
-      const platformTop = platform.y - platform.h / 2;
-      const platformBottom = platform.y + platform.h / 2;
-      const platformLeft = platform.x - platform.w / 2;
-      const platformRight = platform.x + platform.w / 2;
+      const platformTop = platform.y - platform.height / 2;
+      const platformBottom = platform.y + platform.height / 2;
+      const platformLeft = platform.x - platform.width / 2;
+      const platformRight = platform.x + platform.width / 2;
       const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
       const previousPlatformTop = platformTop - platformYVelocity;
 
@@ -185,6 +185,7 @@ class Player extends Actor {
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
+        if (platform.onLand) platform.onLand(this);
         continue;
       }
 
@@ -199,6 +200,7 @@ class Player extends Actor {
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
+        if (platform.onLand) platform.onLand(this);
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;

@@ -1,4 +1,4 @@
-class Level {
+﻿class Level {
     constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits =[], terrain = [], laserPuzzles = {}) {
         laserPuzzles = laserPuzzles || {};
         this.worldWidth = worldWidth || width;
@@ -273,10 +273,10 @@ class Level {
     }
 
     isPlayerTouchingTrap(player, trap) {
-        const trapLeft = trap.x - trap.w / 2;
-        const trapRight = trap.x + trap.w / 2;
-        const trapTop = trap.y - trap.h / 2;
-        const trapBottom = trap.y + trap.h / 2;
+        const trapLeft = trap.x - trap.width / 2;
+        const trapRight = trap.x + trap.width / 2;
+        const trapTop = trap.y - trap.height / 2;
+        const trapBottom = trap.y + trap.height / 2;
 
         return (
             player.hitRight > trapLeft &&
@@ -307,14 +307,14 @@ class Level {
         const playerTop = typeof player.hitTop === "number" ? player.hitTop : player.y - player.height / 2;
         const playerBottom = typeof player.hitBottom === "number" ? player.hitBottom : player.y + player.height / 2;
 
-        let itemHalfW = item.w / 2;
-        let itemHalfH = item.h / 2;
+        let itemHalfW = item.width / 2;
+        let itemHalfH = item.height / 2;
 
-        if (typeof item.w === "undefined") {
+        if (typeof item.width === "undefined") {
             itemHalfW = item.radius;
         }
 
-        if (typeof item.h === "undefined") {
+        if (typeof item.height === "undefined") {
             itemHalfH = item.radius;
         }
 
@@ -381,10 +381,10 @@ class Level {
 
     resolvePlayerDynamicCollisions(player, dynamicObjects) {
         for (const object of dynamicObjects) {
-            const objectLeft = object.x - object.w / 2;
-            const objectRight = object.x + object.w / 2;
-            const objectTop = object.y - object.h / 2;
-            const objectBottom = object.y + object.h / 2;
+            const objectLeft = object.x - object.width / 2;
+            const objectRight = object.x + object.width / 2;
+            const objectTop = object.y - object.height / 2;
+            const objectBottom = object.y + object.height / 2;
 
             if (player.hitRight <= objectLeft || player.hitLeft >= objectRight ||
                 player.hitBottom <= objectTop || player.hitTop >= objectBottom) {
@@ -419,14 +419,14 @@ class Level {
     }
 
     resolveDynamicObjectCollision(first, second) {
-        const firstLeft = first.x - first.w / 2;
-        const firstRight = first.x + first.w / 2;
-        const firstTop = first.y - first.h / 2;
-        const firstBottom = first.y + first.h / 2;
-        const secondLeft = second.x - second.w / 2;
-        const secondRight = second.x + second.w / 2;
-        const secondTop = second.y - second.h / 2;
-        const secondBottom = second.y + second.h / 2;
+        const firstLeft = first.x - first.width / 2;
+        const firstRight = first.x + first.width / 2;
+        const firstTop = first.y - first.height / 2;
+        const firstBottom = first.y + first.height / 2;
+        const secondLeft = second.x - second.width / 2;
+        const secondRight = second.x + second.width / 2;
+        const secondTop = second.y - second.height / 2;
+        const secondBottom = second.y + second.height / 2;
 
         if (firstRight <= secondLeft || firstLeft >= secondRight || firstBottom <= secondTop || firstTop >= secondBottom) {
             return;

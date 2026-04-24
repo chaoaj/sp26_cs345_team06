@@ -1,4 +1,4 @@
-class LaserTrap extends Trap {
+﻿class LaserTrap extends Trap {
   constructor(x, y, w, h, damage = 1, fireDuration = 2000, repeatInterval = 5000, previewDuration = 800, axis = "x") {
     super(x, y, w, h, damage);
     this.fireDuration = fireDuration;
@@ -23,21 +23,21 @@ class LaserTrap extends Trap {
   }
 
   draw() {
-    const left = this.x - this.w / 2;
-    const right = this.x + this.w / 2;
-    const top = this.y - this.h / 2;
-    const bottom = this.y + this.h / 2;
+    const left = this.x - this.width / 2;
+    const right = this.x + this.width / 2;
+    const top = this.y - this.height / 2;
+    const bottom = this.y + this.height / 2;
     const isVertical = this.axis === "y";
-    const beamThickness = isVertical ? this.w : this.h;
+    const beamThickness = isVertical ? this.width : this.height;
     const emitterSize = beamThickness + 2;
 
     rectMode(CORNER);
     noStroke();
     fill(70);
     if (isVertical) {
-      rect(left - 6, top - 18, this.w + 12, 18, 6);
+      rect(left - 6, top - 18, this.width + 12, 18, 6);
     } else {
-      rect(left - 18, top - 6, 18, this.h + 12, 6);
+      rect(left - 18, top - 6, 18, this.height + 12, 6);
     }
 
     if (this.isPreviewing()) {

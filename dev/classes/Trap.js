@@ -1,9 +1,9 @@
-class Trap {
+﻿class Trap {
   constructor(x, y, w, h, damage = 1) {
     this.x = x;
     this.y = y;
-    this.w = w;
-    this.h = h;
+    this.width = w;
+    this.height = h;
     this.damage = damage;
     this.anchorPlatform = null;
     this.anchorOffsetX = 0;

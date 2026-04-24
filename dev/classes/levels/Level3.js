@@ -1,4 +1,4 @@
-function getLevel3Template() {
+﻿function getLevel3Template() {
   const stairPlatform1 = new MovingPlatform(260, height - 150, 220, 32, brickTileImage, "x", 60, 1.2, false);
   const stairPlatform2 = new MovingPlatform(520, height - 220, 160, 32, brickTileImage, "x", 60, 1.2, true);
   const stairPlatform3 = new MovingPlatform(800, height - 290, 200, 32, brickTileImage, "x", 60, 1.2, false);
@@ -43,11 +43,11 @@ function getLevel3Template() {
   ];
 
   const movingTrapA = new SpikeTrap(0, 0, 90, 35);
-  movingTrapA.attachToPlatform(stairPlatform3, 0, -(stairPlatform3.h + movingTrapA.h) / 2);
+  movingTrapA.attachToPlatform(stairPlatform3, 0, -(stairPlatform3.height + movingTrapA.height) / 2);
   traps.push(movingTrapA);
 
   const movingTrapB = new SpikeTrap(0, 0, 90, 35);
-  movingTrapB.attachToPlatform(stairPlatform5, 0, -(stairPlatform5.h + movingTrapB.h) / 2);
+  movingTrapB.attachToPlatform(stairPlatform5, 0, -(stairPlatform5.height + movingTrapB.height) / 2);
   traps.push(movingTrapB);
 
   const boxes = [

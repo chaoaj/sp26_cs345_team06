@@ -1,10 +1,10 @@
-class Items {
+﻿class Items {
     constructor(x, y, type) {
         this.x = x;
         this.y = y;
         this.type = type;
-        this.w = 20;
-        this.h = 20;
+        this.width = 20;
+        this.height = 20;
         this.isCollected = false;
         this.collectedUntil = 0;
         this.respawnDelayMs = this.getRespawnDelayMs();
@@ -59,31 +59,31 @@ class Items {
         }
 
         if (this.type === "health") {
-            image(healthImage, this.x, this.y, this.w*1.5, this.h*1.5);
+            image(healthImage, this.x, this.y, this.width*1.5, this.height*1.5);
         }
 
         if (this.type === "feather") {
-            image(featherImage, this.x, this.y- this.w*.75, this.w*2, this.h*2);
+            image(featherImage, this.x, this.y- this.width*.75, this.width*2, this.height*2);
         }
         if (this.type === "shield") {
-            image(shieldImage, this.x, this.y, this.w*1.5, this.h*1.5);
+            image(shieldImage, this.x, this.y, this.width*1.5, this.height*1.5);
         }
 
         if (this.type === "potion") {
-            image(speedImage, this.x, this.y, this.w*1.5, this.h*1.5);
+            image(speedImage, this.x, this.y, this.width*1.5, this.height*1.5);
         }
 
         if (this.type === "doubleJumpAbility") {
-            image(doubleJumpAmuletImage, this.x, this.y, this.w*1.5, this.h*1.5);
+            image(doubleJumpAmuletImage, this.x, this.y, this.width*1.5, this.height*1.5);
         }
 
         if (this.type === "dashAbility") {
-            image(dashAmuletImage, this.x, this.y, this.w*1.5, this.h*1.5);
+            image(dashAmuletImage, this.x, this.y, this.width*1.5, this.height*1.5);
         }
 
         noStroke();
         rectMode(CENTER);
-       //rect(this.x, this.y, this.w, this.h);
+       //rect(this.x, this.y, this.width, this.height);
     }
 
     onCollected(now = this.getNowMs()) {

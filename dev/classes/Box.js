@@ -1,89 +1,26 @@
-class Box {
+﻿class Box extends Entity {
   constructor(x, y, size) {
-    this.x = x;
-    this.y = y;
-    this.w = size;
-    this.h = size;
-    this.xVelocity = 0;
-    this.yVelocity = 0;
-    this.gravity = 0.6;
-    this.isOnGround = false;
+    super(x, y, size, size);
   }
 
   update(platforms) {
-    this.yVelocity += this.gravity;
-    this.x += this.xVelocity;
-    this.y += this.yVelocity;
-    this.xVelocity = 0;
     this.isOnGround = false;
-
+    super.update();
+    this.xVelocity = 0;
     for (const platform of platforms) {
       this.resolvePlatformCollision(platform);
     }
   }
 
-  resolvePlatformCollision(platform) {
-    const platLeft   = platform.x - platform.w / 2;
-    const platRight  = platform.x + platform.w / 2;
-    const platTop    = platform.y - platform.h / 2;
-    const platBottom = platform.y + platform.h / 2;
-    const platformXVelocity = typeof platform.xVelocity === "number" ? platform.xVelocity : 0;
-    const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
-    const myLeft   = this.x - this.w / 2;
-    const myRight  = this.x + this.w / 2;
-    const myTop    = this.y - this.h / 2;
-    const myBottom = this.y + this.h / 2;
-
-    // No overlap — nothing to do
-    if (myRight <= platLeft || myLeft >= platRight ||
-        myBottom <= platTop || myTop >= platBottom) {
-      return;
-    }
-
-    // Compute penetration depth on each axis
-    const overlapLeft   = myRight   - platLeft;
-    const overlapRight  = platRight - myLeft;
-    const overlapTop    = myBottom  - platTop;
-    const overlapBottom = platBottom - myTop;
-
-    const minX = Math.min(overlapLeft, overlapRight);
-    const minY = Math.min(overlapTop, overlapBottom);
-
-    if (minY <= minX) {
-      // Vertical resolution
-      if (overlapTop <= overlapBottom) {
-        // Landing on top
-        this.y -= overlapTop;
-        this.yVelocity = 0;
-        this.isOnGround = true;
-        this.x += platformXVelocity;
-        this.y += platformYVelocity;
-      } else {
-        // Hitting the underside
-        this.y += overlapBottom;
-        this.yVelocity = 0;
-      }
-    } else {
-      // Horizontal resolution
-      if (overlapLeft <= overlapRight) {
-        this.x -= overlapLeft;
-        this.xVelocity = 0;
-      } else {
-        this.x += overlapRight;
-        this.xVelocity = 0;
-      }
-    }
-  }
-
   resolveBoxCollision(other) {
-    const myLeft = this.x - this.w / 2;
-    const myRight = this.x + this.w / 2;
-    const myTop = this.y - this.h / 2;
-    const myBottom = this.y + this.h / 2;
-    const otherLeft = other.x - other.w / 2;
-    const otherRight = other.x + other.w / 2;
-    const otherTop = other.y - other.h / 2;
-    const otherBottom = other.y + other.h / 2;
+    const myLeft = this.x - this.width / 2;
+    const myRight = this.x + this.width / 2;
+    const myTop = this.y - this.height / 2;
+    const myBottom = this.y + this.height / 2;
+    const otherLeft = other.x - other.width / 2;
+    const otherRight = other.x + other.width / 2;
+    const otherTop = other.y - other.height / 2;
+    const otherBottom = other.y + other.height / 2;
 
     if (myRight <= otherLeft || myLeft >= otherRight || myBottom <= otherTop || myTop >= otherBottom) {
       return;
@@ -120,7 +57,6 @@ class Box {
   draw() {
     fill(160, 100, 40);
     noStroke();
-    //rect(this.x, this.y, this.w, this.h);
-    image(woodenBox, this.x, this.y, this.w, this.h);
+    image(woodenBox, this.x, this.y, this.width, this.height);
   }
 }

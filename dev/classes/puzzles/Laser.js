@@ -1,4 +1,4 @@
-// Laser puzzle system — three cooperating classes:
+﻿// Laser puzzle system â€” three cooperating classes:
 //
 // Laser(x, y, direction, color)
 //   Emits a beam from (x, y) in a given direction.
@@ -8,7 +8,7 @@
 //
 // LaserCollector(x, y, w, h, callback, releaseCallback)
 //   Target that fires callback when a laser beam hits it.
-//   Works the same as Button — callback on activate, releaseCallback on deactivate.
+//   Works the same as Button â€” callback on activate, releaseCallback on deactivate.
 //   Call: collector.draw()
 //
 // LaserMirror(x, y, size, angle)
@@ -25,7 +25,7 @@
 //   collector.draw();
 //   mirror.draw();
 
-// ─── Laser ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Laser â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class Laser {
   constructor(x, y, direction = "right", beamColor = null, maxBounces = 4, maxLength = 2000) {
@@ -79,7 +79,7 @@ class Laser {
       }
 
       for (const collector of collectors) {
-        const d = this._rayBoxIntersect(cx, cy, dx, dy, collector.x, collector.y, collector.w, collector.h);
+        const d = this._rayBoxIntersect(cx, cy, dx, dy, collector.x, collector.y, collector.width, collector.height);
         if (d !== null && d < closestDist) {
           closestDist = d;
           closest = collector;
@@ -88,11 +88,11 @@ class Laser {
       }
 
       for (const blocker of blockers) {
-        if (!blocker || typeof blocker.w !== "number" || typeof blocker.h !== "number") {
+        if (!blocker || typeof blocker.width !== "number" || typeof blocker.height !== "number") {
           continue;
         }
 
-        const d = this._rayBoxIntersect(cx, cy, dx, dy, blocker.x, blocker.y, blocker.w, blocker.h);
+        const d = this._rayBoxIntersect(cx, cy, dx, dy, blocker.x, blocker.y, blocker.width, blocker.height);
         if (d !== null && d < closestDist) {
           closestDist = d;
           closest = blocker;
@@ -209,14 +209,14 @@ class Laser {
   }
 }
 
-// ─── LaserCollector ───────────────────────────────────────────────────────────
+// â”€â”€â”€ LaserCollector â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class LaserCollector {
   constructor(x, y, w = 30, h = 30, callback = null, releaseCallback = null) {
     this.x = x;
     this.y = y;
-    this.w = w;
-    this.h = h;
+    this.width = w;
+    this.height = h;
     this.callback = callback;
     this.releaseCallback = releaseCallback;
     this.isHit = false;
@@ -232,21 +232,21 @@ class LaserCollector {
     stroke(this.isHit ? color(255, 220, 80) : color(100, 100, 100));
     strokeWeight(2);
     noFill();
-    ellipse(this.x, this.y, this.w + 6, this.h + 6);
+    ellipse(this.x, this.y, this.width + 6, this.height + 6);
 
     // Inner fill
     fill(this.isHit ? color(255, 200, 50) : color(50, 50, 50));
     noStroke();
-    ellipse(this.x, this.y, this.w, this.h);
+    ellipse(this.x, this.y, this.width, this.height);
     pop();
   }
 }
 
-// ─── LaserMirror ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ LaserMirror â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class LaserMirror {
-  // angle: 45  → reflects right→up, up→right, left→down, down→left
-  //        -45 → reflects right→down, down→right, left→up, up→left
+  // angle: 45  â†’ reflects rightâ†’up, upâ†’right, leftâ†’down, downâ†’left
+  //        -45 â†’ reflects rightâ†’down, downâ†’right, leftâ†’up, upâ†’left
   // Moveable: falls with gravity, lands on platforms, pushed by player/boxes.
   // Call update(platforms) each frame, then draw().
   // In Level.js pass it alongside boxes in updatePuzzleElements.
@@ -255,8 +255,8 @@ class LaserMirror {
     this.y = y;
     this.size = size;
     // w/h aliases so Level collision helpers treat it the same as a Box
-    this.w = size;
-    this.h = size;
+    this.width = size;
+    this.height = size;
     this.angle = angle;
     this.xVelocity = 0;
     this.yVelocity = 0;
@@ -277,10 +277,10 @@ class LaserMirror {
   }
 
   _resolvePlatformCollision(platform) {
-    const platLeft   = platform.x - platform.w / 2;
-    const platRight  = platform.x + platform.w / 2;
-    const platTop    = platform.y - platform.h / 2;
-    const platBottom = platform.y + platform.h / 2;
+    const platLeft   = platform.x - platform.width / 2;
+    const platRight  = platform.x + platform.width / 2;
+    const platTop    = platform.y - platform.height / 2;
+    const platBottom = platform.y + platform.height / 2;
     const platformXVelocity = typeof platform.xVelocity === "number" ? platform.xVelocity : 0;
     const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
     const myLeft   = this.x - this.size / 2;
@@ -288,7 +288,7 @@ class LaserMirror {
     const myTop    = this.y - this.size / 2;
     const myBottom = this.y + this.size / 2;
 
-    // No overlap — nothing to do
+    // No overlap â€” nothing to do
     if (myRight <= platLeft || myLeft >= platRight ||
         myBottom <= platTop || myTop >= platBottom) {
       return;

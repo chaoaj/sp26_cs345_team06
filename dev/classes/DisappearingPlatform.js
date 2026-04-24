@@ -1,4 +1,4 @@
-class DisappearingPlatform extends BrickPlatform {
+﻿class DisappearingPlatform extends BrickPlatform {
     constructor(x, y, w, h, platformImage, collapseDelayMs = 1000, respawnDelayMs = 2000) {
         super(x, y, w, h, platformImage);
         this.collapseDelayMs = Math.max(0, collapseDelayMs);
@@ -40,9 +40,9 @@ class DisappearingPlatform extends BrickPlatform {
         const playerLeft = typeof player.hitLeft === "number" ? player.hitLeft : player.x - player.width / 2;
         const playerRight = typeof player.hitRight === "number" ? player.hitRight : player.x + player.width / 2;
         const playerBottom = typeof player.hitBottom === "number" ? player.hitBottom : player.y + player.height / 2;
-        const platformLeft = this.x - this.w / 2;
-        const platformRight = this.x + this.w / 2;
-        const platformTop = this.y - this.h / 2;
+        const platformLeft = this.x - this.width / 2;
+        const platformRight = this.x + this.width / 2;
+        const platformTop = this.y - this.height / 2;
         const horizontalOverlap = playerRight > platformLeft && playerLeft < platformRight;
         const nearTop = abs(playerBottom - platformTop) <= 8;
 
