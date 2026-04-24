@@ -48,6 +48,9 @@ class Player extends Actor {
     this.onBeforeRespawn = null;
     this.onRespawn = null;
 
+    this.coyoteWindowMs = 100;
+    this.coyoteUntil = 0;
+
     this.hitboxInsetX   = 35;
     this.hitboxInsetTop = 50;
 
@@ -91,6 +94,10 @@ class Player extends Actor {
     this.isOnFloor = false;
 
     this.resolveVerticalCollisions(platforms, previousY);
+
+    if (this.isOnGround) {
+      this.coyoteUntil = getGameMillis() + this.coyoteWindowMs;
+    }
 
     this.constrainToScreen();
     this.updateAnimation();
@@ -172,7 +179,7 @@ class Player extends Actor {
       const crossedPlatformTop =
         this.yVelocity >= 0 &&
         previousHitBottom <= previousPlatformTop + 2 &&
-        this.hitBottom >= platformTop - downwardCarry;
+        this.hitBottom >= platformTop - downwardCarry + 6;
 
       // Swept landing check prevents phasing through platforms at high relative speeds.
       if (overlapsX && crossedPlatformTop) {
@@ -185,6 +192,7 @@ class Player extends Actor {
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
+        if (platform.onLand) platform.onLand(this);
         continue;
       }
 
@@ -199,6 +207,7 @@ class Player extends Actor {
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
+        if (platform.onLand) platform.onLand(this);
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;

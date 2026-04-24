@@ -58,12 +58,15 @@ function applyPlayerControls(player) {
     }
   }
 
+  const coyoteGrounded = !player.isOnGround && now <= (player.coyoteUntil || 0);
+
   Ability.tryPerformJump(player, {
     jumpPressed,
     hasBufferedJump,
     movingLeft,
     movingRight,
     directionalBoost,
+    coyoteGrounded,
   });
 
   player.wasJumpHeld = jumpHeldNow;
