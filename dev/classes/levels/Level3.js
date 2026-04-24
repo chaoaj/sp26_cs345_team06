@@ -13,6 +13,7 @@ function getLevel3Template() {
   const finalPlatform = new BrickPlatform(2906, finalPlatformBaseY, 220, 32, brickTileImage);
   // Move the door left so it sits on the platform (platform center is 2906, width 220, so platform spans 2796 to 3016)
   // Door width is 75, so center at 2906+50 = 2956 keeps it on the right half, or 2906 for center
+  // Place the door always on the platform
   const finalDoor = new Door(2906, finalPlatformBaseY - 65, 75, 100);
 
   const platforms = [
@@ -82,9 +83,7 @@ function getLevel3Template() {
       80,
       20,
       () => {
-        finalPlatform.y = finalPlatformLoweredY;
-        finalDoor.y = finalPlatformLoweredY - 65;
-        // Spawn 3 FlyingHostiles around the player
+        // Only spawn 3 FlyingHostiles around the player
         if (typeof player !== "undefined" && player) {
           const px = player.x;
           const py = player.y;
@@ -92,9 +91,9 @@ function getLevel3Template() {
           const currentLevel = typeof level !== "undefined" ? level : (levels && levels[2]);
           if (currentLevel && currentLevel.enemies) {
             currentLevel.enemies.push(
-              new FlyingHostile(px - 100, py - 60, 44, 44, 2.2, px - 200, px, 1, 420, 150),
-              new FlyingHostile(px + 100, py - 60, 44, 44, 2.2, px, px + 200, 1, 420, 150),
-              new FlyingHostile(px, py - 140, 44, 44, 2.2, px - 100, px + 100, 1, 420, 150)
+              new FlyingHostile(px - 180, py - 60, 44, 44, 2.2, px - 280, px - 80, 1, 420, 150),
+              new FlyingHostile(px + 180, py - 60, 44, 44, 2.2, px + 80, px + 280, 1, 420, 150),
+              new FlyingHostile(px, py - 180, 44, 44, 2.2, px - 100, px + 100, 1, 420, 150)
             );
           }
         }
