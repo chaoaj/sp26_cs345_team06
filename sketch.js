@@ -513,16 +513,6 @@ function keyPressed() {
   }
 
   if (CHEAT_MODE && gameState === "playing") {
-    if (key === '1') Ability.grant(player, DOUBLE_JUMP_ABILITY);
-    if (key === '2') Ability.grant(player, DASH_ABILITY);
-    if (key === 'r' || key === 'R') {
-      levels[levelNum - 1].resetDynamicState();
-      player.respawn();
-      accumulatedPauseMs = 0;
-      pauseStartedAt = null;
-      runStartedAt = getGameMillis();
-      runCompletedAt = null;
-    }
 
     last5KeysTyped += key.toLowerCase();
     if (last5KeysTyped.length > 5) {
