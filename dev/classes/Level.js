@@ -137,6 +137,12 @@ class Level {
             enemy.direction = initial.direction;
             enemy.isDead = false;
         }
+
+        for (const platform of this.platforms) {
+            if (platform && typeof platform.reset === "function") {
+                platform.reset();
+            }
+        }
     }
 
     getSpawnPoint() {
@@ -152,10 +158,12 @@ class Level {
         }
     }
 
-    updateMovingPlatforms() {
+    updateMovingPlatforms(player = null) {
         for (const platform of this.platforms) {
             if (platform instanceof MovingPlatform) {
                 platform.update();
+            } else if (platform instanceof DisappearingPlatform) {
+                platform.update(player);
             }
         }
 

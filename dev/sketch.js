@@ -318,7 +318,7 @@ function draw() {
     drawTitleScreen();
   } else if (gameState === "playing") {
 
-    level.updateMovingPlatforms();
+    level.updateMovingPlatforms(player);
     player.update(level.platforms);
     level.applyPitfall(player);
     level.applyTrapDamage(player);

@@ -120,6 +120,10 @@ class Player extends Actor {
     const previousHitTop = previousY - this.height / 2 + this.hitboxInsetTop;
 
     for (const platform of platforms) {
+      if (platform && platform.isActive === false) {
+        continue;
+      }
+
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
@@ -150,6 +154,10 @@ class Player extends Actor {
     const previousHitTop    = previousY - this.height / 2 + this.hitboxInsetTop;
 
     for (const platform of platforms) {
+      if (platform && platform.isActive === false) {
+        continue;
+      }
+
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
