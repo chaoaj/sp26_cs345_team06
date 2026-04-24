@@ -1,9 +1,7 @@
-class Hostile {
+class Hostile extends Actor {
   constructor(x, y, w = 40, h = 40, speed = 2, leftBound = x - 100, rightBound = x + 100, damage = 1) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
+    super(x, y, w, h);
+
     this.speed = speed;
     this.leftBound = leftBound;
     this.rightBound = rightBound;
@@ -39,8 +37,8 @@ class Hostile {
   draw() {
     const frameW = greenslimeimage.width / this.frameCount;
     const sx = this.animFrame * frameW;
-    const drawH = this.h * 3;
-    const yOffset = -this.h; 
+    const drawH = this.height * 3;
+    const yOffset = -this.height;
 
     push();
     imageMode(CENTER);
@@ -48,9 +46,9 @@ class Hostile {
     if (this.direction === -1) {
       translate(this.x, this.y + yOffset);
       scale(-1, 1);
-      image(greenslimeimage, 0, 0, this.w * 3, drawH, sx, 0, frameW, greenslimeimage.height);
+      image(greenslimeimage, 0, 0, this.width * 3, drawH, sx, 0, frameW, greenslimeimage.height);
     } else {
-      image(greenslimeimage, this.x, this.y + yOffset, this.w * 3, drawH, sx, 0, frameW, greenslimeimage.height);
+      image(greenslimeimage, this.x, this.y + yOffset, this.width * 3, drawH, sx, 0, frameW, greenslimeimage.height);
     }
     pop();
   }

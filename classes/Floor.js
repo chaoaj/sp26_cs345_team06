@@ -1,6 +1,5 @@
 class Floor {
     constructor(x, y, width, floorImage, pits = []) {
-        //32x32px
         this.x = x;
         this.y = y;
         this.width = width;
@@ -8,6 +7,7 @@ class Floor {
         this.pits = pits;
         this.floors = [];
         this.floorTiles = [];
+        this.lavaTiles = [];
         this.isGenerated = false;
     }
 
@@ -21,6 +21,11 @@ class Floor {
             if (this.pits[pitNum] && this.pits[pitNum][0] === i) {
                 i += this.pits[pitNum][1];
                 pitNum++;
+                for (let j = 0; j < this.pits[pitNum - 1][1]; j++) {
+                    const tileX = this.x + (i - this.pits[pitNum - 1][1] + j) * 32;
+                    const tileY = this.y - 35;
+                    this.lavaTiles.push({ x: tileX, y: tileY });
+                }
             } else {
                 const tileX = this.x + i * 32;
                 const tileY = this.y - 35;
@@ -37,6 +42,10 @@ class Floor {
 
         for (const tile of this.floorTiles) {
             image(this.floorImage, tile.x, tile.y, 32, 32);
+        }
+
+        for (const lava of this.lavaTiles) {
+            image(lavaImage, lava.x, lava.y, 32, 32);
         }
 
         return this.floors;

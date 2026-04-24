@@ -1,14 +1,22 @@
-class Player {
+class Player extends Actor {
   constructor(x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.spawnX = x;
-    this.spawnY = y;
-    this.width = width;
-    this.height = height;
-    this.yVelocity = 0;
+    super(x, y, width, height);
+
     this.baseMoveSpeed = 5;
     this.moveSpeed = this.baseMoveSpeed;
+
+    this.jumpStrength = 15;
+
+    this.maxAirJumps = 0;
+    this.remainingAirJumps = 0;
+
+    this.canDash = false;
+
+    this.isHurt = false;
+
+    this.spawnX = x;
+    this.spawnY = y;
+
     this.speedPotionMoveSpeed = 8;
     this.speedPotionDurationMs = 30000;
     this.speedPotionExpiresAt = 0;
@@ -18,9 +26,8 @@ class Player {
     this.wasJumpHeld = false;
     this.jumpBufferDurationMs = 120;
     this.jumpBufferUntil = 0;
-    this.maxAirJumps = 0;
-    this.remainingAirJumps = this.maxAirJumps;
-    this.canDash = false;
+
+
     this.isDashing = false;
     this.dashDirection = 1;
     this.dashSpeed = 14;
@@ -30,22 +37,25 @@ class Player {
     this.dashEndsAt = 0;
     this.dashCooldownUntil = 0;
     this.wasDashHeld = false;
+
     this.baseJumpStrength = 15;
     this.jumpStrength = this.baseJumpStrength;
     this.gravity = 0.6;
     this.isOnGround = false;
     this.isOnFloor = false;
-    this.maxHealth = 3;
-    this.health = this.maxHealth;
     this.maxShield = 2;
     this.shieldHealth = 0;
+    this.onBeforeRespawn = null;
     this.onRespawn = null;
+
+    this.coyoteWindowMs = 100;
+    this.coyoteUntil = 0;
 
     this.hitboxInsetX   = 35;
     this.hitboxInsetTop = 50;
 
     this.facingLeft = false;
-    this.isHurt = false;
+
     this.animations = {
       idle: { sheet: playerIdleSheet, frameCount: 4, fps: 8,  loop: true  },
       walk: { sheet: playerWalkSheet, frameCount: 6, fps: 10, loop: true  },
@@ -71,15 +81,24 @@ class Player {
     const previousY = this.y;
 
     this.updateTimedEffects();
+
     applyPlayerControls(this);
+
+    this.applyPhysics();
+
     this.resolveHorizontalCollisions(platforms, previousX, previousY);
 
-    this.yVelocity += this.gravity;
-    this.y += this.yVelocity;
+    this.move();
+
     this.isOnGround = false;
     this.isOnFloor = false;
 
     this.resolveVerticalCollisions(platforms, previousY);
+
+    if (this.isOnGround) {
+      this.coyoteUntil = getGameMillis() + this.coyoteWindowMs;
+    }
+
     this.constrainToScreen();
     this.updateAnimation();
     this.advanceFrame();
@@ -108,6 +127,10 @@ class Player {
     const previousHitTop = previousY - this.height / 2 + this.hitboxInsetTop;
 
     for (const platform of platforms) {
+      if (platform && platform.isActive === false) {
+        continue;
+      }
+
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
@@ -138,6 +161,10 @@ class Player {
     const previousHitTop    = previousY - this.height / 2 + this.hitboxInsetTop;
 
     for (const platform of platforms) {
+      if (platform && platform.isActive === false) {
+        continue;
+      }
+
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;
@@ -146,43 +173,47 @@ class Player {
       const previousPlatformTop = platformTop - platformYVelocity;
 
       const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
+      // When platform moves down it pulls away from the player, so also check overlap using old top.
       const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
+      const downwardCarry = Math.max(0, platformYVelocity); // how far platform moved down this frame
       const crossedPlatformTop =
         this.yVelocity >= 0 &&
-        previousHitBottom <= previousPlatformTop &&
-        this.hitBottom >= platformTop;
+        previousHitBottom <= previousPlatformTop + 2 &&
+        this.hitBottom >= platformTop - downwardCarry + 6;
 
       // Swept landing check prevents phasing through platforms at high relative speeds.
       if (overlapsX && crossedPlatformTop) {
         this.y = platformTop - this.height / 2;
-        this.yVelocity = 0;
+        // Inherit downward platform velocity so player rides it next frame.
+        this.yVelocity = downwardCarry > 0 ? downwardCarry : 0;
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
+        if (platform.onLand) platform.onLand(this);
         continue;
       }
 
       if (!overlapsX || !overlapsY) continue;
 
-      if (this.yVelocity >= 0 && previousHitBottom <= previousPlatformTop) {
+      if (this.yVelocity >= 0 && previousHitBottom <= previousPlatformTop + 2) {
         this.y = platformTop - this.height / 2;
-        this.yVelocity = 0;
+        this.yVelocity = downwardCarry > 0 ? downwardCarry : 0;
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
+        if (platform.onLand) platform.onLand(this);
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;
       }
     }
   }
-
 
   constrainToScreen() {
     const halfHeight = this.height / 2;
@@ -196,6 +227,7 @@ class Player {
       this.isOnFloor = true;
     }
   }
+
   updateAnimation() {
     if (this.isHurt) {
       if (this.animFrame >= this.animations.hurt.frameCount - 1) {
@@ -239,7 +271,7 @@ class Player {
 
   takeDamage(amount = 1) {
     let remainingDamage = amount;
-
+    damageSound.play()
     if (this.shieldHealth > 0) {
       const blockedDamage = Math.min(this.shieldHealth, remainingDamage);
       this.shieldHealth -= blockedDamage;
@@ -253,6 +285,7 @@ class Player {
     this.isHurt = true;
     this.setAnimState("hurt");
     if (this.health <= 0) {
+      deathSound.play()
       this.respawn();
     }
   }
@@ -270,7 +303,19 @@ class Player {
     this.spawnY = y;
   }
 
+  clearTemporaryItemEffects() {
+    this.jumpStrength = this.baseJumpStrength;
+    this.highJumpExpiresAt = 0;
+    this.moveSpeed = this.baseMoveSpeed;
+    this.speedPotionExpiresAt = 0;
+    this.shieldHealth = 0;
+  }
+
   respawn() {
+    if (typeof this.onBeforeRespawn === "function") {
+      this.onBeforeRespawn(this);
+    }
+
     this.x = this.spawnX;
     this.y = this.spawnY;
     this.jumpMomentumX = 0;
@@ -283,6 +328,7 @@ class Player {
     this.wasJumpHeld = false;
     this.yVelocity = 0;
     this.isOnGround = false;
+    this.clearTemporaryItemEffects();
     this.health = this.maxHealth;
     this.isHurt = false;
     this.setAnimState("idle");

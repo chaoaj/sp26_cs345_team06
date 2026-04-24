@@ -1,8 +1,10 @@
+﻿const CHEAT_MODE = true;
+
 let gameState = "title";
 
 const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT_MULTIPLIER = 1;
-const LEVEL_WORLD_WIDTHS = [1800, 2600, 3300];
+const LEVEL_WORLD_WIDTHS = [4160, 3400, 3296];
 
 let platforms = [];
 let players;
@@ -25,16 +27,34 @@ let level1Enemies = []
 let level1Doors = []
 let level1Pits = []
 let level2Pits = []
+let level1LaserPuzzles = null
 let pauseStartedAt = null;
 let accumulatedPauseMs = 0;
 let abilityUnlockPopup = null;
-let pauseLevelSelectActive = false;
+let runStartedAt = null;
+let runCompletedAt = null;
 
 function getGameMillis() {
   if ((gameState === "paused" || gameState === "abilityUnlock") && pauseStartedAt !== null) {
     return pauseStartedAt - accumulatedPauseMs;
   }
   return millis() - accumulatedPauseMs;
+}
+
+function getRunElapsedMs() {
+  if (runStartedAt === null) {
+    return 0;
+  }
+
+  const currentTime = runCompletedAt !== null ? runCompletedAt : getGameMillis();
+  return Math.max(0, currentTime - runStartedAt);
+}
+
+function formatElapsedTime(totalMs) {
+  const totalSeconds = Math.floor(Math.max(0, totalMs) / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 function showAbilityUnlock(ability) {
@@ -73,63 +93,20 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
-  level1Platforms = [
-    new Platform(250,  height - 170, 220, 30, brickPlatformImage),
-    new Platform(490,  height - 260, 220, 30, brickPlatformImage),
-    new Platform(730,  height - 350, 220, 30, brickPlatformImage),
-    new Platform(970,  height - 260, 220, 30, brickPlatformImage),
-    new Platform(1210, height - 170, 220, 30, brickPlatformImage),
-    new MovingPlatform(1450, height - 300, 200, 30, brickPlatformImage, "y", 180, 1.5),
-    new MovingPlatform(1650, height - 170, 200, 30, brickPlatformImage, "x", 700, 2),
-    new Platform(2000, height - 300, 220, 30, brickPlatformImage),
-    new Platform(2450, height - 350, 220, 30, brickPlatformImage),
-    new Platform(2600, height - 170, 220, 30, brickPlatformImage),
-    new Platform(2800, height - 300, 220, 30, brickPlatformImage)
-  ]
 
-  level1Items = [
-    new Items(730, height - 420, "health"),
-    new Items(970, height - 280, "feather"),
-    new Items(490, height - 330, "shield"),
-    new Items(1210, height - 200, "potion"),
-    new Items(250, height - 220, "doubleJumpAbility"),
-    new Items(1210, height - 220, "dashAbility")
-  ]
-
-  level1Traps = [
-    new SpikeTrap(730, height - 45, 120, 40),
-    new LaserTrap(610, height - 285, 160, 14),
-    new SpikeTrap(1900, height - 45, 120, 30)
-  ]
-
-  level1Boxes = [
-    new Box(490, height - 360, 50),
-    new Box(700, height - 490, 50)
-  ]
-
-  level2Boxes = [
-
-  ]
-
-  level1Doors = [
-    new Door(2800, height - 365, 75, 100)
-  ]
-
-  level1Buttons = [
-    new Button(1100, height - 35, 80, 20, () => console.log("button pressed"))
-  ]
-
-  level1Enemies = [
-    new Hostile(970, height - 295, 40, 40, 1.5, 900, 1040),
-    new FlyingHostile(520, height - 320, 44, 44, 2.2, 420, 620, 1, 360, 130)
-  ]
-  level1Template = [level1Platforms, level1Items, level1Traps, level1Boxes, level1Buttons, level1Enemies, level1Doors, level1Pits]
+  const level1Template = getLevel1Template()
   levelTemplates.push(level1Template);
-  level2Template = getLevel2Template();
+  const level2Template = getLevel2Template();
+  if (level2Template.length < 10) {
+    level2Template.push(null);
+  }
   levelTemplates.push(level2Template);
-  level3Template = getLevel3Template();
+  const level3Template = getLevel3Template();
   if (level3Template.length < 8) {
     level3Template.push([]);
+  }
+  if (level3Template.length < 10) {
+    level3Template.push(null);
   }
   levelTemplates.push(level3Template);
   setupLevel();
@@ -138,12 +115,9 @@ function setup() {
 
 function setupLevel() {
   //level = new Level(level1Platforms, backgroundImage, brickFloorImage, level1Items, level1Traps, WORLD_WIDTH, level1Boxes, level1Buttons, level1Enemies, level1Doors);
-  level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7]);
-  level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7]);
-  levels.push(level1, level2);
-
-  level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7]);
-  levels = [];
+  level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8], levelTemplates[0][9]);
+  level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8], levelTemplates[1][9]);
+  level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8], levelTemplates[2][9]);
   levels.push(level1, level2, level3);
 
   endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
@@ -152,16 +126,41 @@ function setupLevel() {
   const spawnX = width * 0.12;
   const spawnY = height - 160;
   player = new Player(spawnX, spawnY, 80, 120);
+  player.onBeforeRespawn = () => {
+    if (gameState === "endgame" && endGameLevel && typeof endGameLevel.getSpawnPoint === "function") {
+      const spawn = endGameLevel.getSpawnPoint();
+      player.setSpawnPoint(spawn.x, spawn.y);
+      return;
+    }
+
+    const activeLevel = levels[levelNum - 1];
+    if (activeLevel && typeof activeLevel.getSpawnPoint === "function") {
+      const spawn = activeLevel.getSpawnPoint();
+      player.setSpawnPoint(spawn.x, spawn.y);
+    }
+  };
   player.onRespawn = () => {
     const activeLevel = levels[levelNum - 1];
     if (activeLevel && typeof activeLevel.resetDynamicState === "function") {
       activeLevel.resetDynamicState();
+    }
+
+    if (camera) {
+      if (gameState === "endgame" && endGameLevel) {
+        camera.worldWidth = endGameLevel.worldWidth;
+      } else if (activeLevel) {
+        camera.worldWidth = activeLevel.worldWidth;
+      }
+      camera.x = 0;
+      camera.y = 0;
     }
   };
   camera = new Camera(LEVEL_WORLD_WIDTHS[0], height * WORLD_HEIGHT_MULTIPLIER);
   abilityUnlockPopup = null;
   pauseStartedAt = null;
   accumulatedPauseMs = 0;
+  runStartedAt = null;
+  runCompletedAt = null;
 }
 
 function startEndGame() {
@@ -283,22 +282,6 @@ function mousePressed() {
     return;
   }
 
-  if (pauseLevelSelectActive) {
-    // Handle level select click
-    const selectedLevel = handleLevelSelectClick(mouseX, mouseY);
-    if (selectedLevel) {
-      switchToLevel(selectedLevel);
-      if (pauseStartedAt !== null) {
-        accumulatedPauseMs += millis() - pauseStartedAt;
-      }
-      pauseStartedAt = null;
-      pauseLevelSelectActive = false;
-      gameState = "playing";
-    }
-    return;
-  }
-
-  // Handle main pause menu click
   const action = handlePauseMenuClick(mouseX, mouseY);
   if (action === "resume") {
     if (pauseStartedAt !== null) {
@@ -313,10 +296,17 @@ function mousePressed() {
       accumulatedPauseMs += millis() - pauseStartedAt;
     }
     pauseStartedAt = null;
-    pauseLevelSelectActive = false;
     gameState = "playing";
   } else if (action === "levelSelect") {
-    pauseLevelSelectActive = true;
+    const levelNum = handleLevelSelectClick(mouseX, mouseY);
+    if (levelNum) {
+      switchToLevel(levelNum);
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
+      }
+      pauseStartedAt = null;
+      gameState = "playing";
+    }
   }
 }
 
@@ -330,7 +320,7 @@ function draw() {
     drawTitleScreen();
   } else if (gameState === "playing") {
 
-    level.updateMovingPlatforms();
+    level.updateMovingPlatforms(player);
     player.update(level.platforms);
     level.applyPitfall(player);
     level.applyTrapDamage(player);
@@ -391,6 +381,10 @@ function draw() {
     camera.reset();
 
     if (endGameLevel.hasCollectedTreasure(player)) {
+      if (runCompletedAt === null) {
+        runCompletedAt = getGameMillis();
+      }
+
       push();
       fill(255);
       textAlign(CENTER, CENTER);
@@ -398,7 +392,8 @@ function draw() {
       text("You Win!", width / 2, height / 2 - 20);
       textSize(18);
       text("Treasure recovered.", width / 2, height / 2 + 18);
-      text("Press R to return to title", width / 2, height / 2 + 52);
+      text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, width / 2, height / 2 + 40);
+      text("Press R to return to title", width / 2, height / 2 + 74);
       pop();
     }
   } else if (gameState === "paused") {
@@ -409,12 +404,7 @@ function draw() {
     player.draw();
     camera.reset();
     level.drawHUD(player);
-
-    if (pauseLevelSelectActive) {
-      drawLevelSelectOverlay();
-    } else {
-      drawPauseOverlay();
-    }
+    drawPauseOverlay();
   } else if (gameState === "abilityUnlock") {
     level.drawBackground();
     camera.apply();
@@ -490,6 +480,12 @@ function keyPressed() {
     return;
   }
 
+  if (CHEAT_MODE && gameState === "playing") {
+    if (key === '1') Ability.grant(player, DOUBLE_JUMP_ABILITY);
+    if (key === '2') Ability.grant(player, DASH_ABILITY);
+    if (key === 'r' || key === 'R') player.respawn();
+  }
+
   //TEMPORARY
   if (key === 'l' || key === 'L') {
     const nextLevelNum = (levelNum % levels.length) + 1;
@@ -499,20 +495,13 @@ function keyPressed() {
   if (key === "p" || key === "P" || keyCode === ESCAPE) {
     if (gameState === "playing") {
       pauseStartedAt = millis();
-      pauseLevelSelectActive = false;
       gameState = "paused";
     } else if (gameState === "paused") {
-      if (pauseLevelSelectActive) {
-        // Close level select, go back to main pause menu
-        pauseLevelSelectActive = false;
-      } else {
-        // Close pause entirely
-        if (pauseStartedAt !== null) {
-          accumulatedPauseMs += millis() - pauseStartedAt;
-        }
-        pauseStartedAt = null;
-        gameState = "playing";
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
       }
+      pauseStartedAt = null;
+      gameState = "playing";
     }
   }
 }

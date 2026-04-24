@@ -24,6 +24,14 @@ class Items {
             return 12000;
         }
 
+        if (this.type === "shield") {
+            return 15000;
+        }
+
+        if (this.type === "potion") {
+            return 10000;
+        }
+
         return 0;
     }
 
