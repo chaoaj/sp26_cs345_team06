@@ -88,17 +88,30 @@ function handlePauseMenuClick(mx, my) {
 }
 
 function getLevelSelectRects() {
-  const count = 2;
+  // Use global levels array if available
+  const count = (typeof levels !== 'undefined' && Array.isArray(levels)) ? levels.length : 3;
   const itemW = 120, itemH = 120, gap = 30;
-  const totalW = count * itemW + (count - 1) * gap;
+  // Layout: up to 4 per row
+  const perRow = Math.min(4, count);
+  const rows = Math.ceil(count / perRow);
+  const totalW = perRow * itemW + (perRow - 1) * gap;
+  const totalH = rows * itemH + (rows - 1) * gap;
   const startX = width / 2 - totalW / 2 + itemW / 2;
-  return Array.from({ length: count }, (_, i) => ({
-    num: i + 1,
-    x: startX + i * (itemW + gap),
-    y: height / 2 + 20,
-    w: itemW,
-    h: itemH,
-  }));
+  const startY = height / 2 - totalH / 2 + itemH / 2 + 20;
+  let rects = [];
+  for (let i = 0; i < count; i++) {
+    const col = i % perRow;
+    const row = Math.floor(i / perRow);
+    rects.push({
+      num: i + 1,
+      label: (i === count - 1) ? 'Final Level' : `Level ${i + 1}`,
+      x: startX + col * (itemW + gap),
+      y: startY + row * (itemH + gap),
+      w: itemW,
+      h: itemH,
+    });
+  }
+  return rects;
 }
 
 function drawLevelSelectOverlay() {
@@ -110,12 +123,18 @@ function drawLevelSelectOverlay() {
 
   rectMode(CENTER);
   fill(26, 31, 46);
-  rect(width / 2, height / 2, 380, 260, 18);
+  // Dynamic height for more levels
+  const count = (typeof levels !== 'undefined' && Array.isArray(levels)) ? levels.length : 3;
+  const perRow = Math.min(4, count);
+  const rows = Math.ceil(count / perRow);
+  const panelW = Math.max(380, perRow * 140);
+  const panelH = Math.max(260, rows * 140);
+  rect(width / 2, height / 2, panelW, panelH, 18);
 
   fill(255);
   textAlign(CENTER, CENTER);
   textSize(30);
-  text("Select Level", width / 2, height / 2 - 90);
+  text("Select Level", width / 2, height / 2 - panelH / 2 + 40);
 
   for (const r of getLevelSelectRects()) {
     rectMode(CENTER);
@@ -124,7 +143,7 @@ function drawLevelSelectOverlay() {
     fill(255);
     textSize(20);
     textAlign(CENTER, CENTER);
-    text(`Level ${r.num}`, r.x, r.y);
+    text(r.label, r.x, r.y);
   }
   pop();
 }

@@ -1,10 +1,29 @@
 class EndGame {
+    // No-op methods for compatibility with main game loop
+    updateMovingPlatforms() {}
+    updateEnemies() {}
+    updatePuzzleElements() {}
+    applyPitfall() {}
+    applyTrapDamage() {}
+    applyEnemyDamage() {}
+    // Call this in the main loop to check for treasure collection
+    collectTouchedItems(player) {
+      this.hasCollectedTreasure(player);
+    }
+    drawHUD() {}
+    get doors() { return []; }
+    get boxes() { return []; }
+    get buttons() { return []; }
+    get enemies() { return []; }
+    get pits() { return []; }
+    get terrain() { return []; }
   constructor(worldWidth, floorImage, platformImage) {
     this.worldWidth = worldWidth;
     this.floorImage = floorImage;
     this.platformImage = platformImage;
     this.platforms = [];
     this.treasure = null;
+    this.winTriggered = false;
   }
 
   setup() {
@@ -34,8 +53,13 @@ class EndGame {
   }
 
   hasCollectedTreasure(player) {
-    if (!this.treasure || this.treasure.collected) {
-      return !!(this.treasure && this.treasure.collected);
+    console.log('[EndGame] hasCollectedTreasure called. Instance:', this, 'Treasure collected:', this.treasure ? this.treasure.collected : undefined);
+    if (!this.treasure) {
+      return false;
+    }
+
+    if (this.treasure.collected) {
+      return true;
     }
 
     const chestLeft = this.treasure.x - this.treasure.w / 2;
@@ -50,10 +74,11 @@ class EndGame {
       player.hitTop < chestBottom;
 
     if (touchingChest) {
+      console.log('[EndGame] Player touched chest. Setting collected = true');
       this.treasure.collected = true;
+      return true;
     }
-
-    return this.treasure.collected;
+    return false;
   }
 
   drawBackground() {
