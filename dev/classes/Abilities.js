@@ -222,3 +222,59 @@ const DASH_ABILITY = new Ability(
     player.canDash = true;
   }
 );
+
+function drawAbilityUnlockOverlay() {
+  if (!abilityUnlockPopup) {
+    return;
+  }
+  push();
+  noStroke();
+  fill(0, 0, 0, 165);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+
+  const panelW = min(560, width - 60);
+  const panelH = 220;
+  const panelX = width / 2;
+  const panelY = height / 2;
+
+  rectMode(CENTER);
+  fill(24, 28, 42);
+  rect(panelX, panelY, panelW, panelH, 18);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(34);
+  text("Ability Unlocked", panelX, panelY - 65);
+  textSize(28);
+  text(abilityUnlockPopup.name, panelX, panelY - 20);
+  textSize(20);
+  text(abilityUnlockPopup.description, panelX, panelY + 24);
+  textSize(16);
+  text("Press any key to continue", panelX, panelY + 78);
+  pop();
+}
+
+function closeAbilityUnlockPopup() {
+  if (!abilityUnlockPopup || gameState !== "abilityUnlock") {
+    return;
+  }
+  if (pauseStartedAt !== null) {
+    accumulatedPauseMs += millis() - pauseStartedAt;
+  }
+  pauseStartedAt = null;
+  abilityUnlockPopup = null;
+  gameState = "playing";
+}
+
+function showAbilityUnlock(ability) {
+  if (!ability || !ability.name || gameState !== "playing") {
+    return;
+  }
+  abilityUnlockPopup = {
+    name: ability.name,
+    description: ability.description || "New ability unlocked.",
+  };
+  pauseStartedAt = millis();
+  gameState = "abilityUnlock";
+}

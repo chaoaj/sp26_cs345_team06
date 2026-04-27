@@ -13,6 +13,21 @@ function getPauseItemRects() {
   }));
 }
 
+function handlePauseKeys() {
+    if (key === "p" || key === "P" || keyCode === ESCAPE) {
+    if (gameState === "playing") {
+      pauseStartedAt = millis();
+      gameState = "paused";
+    } else if (gameState === "paused") {
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
+      }
+      pauseStartedAt = null;
+      gameState = "playing";
+    }
+  }
+}
+
 function drawPauseOverlay() {
   push();
   noStroke();
@@ -158,4 +173,15 @@ function handleLevelSelectClick(mx, my) {
     }
   }
   return null;
+}
+
+
+function handlePauseMenuDraw() {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawPauseOverlay();
 }

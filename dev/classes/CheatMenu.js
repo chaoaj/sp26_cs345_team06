@@ -2,7 +2,7 @@
 
 // this is just funny to show chao can turn it off for testing things
 const cheatDetectionOn = true
-
+let last5KeysTyped = ""
 let hasCheated = false
 
 const cheatState = {
@@ -12,6 +12,26 @@ const cheatState = {
     skipLevel: false,
     unlockItems: false
 };
+
+function handleCheatMenuKeys() {
+    if (CHEAT_MODE && gameState === "playing") {
+
+    last5KeysTyped += key.toLowerCase();
+    if (last5KeysTyped.length > 5) {
+      last5KeysTyped = last5KeysTyped.slice(-5);
+    }
+    if (last5KeysTyped === "cheat") {
+      gameState = "cheatMenu";
+      last5KeysTyped = "";
+    }
+  }
+
+  if (gameState === "cheatMenu") {
+    if (key === "Escape" || key === "c" || key === "C") {
+      gameState = "playing";
+    }
+  }
+}
 
 function toggleCheat(key) {
     cheatState[key] = !cheatState[key];
@@ -193,4 +213,41 @@ function drawCheaterOverlay() {
   text("YOU CHEATED", panelX + 3, panelTop + 95 + 3);
 
   pop();
+}
+
+function handleCheatMenuMousePressed() {
+    const cheats = [
+      "infiniteHealth", "infiniteJumps", "unlockAll",
+      "skipLevel", "unlockItems"
+    ];
+    const lineHeight = 38;
+    const panelW = min(520, width - 60);
+    const basePanelH = 340;
+    const panelH = min(height - 20, basePanelH + max(0, cheats.length - 4) * lineHeight);
+    const panelX = width / 2;
+    const panelY = height / 2;
+    const panelTop = panelY - panelH / 2;
+    const firstButtonY = panelTop + 154;
+    const bw = panelW - 48;
+    const bh = 30;
+
+    for (let i = 0; i < cheats.length; i++) {
+      const bx = panelX;
+      const by = firstButtonY + i * lineHeight;
+      if (mouseX > bx - bw / 2 && mouseX < bx + bw / 2 &&
+          mouseY > by - bh / 2 && mouseY < by + bh / 2) {
+        toggleCheat(cheats[i]);
+      }
+    }
+    return;
+}
+
+function handleCheatMenuDraw() {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawCheatMenuOverlay();
 }
