@@ -24,6 +24,8 @@ function handlePauseKeys() {
       }
       pauseStartedAt = null;
       gameState = "playing";
+    } else if (gameState === "levelSelect") {
+      gameState = "paused";
     }
   }
 }
