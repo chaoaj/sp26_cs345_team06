@@ -59,10 +59,29 @@ function setup() {
 }
 
 function setupLevel() {
-  level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8], levelTemplates[0][9]);
-  level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8], levelTemplates[1][9]);
-  level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8], levelTemplates[2][9]);
-  levelTest = new Level(levelTemplates[3][0], backgroundImage, floorTileLevel1, levelTemplates[3][1], levelTemplates[3][2], LEVEL_WORLD_WIDTHS[3], levelTemplates[3][3], levelTemplates[3][4], levelTemplates[3][5], levelTemplates[3][6], levelTemplates[3][7], levelTemplates[3][8]);
+  level1 = new Level(
+    levelTemplates[0][0], backgroundImage, floorTileLevel1,
+    levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0],
+    levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5],
+    levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8],
+    levelTemplates[0][9]);
+  level2 = new Level(
+    levelTemplates[1][0], backgroundImage, floorTileLevel2,
+    levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1],
+     levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5],
+     levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8],
+     levelTemplates[1][9]);
+  level3 = new Level(
+    levelTemplates[2][0], backgroundImage, floorTileLevel3,
+    levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2],
+    levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5],
+    levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8],
+    levelTemplates[2][9]);
+  levelTest = new Level(
+    levelTemplates[3][0], backgroundImage, floorTileLevel1,
+    levelTemplates[3][1], levelTemplates[3][2], LEVEL_WORLD_WIDTHS[3],
+    levelTemplates[3][3], levelTemplates[3][4], levelTemplates[3][5],
+    levelTemplates[3][6], levelTemplates[3][7], levelTemplates[3][8]);
   navigationLevel = new NavigationLevel(
     levelTemplates[4][0], backgroundImage, floorTileLevel1,
     levelTemplates[4][1], levelTemplates[4][2], LEVEL_WORLD_WIDTHS[4],
@@ -70,7 +89,7 @@ function setupLevel() {
     levelTemplates[4][6], levelTemplates[4][7], levelTemplates[4][8],
     levelTemplates[4][9]
   );
-  levels.push(level1, level2, level3, navigationLevel);
+  levels.push(level1, level2, level3);
 
   endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
   endGameLevel.setup();
@@ -215,6 +234,13 @@ function draw() {
 }
 
 function keyPressed() {
+    // TEMP: Press 'n' to switch to NavigationLevel
+    if (key === 'n' || key === 'N') {
+      // Assuming navigationLevel is the last before endGameLevel in levels array
+      levelNum = levels.length; // If you want it to be the last, or set to the correct index
+      player.respawn();
+      return;
+    }
   if (gameState === "title") {
     handleTitleKeyPressed();
     return;
