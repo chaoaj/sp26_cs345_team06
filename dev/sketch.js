@@ -55,6 +55,24 @@ function setup() {
   }
   levelTemplates.push(level3Template);
   levelTemplates.push(getTestLevelTemplate());
+  // Add NavigationLevel template
+  levelTemplates.push(getNavigationLevelTemplate());
+  // Returns a template array for NavigationLevel (structure matches other level templates)
+  function getNavigationLevelTemplate() {
+    // You can customize these arrays as needed for your NavigationLevel
+    return [
+      [], // platforms
+      [], // items
+      null, // traps
+      [], // boxes
+      [], // buttons
+      [], // enemies
+      [], // doors
+      [], // pits
+      [], // terrain
+      {}  // laserPuzzles
+    ];
+  }
   setupLevel();
 }
 
