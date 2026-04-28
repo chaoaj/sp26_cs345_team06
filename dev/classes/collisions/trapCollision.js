@@ -52,4 +52,21 @@ function applyTrapDamage(level, player) {
             }
         }
     }
+
+    // After collision resolution the player sits flush against the platform edge
+    // (zero overlap), so we expand the check by 2px to detect adjacency.
+    for (const platform of level.platforms) {
+        if (!platform.isHarmful) continue;
+        const px = 2;
+        if (
+            player.hitRight  > platform.x - platform.w / 2 - px &&
+            player.hitLeft   < platform.x + platform.w / 2 + px &&
+            player.hitBottom > platform.y - platform.h / 2 - px &&
+            player.hitTop    < platform.y + platform.h / 2 + px
+        ) {
+            player.takeDamage(platform.damage);
+            level.lastTrapDamageAt = now;
+            return;
+        }
+    }
 }

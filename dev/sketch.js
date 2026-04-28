@@ -3,7 +3,7 @@
 const CHEAT_MODE = true;
 const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT_MULTIPLIER = 1;
-const LEVEL_WORLD_WIDTHS = [4160, 3400, 3296];
+const LEVEL_WORLD_WIDTHS = [4160, 3400, 3296, 2400];
 
 
 ///TEMP VARIABLES
@@ -28,6 +28,7 @@ let levelNum = 1
 let levels = []
 let levelTemplates = []
 let abilityUnlockPopup = null;
+let testLevelActive = false;
 let gameState = "title";
 
 // FUNCTIONS
@@ -53,6 +54,7 @@ function setup() {
     level3Template.push(null);
   }
   levelTemplates.push(level3Template);
+  levelTemplates.push(getTestLevelTemplate());
   setupLevel();
 }
 
@@ -60,6 +62,7 @@ function setupLevel() {
   level1 = new Level(levelTemplates[0][0], backgroundImage, floorTileLevel1, levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0], levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5], levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8], levelTemplates[0][9]);
   level2 = new Level(levelTemplates[1][0], backgroundImage, floorTileLevel2, levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1], levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5], levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8], levelTemplates[1][9]);
   level3 = new Level(levelTemplates[2][0], backgroundImage, floorTileLevel3, levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2], levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5], levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8], levelTemplates[2][9]);
+  levelTest = new Level(levelTemplates[3][0], backgroundImage, floorTileLevel1, levelTemplates[3][1], levelTemplates[3][2], LEVEL_WORLD_WIDTHS[3], levelTemplates[3][3], levelTemplates[3][4], levelTemplates[3][5], levelTemplates[3][6], levelTemplates[3][7], levelTemplates[3][8]);
   levels.push(level1, level2, level3);
 
   endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
@@ -75,14 +78,14 @@ function setupLevel() {
       player.setSpawnPoint(spawn.x, spawn.y);
       return;
     }
-    const activeLevel = levels[levelNum - 1];
+    const activeLevel = testLevelActive ? levelTest : levels[levelNum - 1];
     if (activeLevel && typeof activeLevel.getSpawnPoint === "function") {
       const spawn = activeLevel.getSpawnPoint();
       player.setSpawnPoint(spawn.x, spawn.y);
     }
   };
   player.onRespawn = () => {
-    const activeLevel = levels[levelNum - 1];
+    const activeLevel = testLevelActive ? levelTest : levels[levelNum - 1];
     if (activeLevel) {
       resetDynamicStateForLevel(activeLevel);
     }
@@ -147,7 +150,7 @@ function mousePressed() {
 }
 
 function draw() {
-  level = levels[levelNum - 1];
+  level = testLevelActive ? levelTest : levels[levelNum - 1];
   if (camera && level) {
     camera.worldWidth = level.worldWidth;
   }
@@ -219,4 +222,8 @@ function keyPressed() {
   handleCheatMenuKeys()
   handlePauseKeys()
 
+  if (key === 'q' || key === 'Q') {
+    testLevelActive = !testLevelActive;
+    player.respawn();
+  }
 }
