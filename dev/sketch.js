@@ -83,8 +83,8 @@ function setupLevel() {
   };
   player.onRespawn = () => {
     const activeLevel = levels[levelNum - 1];
-    if (activeLevel && typeof activeLevel.resetDynamicState === "function") {
-      activeLevel.resetDynamicState();
+    if (activeLevel) {
+      resetDynamicStateForLevel(activeLevel);
     }
     if (camera) {
       if (gameState === "endgame" && endGameLevel) {
@@ -125,7 +125,7 @@ function mousePressed() {
       pauseStartedAt = null;
       gameState = "playing";
     } else if (action === "retry") {
-      levels[levelNum - 1].resetDynamicState();
+      resetDynamicStateForLevel(levels[levelNum - 1]);
       player.respawn();
       accumulatedPauseMs = 0;
       pauseStartedAt = null;
@@ -162,8 +162,8 @@ function draw() {
     level.updateMovingPlatforms(player);
     player.update(level.platforms);
     level.applyPitfall(player);
-    level.applyTrapDamage(player);
-    level.applyEnemyDamage(player);
+    applyTrapDamage(level, player);
+    applyEnemyDamage(level, player);
     level.updateEnemies();
     level.updatePuzzleElements(player);
     camera.follow(player);
