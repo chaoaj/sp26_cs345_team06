@@ -56,23 +56,14 @@ function setup() {
   levelTemplates.push(level3Template);
   levelTemplates.push(getTestLevelTemplate());
   // Add NavigationLevel template
-  levelTemplates.push(getNavigationLevelTemplate());
-  // Returns a template array for NavigationLevel (structure matches other level templates)
-  function getNavigationLevelTemplate() {
-    // You can customize these arrays as needed for your NavigationLevel
-    return [
-      [], // platforms
-      [], // items
-      null, // traps
-      [], // boxes
-      [], // buttons
-      [], // enemies
-      [], // doors
-      [], // pits
-      [], // terrain
-      {}  // laserPuzzles
-    ];
+  const navigationLevelTemplate = getNavigationLevelTemplate();
+  if (navigationLevelTemplate.length < 8) {
+    navigationLevelTemplate.push([]);
   }
+  if (navigationLevelTemplate.length < 10) {
+    navigationLevelTemplate.push(null);
+  }
+  levelTemplates.push(navigationLevelTemplate);
   setupLevel();
 }
 
@@ -108,10 +99,16 @@ function setupLevel() {
     levelTemplates[4][9]
   );
   levels.push(level1, level2, level3);
+  // Insert navigationLevel after main levels, but before endGameLevel
+  const navigationLevelIndex = levels.length;
+  levels.push(navigationLevel);
 
   endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
   endGameLevel.setup();
   levels.push(endGameLevel);
+
+  // Store navigationLevelIndex globally for use in keyPressed
+  window.navigationLevelIndex = navigationLevelIndex;
 
   const spawnX = width * 0.12;
   const spawnY = height - 160;
@@ -254,10 +251,12 @@ function draw() {
 function keyPressed() {
     // TEMP: Press 'n' to switch to NavigationLevel
     if (key === 'n' || key === 'N') {
-      // Assuming navigationLevel is the last before endGameLevel in levels array
-      levelNum = levels.length; // If you want it to be the last, or set to the correct index
-      player.respawn();
-      return;
+      // Jump to navigationLevel (now in levels array)
+      if (typeof window.navigationLevelIndex === 'number') {
+        levelNum = window.navigationLevelIndex + 1; // levelNum is 1-based
+        player.respawn();
+        return;
+      }
     }
   if (gameState === "title") {
     handleTitleKeyPressed();
