@@ -74,7 +74,7 @@ function getLevel2Template() {
 
   // ── TERRAIN ───────────────────────────────────────────────────────────────
   const terrain = [];
-
+  const pipePuzzles = []
   return [
     platforms,
     items,
@@ -85,5 +85,7 @@ function getLevel2Template() {
     doors,
     pits,
     terrain,
+    pipePuzzles
+
   ];
 }

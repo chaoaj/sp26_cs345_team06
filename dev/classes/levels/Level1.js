@@ -50,6 +50,11 @@ function getLevel1Template() {
 
     new Terrain(3800, height - 100, 704, 256, box4long),
   ]
+  pp1 = new PipePuzzle(500, 200, 6);
+  pp1.loadImages(pipeStraightImg, pipeElbowImg, pipeTpieceImg, pipeQuadImg);
+  const pipePuzzles = [
+    pp1,
+  ]
 
   return [
     platforms,
@@ -61,5 +66,6 @@ function getLevel1Template() {
     doors,
     pits,
     terrain,
+    pipePuzzles
   ];
 }

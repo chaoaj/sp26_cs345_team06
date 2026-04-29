@@ -2,6 +2,12 @@ function preload() {
   //can only have one preload function across all files
   // so preload here
 
+  //Puzzle images
+  pipeStraightImg = loadImage('assets/puzzles/straight.png');
+  pipeElbowImg = loadImage('assets/puzzles/elbow.png');
+  pipeTpieceImg = loadImage('assets/puzzles/tpiece.png');
+  pipeQuadImg = loadImage('assets/puzzles/quad.png');
+
   //Music
   backgroundMusic = loadSound("assets/audio/BackgroundMusic.mp3")
   soliloquyMusic = loadSound("assets/audio/Soliloquy.mp3")

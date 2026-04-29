@@ -120,6 +120,8 @@ function getLevel3Template() {
   const terrain = [
     new Terrain(2200, height - 144, 288, 384, step4),
   ];
+    const pipePuzzles = []
+
 
   return [
     platforms,
@@ -131,5 +133,7 @@ function getLevel3Template() {
     doors,
     pits,
     terrain,
+    pipePuzzles
+
   ];
 }

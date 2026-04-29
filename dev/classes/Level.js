@@ -1,7 +1,7 @@
 // Assumes collisions.js is loaded as a script and exposes functions globally
 // Level class manages all state and logic for a single game level.
 class Level {
-    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits = [], terrain = [], laserPuzzles = {}) {
+    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits = [], terrain = [], laserPuzzles = {}, pipePuzzles = []) {
         // Defensive: ensure all arrays are valid even if null is passed
         platforms = platforms || [];
         items = items || [];
@@ -13,6 +13,7 @@ class Level {
         pits = pits || [];
         terrain = terrain || [];
         laserPuzzles = laserPuzzles || {};
+        pipePuzzles = pipePuzzles || []
         this.worldWidth = worldWidth || width;
         this.platforms = [...platforms];
         this.items = [...items];
@@ -27,6 +28,7 @@ class Level {
         this.lasers = [...(laserPuzzles.lasers || [])];
         this.laserCollectors = [...(laserPuzzles.collectors || [])];
         this.laserMirrors = [...(laserPuzzles.mirrors || [])];
+        this.pipePuzzle = pipePuzzles || [];
 
         this.abilityToImageMap = [
             { ability: "doubleJump", image: doublejumpui },
@@ -205,6 +207,7 @@ class Level {
         for (const mirror of this.laserMirrors) mirror.draw();
         for (const collector of this.laserCollectors) collector.draw();
         for (const laser of this.lasers) laser.draw();
+        for (const puzzle of this.pipePuzzle) puzzle.draw();
     }
 
     updatePuzzleElements(player) {
@@ -262,6 +265,16 @@ class Level {
         const laserBlockers = [...this.platforms, ...this.boxes];
         for (const laser of this.lasers) {
             laser.update(this.laserMirrors, this.laserCollectors, laserBlockers);
+        }
+
+        if (this.pipePuzzle && this.pipePuzzle.length > 0) {
+            for (let puzzle of this.pipePuzzle) {
+                if (puzzle.isPlayerNear(player) && keyIsDown(69)) { // E key
+                    puzzle.active = true;
+                } else if (!puzzle.isPlayerNear(player)) {
+                    puzzle.active = false;
+                }
+            }
         }
     }
 
