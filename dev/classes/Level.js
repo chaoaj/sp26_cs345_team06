@@ -1,7 +1,7 @@
 // Assumes collisions.js is loaded as a script and exposes functions globally
 // Level class manages all state and logic for a single game level.
 class Level {
-    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits = [], terrain = [], laserPuzzles = {}, pipePuzzles = []) {
+    constructor(platforms, backgroundimage, floorImage, items = [], traps = [], worldWidth = null, boxes = [], buttons = [], enemies = [], doors = [], pits = [], terrain = [], pipePuzzles = [], laserPuzzles = {}) {
         // Defensive: ensure all arrays are valid even if null is passed
         platforms = platforms || [];
         items = items || [];
@@ -13,7 +13,6 @@ class Level {
         pits = pits || [];
         terrain = terrain || [];
         laserPuzzles = laserPuzzles || {};
-        pipePuzzles = pipePuzzles || []
         this.worldWidth = worldWidth || width;
         this.platforms = [...platforms];
         this.items = [...items];
@@ -28,7 +27,7 @@ class Level {
         this.lasers = [...(laserPuzzles.lasers || [])];
         this.laserCollectors = [...(laserPuzzles.collectors || [])];
         this.laserMirrors = [...(laserPuzzles.mirrors || [])];
-        this.pipePuzzles =  [...pipePuzzles]
+        this.pipePuzzles = [...(pipePuzzles || [])];
 
         this.abilityToImageMap = [
             { ability: "doubleJump", image: doublejumpui },
@@ -154,10 +153,12 @@ class Level {
     // ...existing code...
 
     applyPitfall(player) {
-        if (isPlayerTouchingPit(this, player)) {
-            deathSound.play()
+        // Use the global isPlayerTouchingPit for pitfall logic (from trapCollision.js)
+        if (typeof isPlayerTouchingPit === 'function' ? isPlayerTouchingPit(this, player) : false) {
+            deathSound.play();
             player.respawn();
         }
+    // (No longer needed: isPlayerTouchingPitCustom)
     }
 
     isPlayerTouchingTrap(player, trap) {
@@ -207,7 +208,13 @@ class Level {
         for (const mirror of this.laserMirrors) mirror.draw();
         for (const collector of this.laserCollectors) collector.draw();
         for (const laser of this.lasers) laser.draw();
-        for (const puzzle of this.pipePuzzles) puzzle.drawPipe();
+        for (const pipePuzzle of this.pipePuzzles) {
+            if (typeof pipePuzzle.draw === 'function') {
+                pipePuzzle.draw();
+            } else if (typeof pipePuzzle.drawPipe === 'function') {
+                pipePuzzle.drawPipe();
+            }
+        }
     }
 
     updatePuzzleElements(player) {
@@ -219,10 +226,11 @@ class Level {
             box.update(this.platforms);
             // Box pitfall respawn logic (Level 2)
             if (this.pits && this.pits.length > 0) {
-                // Use the same pitfall logic as player, but for the box
                 const boxLeft = box.x - box.w / 2;
                 const boxRight = box.x + box.w / 2;
-                const touchingFloorBand = box.y + box.h / 2 >= height - 1;
+                const boxBottom = box.y + box.h / 2;
+                const floorY = this.floor ? this.floor.y : height;
+                const touchingFloorBand = boxBottom >= floorY - 1;
                 if (touchingFloorBand) {
                     for (const pit of this.pits) {
                         const startTile = pit[0];
@@ -266,7 +274,6 @@ class Level {
         for (const laser of this.lasers) {
             laser.update(this.laserMirrors, this.laserCollectors, laserBlockers);
         }
-
     }
 
     // ...existing code...

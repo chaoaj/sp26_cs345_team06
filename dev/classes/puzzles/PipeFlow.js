@@ -1,5 +1,5 @@
-function mapTypeToImage(pipe) {
-  switch (pipe.type) {
+function mapTypeToImage(pipeType) {
+  switch (pipeType) {
     case "straight":
       return pipeStraightImg;
     case "elbow":
@@ -24,11 +24,16 @@ class Pipe{
     this.image = mapTypeToImage(this.pipeType);
   }
   drawPipe() {
+    if (!this.image) {
+      fill(255,0,0,100);
+      rect(this.x, this.y, this.width, this.height);
+      return;
+    }
     image(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
-class PipeFlow { 
+class PipeFlow {
   constructor(x, y, width, height) {
     this.x = x;
     this.y = y;
