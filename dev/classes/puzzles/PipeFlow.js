@@ -12,7 +12,9 @@ function mapTypeToImage(pipe) {
 }
 
 class Pipe{
-  constructor(x, y, width, height, pipeType = "straight") {
+  constructor(x, y, width, height, pipeType = "straight", correctOrientation) {
+    this.correctOrientation = correctOrientation
+    this.currentOrientation = 0;
     this.x = x;
     this.y = y;
     this.width = width;
@@ -33,4 +35,5 @@ class PipeFlow {
     this.width = width;
     this.height = height;
   }
+
 }

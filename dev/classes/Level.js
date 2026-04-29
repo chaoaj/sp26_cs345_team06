@@ -28,7 +28,7 @@ class Level {
         this.lasers = [...(laserPuzzles.lasers || [])];
         this.laserCollectors = [...(laserPuzzles.collectors || [])];
         this.laserMirrors = [...(laserPuzzles.mirrors || [])];
-        this.pipePuzzle = pipePuzzles || [];
+        this.pipePuzzles =  [...pipePuzzles]
 
         this.abilityToImageMap = [
             { ability: "doubleJump", image: doublejumpui },
@@ -207,7 +207,7 @@ class Level {
         for (const mirror of this.laserMirrors) mirror.draw();
         for (const collector of this.laserCollectors) collector.draw();
         for (const laser of this.lasers) laser.draw();
-        for (const puzzle of this.pipePuzzle) puzzle.draw();
+        for (const puzzle of this.pipePuzzles) puzzle.drawPipe();
     }
 
     updatePuzzleElements(player) {
@@ -267,15 +267,6 @@ class Level {
             laser.update(this.laserMirrors, this.laserCollectors, laserBlockers);
         }
 
-        if (this.pipePuzzle && this.pipePuzzle.length > 0) {
-            for (let puzzle of this.pipePuzzle) {
-                if (puzzle.isPlayerNear(player) && keyIsDown(69)) { // E key
-                    puzzle.active = true;
-                } else if (!puzzle.isPlayerNear(player)) {
-                    puzzle.active = false;
-                }
-            }
-        }
     }
 
     // ...existing code...

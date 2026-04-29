@@ -68,6 +68,7 @@ function setup() {
 }
 
 function setupLevel() {
+  print(levelTemplates[0][9])
   level1 = new Level(
     levelTemplates[0][0], backgroundImage, floorTileLevel1,
     levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0],
