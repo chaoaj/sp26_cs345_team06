@@ -17,14 +17,19 @@ class NavigationLevel extends Level {
 }
 function getNavigationLevelTemplate() {
     const BeatLevel1 = false; // Set to true to test the door unlock platform
+    const beatLevel2 = true; // Set to true to test the laser traps
+    const beatLevel3 = false; // Set to true to test the moving platforms with traps on them
+    const beatLevel4 = false; // Set to true to test the final door and platform
     const unlock1 = new MovingPlatform(800, height - 1200, 128, 32, brickTileImage, "y", 700, 2, false);
     const DoorUnlock1 = new Terrain(1026, height - 72, 192, 256, step4);
-
   const platforms = [
     new BrickPlatform(625, height - 400, 250, 32, brickTileImage),
     new DisappearingPlatform(350, height - 500, 128, 32, brickTileImage, 1000, 500),
-    new BrickPlatform(625, height - 250, 100, 32, brickTileImage),
-    unlock1,
+    new BrickPlatform(625, height - 250, 130, 32, brickTileImage),
+    new BrickPlatform(950, height - 1200, 128, 32, brickTileImage),
+    ...(beatLevel2 ? [] : [new BrickPlatform(675, height - 325, 32, 150, brickTileImage)]),
+    ...(beatLevel2 ? [] : [new BrickPlatform(575, height - 325, 32, 150, brickTileImage)]),
+    ...(beatLevel3 ? [unlock1] : []),
     // placeholder after this
 
     new BrickPlatform(850, height - 185, 160, 32, brickTileImage),
@@ -38,16 +43,18 @@ function getNavigationLevelTemplate() {
   ];
 
   const items = [
+    new Items(900, height - 1200, "potion"),
     // new Items(420, height - 40, "potion"),
     // new Items(400, height - 40, "feather"),
     // new Items(300, height - 40, "dashAbility"),
     // new Items(280, height - 40, "doubleJumpAbility"),
 
   ];
-
+  const laserTrap1 = new LaserTrap(675, height - 325, 10, 110, 3, 2000, 2000, 800, "y");
+  const laserTrap2 = new LaserTrap(575, height - 325, 10, 110, 3, 2000, 2000, 800, "y");
   const traps = [
-    new LaserTrap(665, height - 325, 10, 110, 3, 2000, 2000, 800, "y"),
-    new LaserTrap(585, height - 325, 10, 110, 3, 2000, 2000, 800, "y"),
+    ... (beatLevel2 ? [laserTrap1] : []),
+    ... (beatLevel2 ? [laserTrap2] : []),
 
   ];
 
