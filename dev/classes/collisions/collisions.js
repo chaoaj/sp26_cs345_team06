@@ -25,6 +25,7 @@ function resolvePlayerDynamicCollisions(player, dynamicObjects) {
                 player.y -= overlapTop;
                 player.yVelocity = 0;
                 player.isOnGround = true;
+                player.onPlatform = object;
             } else {
                 player.y += overlapBottom;
             }

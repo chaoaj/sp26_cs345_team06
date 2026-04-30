@@ -160,6 +160,7 @@ class Ability {
         player.jumpMomentumX = 0;
       }
       player.isOnGround = false;
+      player.onPlatform = null; // Clear platform when jumping
     };
 
     if (hasBufferedJump && player.isOnGround) {

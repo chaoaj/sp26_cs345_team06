@@ -5,6 +5,8 @@ class Player extends Actor {
     this.baseMoveSpeed = 5;
     this.moveSpeed = this.baseMoveSpeed;
 
+    this.onPlatform = null; // Track the platform player is standing on
+
     this.jumpStrength = 15;
 
     this.maxAirJumps = 0;
@@ -92,6 +94,7 @@ class Player extends Actor {
 
     this.isOnGround = false;
     this.isOnFloor = false;
+    this.onPlatform = null; // Reset before checking collisions
 
     this.resolveVerticalCollisions(platforms, previousY);
 
@@ -184,11 +187,11 @@ class Player extends Actor {
       // Swept landing check prevents phasing through platforms at high relative speeds.
       if (overlapsX && crossedPlatformTop) {
         this.y = platformTop - this.height / 2;
-        // Inherit downward platform velocity so player rides it next frame.
         this.yVelocity = downwardCarry > 0 ? downwardCarry : 0;
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
+        this.onPlatform = platform;
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
@@ -204,6 +207,7 @@ class Player extends Actor {
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
+        this.onPlatform = platform;
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
