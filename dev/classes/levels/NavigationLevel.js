@@ -36,10 +36,10 @@ function getNavigationLevelTemplate() {
     new DisappearingPlatform(450, height - 1950, 64, 64, brickTileImage, 1000, 1000),
     new BrickPlatform(625, height - 250, 130, 32, brickTileImage),
     new BrickPlatform(950, height - 1200, 128, 32, brickTileImage),
-    new BrickPlatform(600, height - 2050, 128, 32, brickTileImage),
-    new BrickPlatform(800, height - 2050, 128, 32, brickTileImage),
-    new BrickPlatform(1000, height - 2150, 128, 32, brickTileImage),
-    new BrickPlatform(700, height - 2300, 128, 32, brickTileImage),
+    ...(beatLevel2 ? [new BrickPlatform(600, height - 2050, 128, 32, brickTileImage)] : []),
+    ...(beatLevel2 ? [new BrickPlatform(800, height - 2050, 128, 32, brickTileImage)] : []),
+    ...(beatLevel2 ? [new BrickPlatform(1000, height - 2150, 128, 32, brickTileImage)] : []),
+    ...(beatLevel2 ? [new BrickPlatform(700, height - 2300, 128, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [] : [new BrickPlatform(675, height - 325, 32, 150, brickTileImage)]),
     ...(beatLevel2 ? [] : [new BrickPlatform(575, height - 325, 32, 150, brickTileImage)]),
     ...(beatLevel3 ? [unlock1] : []),
@@ -72,23 +72,24 @@ function getNavigationLevelTemplate() {
   ];
 
   const boxes = [
-    new LaserMirror(600, height - 2100, 24, 45), // 32 is half platform height, 12 is half mirror size
-    new LaserMirror(800, height - 2100, 24, 45),
-    new LaserMirror(700, height - 2325, 24, 45),
-    new LaserMirror(850, height - 2100, 24, 45),
-    new StaticLaserMirror(575, height - 2325, 25, 45, 3, 2000, 2000, 800, "y"),
-    new StaticLaserMirror(825, height - 2425, 25, 45, 3, 2000, 2000, 800, "y"),
-    new StaticLaserMirror(850, height - 2425, 25, 45, 3, 2000, 2000, 800, "y"),
 
   ];
   const laserPuzzles = {
     lasers: [
-      new Laser(400, 400, "right", color(255, 0, 0), 10, 2000)
+      ...(beatLevel2 ? [new Laser(1000, height - 2075, "left", color(255, 0, 0), 10, 2000)] : []),
     ],
     collectors: [
-      new LaserCollector(575, height - 325, 30, 30)
+      ...(beatLevel2 ? [new LaserCollector(675, height - 2525, 30, 30)] : [])
     ],
-    mirrors: [] // Add LaserMirror/StaticLaserMirror here if you want them managed separately
+    mirrors: [
+    ...(beatLevel2 ? [new LaserMirror(600, height - 2100, 24, -45)] : []), // 32 is half platform height, 12 is half mirror size
+    ...(beatLevel2 ? [new LaserMirror(800, height - 2100, 24, 45)] : []),
+    ...(beatLevel2 ? [new LaserMirror(700, height - 2325, 24, 45)] : []),
+    ...(beatLevel2 ? [new LaserMirror(850, height - 2100, 24, -45)] : []),
+    ...(beatLevel2 ? [new StaticLaserMirror(575, height - 2325, 25, 45, 3, 2000, 2000, 800, "y")] : []),
+    ...(beatLevel2 ? [new StaticLaserMirror(825, height - 2425, 25, 45, 3, 2000, 2000, 800, "y")] : []),
+    ...(beatLevel2 ? [new StaticLaserMirror(850, height - 2425, 25, -45, 3, 2000, 2000, 800, "y")] : []),
+    ] // Add LaserMirror/StaticLaserMirror here if you want them managed separately
   };
   const buttons = [
 
