@@ -88,16 +88,22 @@ function setupLevel() {
     levelTemplates[3][3], levelTemplates[3][4], levelTemplates[3][5],
     levelTemplates[3][6], levelTemplates[3][7], levelTemplates[3][8],
     levelTemplates[3][9], levelTemplates[3][10]);
-  // DEBUG: Log enemies array from template before instantiation
-  console.log('[setupLevel] NavigationLevel enemies from template:',
-    (levelTemplates[4][5] || []).map(e => e?.constructor?.name)
-  );
+
   navigationLevel = new NavigationLevel(
-    levelTemplates[4][0], backgroundImage, floorTileLevel1,
-    levelTemplates[4][1], levelTemplates[4][2], LEVEL_WORLD_WIDTHS[4],
-    levelTemplates[4][3], levelTemplates[4][4], levelTemplates[4][5],
-    levelTemplates[4][6], levelTemplates[4][7], levelTemplates[4][8],
-    levelTemplates[4][9], levelTemplates[4][10]
+    levelTemplates[4][0], // platforms
+    backgroundImage,
+    floorTileLevel1,
+    levelTemplates[4][1], // items
+    levelTemplates[4][2], // traps
+    LEVEL_WORLD_WIDTHS[4],
+    levelTemplates[4][3], // boxes
+    levelTemplates[4][4], // buttons
+    levelTemplates[4][5], // enemies
+    levelTemplates[4][6], // doors
+    levelTemplates[4][7], // pits
+    levelTemplates[4][8], // terrain
+    levelTemplates[4][12], // pipePuzzles
+    levelTemplates[4][13]  // laserPuzzles
   );
   navigationLevel.worldHeight = 6000;
   levels.push(level1, level2, level3);
@@ -215,7 +221,6 @@ function draw() {
     if (level instanceof NavigationLevel) {
       camera.unconstrained = true;
       camera.follow(player);
-      // No constraints on camera.x or camera.y
     } else {
       camera.unconstrained = false;
       camera.follow(player);

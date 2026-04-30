@@ -28,8 +28,18 @@ function getNavigationLevelTemplate() {
   const platforms = [
     new BrickPlatform(625, height - 400, 250, 32, brickTileImage),
     new DisappearingPlatform(350, height - 500, 128, 32, brickTileImage, 1000, 500),
+    new DisappearingPlatform(500, height - 1200, 64, 64, brickTileImage, 2000, 1000),
+    new DisappearingPlatform(450, height - 1350, 64, 64, brickTileImage, 1000, 1000),
+    new DisappearingPlatform(500, height - 1500, 64, 64, brickTileImage, 1000, 1000),
+    new DisappearingPlatform(450, height - 1650, 64, 64, brickTileImage, 1000, 1000),
+    new DisappearingPlatform(500, height - 1800, 64, 64, brickTileImage, 1000, 1000),
+    new DisappearingPlatform(450, height - 1950, 64, 64, brickTileImage, 1000, 1000),
     new BrickPlatform(625, height - 250, 130, 32, brickTileImage),
     new BrickPlatform(950, height - 1200, 128, 32, brickTileImage),
+    new BrickPlatform(600, height - 2050, 128, 32, brickTileImage),
+    new BrickPlatform(800, height - 2050, 128, 32, brickTileImage),
+    new BrickPlatform(1000, height - 2150, 128, 32, brickTileImage),
+    new BrickPlatform(700, height - 2300, 128, 32, brickTileImage),
     ...(beatLevel2 ? [] : [new BrickPlatform(675, height - 325, 32, 150, brickTileImage)]),
     ...(beatLevel2 ? [] : [new BrickPlatform(575, height - 325, 32, 150, brickTileImage)]),
     ...(beatLevel3 ? [unlock1] : []),
@@ -46,7 +56,7 @@ function getNavigationLevelTemplate() {
   ];
 
   const items = [
-    new Items(900, height - 1200, "potion"),
+    new Items(900, height - 1230, "potion"),
     // new Items(420, height - 40, "potion"),
     // new Items(400, height - 40, "feather"),
     // new Items(300, height - 40, "dashAbility"),
@@ -62,25 +72,32 @@ function getNavigationLevelTemplate() {
   ];
 
   const boxes = [
+    new LaserMirror(600, height - 2100, 24, 45), // 32 is half platform height, 12 is half mirror size
+    new LaserMirror(800, height - 2100, 24, 45),
+    new LaserMirror(700, height - 2325, 24, 45),
+    new LaserMirror(850, height - 2100, 24, 45),
+    new StaticLaserMirror(575, height - 2325, 25, 45, 3, 2000, 2000, 800, "y"),
+    new StaticLaserMirror(825, height - 2425, 25, 45, 3, 2000, 2000, 800, "y"),
+    new StaticLaserMirror(850, height - 2425, 25, 45, 3, 2000, 2000, 800, "y"),
 
   ];
-
+  const laserPuzzles = {
+    lasers: [
+      new Laser(400, 400, "right", color(255, 0, 0), 10, 2000)
+    ],
+    collectors: [
+      new LaserCollector(575, height - 325, 30, 30)
+    ],
+    mirrors: [] // Add LaserMirror/StaticLaserMirror here if you want them managed separately
+  };
   const buttons = [
 
   ];
 
-  let enemies = [];
-  const hostile = new Hostile(3600, 600, 40, 40, 1.6, 3500, 3900);
-  enemies.push(hostile);
-  try {
-    // Use hardcoded y value for RangedHostile to avoid undefined height
-    const ranged = new RangedHostile(400, 600, 80, 80, 1.2, 300, 500, 1, 320, 1200, 5.5, 1);
-    enemies.push(ranged);
-  } catch (e) {
-    // ...existing code...
-  }
-  // ...existing code...
-
+  const enemies = [
+    new Hostile(3600, 600, 40, 40, 1.6, 3500, 3900),
+    new RangedHostile(400, 600, 80, 80, 1.2, 300, 500, 1, 320, 1200, 5.5, 1)
+  ]
   const doors = [
     new Door(4000, height - 278, 75, 100),
   ];
@@ -96,7 +113,7 @@ function getNavigationLevelTemplate() {
     new Terrain(3800, height - 100, 704, 256, box4long),
   ];
 
-  // Return array matching Level constructor: platforms, items, traps, boxes, buttons, enemies, doors, pits, terrain, laserPuzzles, pipePuzzles
+  // Return array matching Level constructor: platforms, items, traps, boxes, buttons, enemies, doors, pits, terrain, pipePuzzles, laserPuzzles
   return [
     platforms,   // 0
     items,       // 1
@@ -107,7 +124,10 @@ function getNavigationLevelTemplate() {
     doors,       // 6
     pits,        // 7
     terrain,     // 8
-    null,        // 9: laserPuzzles
-    null         // 10: pipePuzzles
+    null,        // 9: worldWidth (optional, can be null)
+    null,        // 10: unused (for alignment)
+    null,        // 11: unused (for alignment)
+    [],          // 12: pipePuzzles (empty array)
+    laserPuzzles // 13: laserPuzzles
   ];
 }
