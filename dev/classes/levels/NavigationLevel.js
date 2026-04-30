@@ -36,6 +36,13 @@ function getNavigationLevelTemplate() {
     new DisappearingPlatform(450, height - 1950, 64, 64, brickTileImage, 1000, 1000),
     new BrickPlatform(625, height - 250, 130, 32, brickTileImage),
     new BrickPlatform(950, height - 1200, 128, 32, brickTileImage),
+    ...(BeatLevel1 ? [new MovingPlatform(2800, height - 150, 128, 32, brickTileImage, "x", 700, 2, false)] : []),
+    ...(BeatLevel1 ? [new HarmfulPlatform(3350, height - 200, 64, 32, 1000, 1000)] : []),
+    ...(BeatLevel1 ? [new HarmfulPlatform(3200, height - 200, 96, 32, 1000, 1000)] : []),
+    ...(BeatLevel1 ? [new HarmfulPlatform(3000, height - 200, 64, 32, 1000, 1000)] : []),
+    ...(BeatLevel1 ? [new HarmfulPlatform(2800, height - 200, 32, 32, 1000, 1000)] : []),
+    ...(BeatLevel1 ? [new MovingPlatform(1200, height - 200, 128, 32, brickTileImage, "x", 1200, 3, true)] : []),
+    ...(BeatLevel1 ? [new BrickPlatform(1800, height - 250, 768, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(600, height - 2050, 128, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(800, height - 2050, 128, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(1000, height - 2150, 128, 32, brickTileImage)] : []),
@@ -46,13 +53,6 @@ function getNavigationLevelTemplate() {
     // placeholder after this
 
     new BrickPlatform(850, height - 185, 160, 32, brickTileImage),
-    new MovingPlatform(1200, height - 185, 160, 32, brickTileImage, "x", 900, 3, true),
-    new BrickPlatform(2300, height - 185, 160, 32, brickTileImage),
-
-    new MovingPlatform(2750, height - 200, 128, 32, brickTileImage, "y", 200, 1),
-    new BrickPlatform(2900, height - 210, 128, 32, brickTileImage),
-    new BrickPlatform(3100, height - 240, 128, 32, brickTileImage),
-    new BrickPlatform(3300, height - 270, 128, 32, brickTileImage),
   ];
 
   const items = [
@@ -68,6 +68,9 @@ function getNavigationLevelTemplate() {
   const traps = [
     ... (beatLevel2 ? [laserTrap1] : []),
     ... (beatLevel2 ? [laserTrap2] : []),
+    new SpikeTrap(1600, height - 282, 160, 32, 1000, 1000),
+    new SpikeTrap(1850, height - 282, 160, 32, 1000, 1000),
+    new SpikeTrap(2050, height - 282, 160, 32, 1000, 1000),
 
   ];
 
@@ -96,22 +99,24 @@ function getNavigationLevelTemplate() {
   ];
 
   const enemies = [
-    new Hostile(3600, 600, 40, 40, 1.6, 3500, 3900),
-    new RangedHostile(400, 600, 80, 80, 1.2, 300, 500, 1, 320, 1200, 5.5, 1)
+    new Hostile(1600, height - 288, 40, 40, 2, 1450, 2150),
+    new Hostile(1500, height - 288, 40, 40, 1.4, 1450, 2150),
+    new Hostile(1700, height - 288, 40, 40, 2.6, 1450, 2150),
+    new JumpingHostile(3725, height - 282, 40, 40, 1, 3725, 3725, 1, 220, 3000),
   ]
   const doors = [
     new Door(4000, height - 278, 75, 100),
   ];
 
   const pits = [
-    [36, 40],
+    [0, 400],
   ];
 
   const terrain = [
     new Terrain(0, height - 300, 300, 600, step4),
     ...(BeatLevel1 ? [DoorUnlock1] : []),
     new Terrain(2600, height - 100, 192, 256, step4),
-    new Terrain(3800, height - 100, 704, 256, box4long),
+    new Terrain(3800, height - 100, 192, 256, step4),
   ];
 
   // Return array matching Level constructor: platforms, items, traps, boxes, buttons, enemies, doors, pits, terrain, pipePuzzles, laserPuzzles
