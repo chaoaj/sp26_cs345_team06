@@ -215,6 +215,7 @@ function draw() {
     applyEnemyDamage(level, player);
     level.updateEnemies();
     level.updatePuzzleElements(player);
+    resolvePlayerDynamicCollisions(player, [...level.platforms, ...level.boxes]);
     if (level instanceof NavigationLevel) {
       camera.unconstrained = true;
       camera.follow(player);
