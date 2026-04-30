@@ -82,7 +82,7 @@ function resetDynamicStateForLevel(level) {
                     initial.x, initial.y,
                     initial.w, initial.h,
                     initial.speed, initial.leftBound, initial.rightBound,
-                    initial.damage, initial.jumpHeight, initial.jumpInterval, initial.jumpDuration
+                    initial.damage, initial.jumpHeight, initial.jumpCooldownMs, initial.jumpSpeed
                 );
             } else if (initial.type === "Hostile") {
                 newEnemy = new Hostile(
@@ -96,7 +96,8 @@ function resetDynamicStateForLevel(level) {
                     initial.x, initial.y,
                     initial.w, initial.h,
                     initial.speed, initial.leftBound, initial.rightBound,
-                    initial.damage, initial.range, initial.cooldown
+                    initial.damage, initial.detectionRange, initial.shootCooldownMs,
+                    initial.projectileSpeed, initial.projectileDamage
                 );
             } else {
                 // fallback: do nothing
