@@ -207,11 +207,11 @@ class Level {
         for (const collector of this.laserCollectors) collector.draw();
         for (const laser of this.lasers) laser.draw();
         for (const pipePuzzle of this.pipePuzzles) {
-            if (typeof pipePuzzle.draw === 'function') {
-                pipePuzzle.draw();
-            } else if (typeof pipePuzzle.drawPipe === 'function') {
-                pipePuzzle.drawPipe();
+            if (isPipePuzzleSolved(this.pipePuzzles)) {
+                print("true");
             }
+            pipePuzzle.update(player);  
+            pipePuzzle.drawPipe();
         }
     }
 
