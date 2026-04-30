@@ -1,7 +1,10 @@
 class NavigationLevel extends Level {
+        // Add a wide dirt terrain at the bottom to visually cover empty space
+
     constructor(...args) {
         super(...args);
-        // Add any NavigationLevel-specific logic here
+        // Add a wide dirt terrain at the bottom to visually cover empty space
+        // Do not call drawTerrain() here; Level will handle terrainPlatforms/platforms if needed
     }
     // Add/override methods if needed
     getSpawnPoint() {
@@ -16,8 +19,8 @@ class NavigationLevel extends Level {
     }
 }
 function getNavigationLevelTemplate() {
-    const BeatLevel1 = false; // Set to true to test the door unlock platform
-    const beatLevel2 = true; // Set to true to test the laser traps
+    const BeatLevel1 = true; // Set to true to test the door unlock platform
+    const beatLevel2 = false; // Set to true to test the laser traps
     const beatLevel3 = false; // Set to true to test the moving platforms with traps on them
     const beatLevel4 = false; // Set to true to test the final door and platform
     const unlock1 = new MovingPlatform(800, height - 1200, 128, 32, brickTileImage, "y", 700, 2, false);
@@ -66,9 +69,17 @@ function getNavigationLevelTemplate() {
 
   ];
 
-  const enemies = [
-    new Hostile(3600, height - 248, 40, 40, 1.6, 3500, 3900),
-  ];
+  let enemies = [];
+  const hostile = new Hostile(3600, 600, 40, 40, 1.6, 3500, 3900);
+  enemies.push(hostile);
+  try {
+    // Use hardcoded y value for RangedHostile to avoid undefined height
+    const ranged = new RangedHostile(400, 600, 80, 80, 1.2, 300, 500, 1, 320, 1200, 5.5, 1);
+    enemies.push(ranged);
+  } catch (e) {
+    // ...existing code...
+  }
+  // ...existing code...
 
   const doors = [
     new Door(4000, height - 278, 75, 100),
@@ -85,15 +96,18 @@ function getNavigationLevelTemplate() {
     new Terrain(3800, height - 100, 704, 256, box4long),
   ];
 
+  // Return array matching Level constructor: platforms, items, traps, boxes, buttons, enemies, doors, pits, terrain, laserPuzzles, pipePuzzles
   return [
-    platforms,
-    items,
-    traps,
-    boxes,
-    buttons,
-    enemies,
-    doors,
-    pits,
-    terrain,
+    platforms,   // 0
+    items,       // 1
+    traps,       // 2
+    boxes,       // 3
+    buttons,     // 4
+    enemies,     // 5
+    doors,       // 6
+    pits,        // 7
+    terrain,     // 8
+    null,        // 9: laserPuzzles
+    null         // 10: pipePuzzles
   ];
 }

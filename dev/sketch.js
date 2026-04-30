@@ -57,12 +57,7 @@ function setup() {
   levelTemplates.push(getTestLevelTemplate());
   // Add NavigationLevel template
   const navigationLevelTemplate = getNavigationLevelTemplate();
-  if (navigationLevelTemplate.length < 8) {
-    navigationLevelTemplate.push([]);
-  }
-  if (navigationLevelTemplate.length < 10) {
-    navigationLevelTemplate.push(null);
-  }
+  // Do not modify navigationLevelTemplate length/order; it is already correct
   levelTemplates.push(navigationLevelTemplate);
   setupLevel();
 }
@@ -93,6 +88,10 @@ function setupLevel() {
     levelTemplates[3][3], levelTemplates[3][4], levelTemplates[3][5],
     levelTemplates[3][6], levelTemplates[3][7], levelTemplates[3][8],
     levelTemplates[3][9], levelTemplates[3][10]);
+  // DEBUG: Log enemies array from template before instantiation
+  console.log('[setupLevel] NavigationLevel enemies from template:',
+    (levelTemplates[4][5] || []).map(e => e?.constructor?.name)
+  );
   navigationLevel = new NavigationLevel(
     levelTemplates[4][0], backgroundImage, floorTileLevel1,
     levelTemplates[4][1], levelTemplates[4][2], LEVEL_WORLD_WIDTHS[4],
@@ -100,6 +99,7 @@ function setupLevel() {
     levelTemplates[4][6], levelTemplates[4][7], levelTemplates[4][8],
     levelTemplates[4][9], levelTemplates[4][10]
   );
+  navigationLevel.worldHeight = 6000;
   levels.push(level1, level2, level3);
   // Insert navigationLevel after main levels, but before endGameLevel
   const navigationLevelIndex = levels.length;
@@ -212,8 +212,15 @@ function draw() {
     applyEnemyDamage(level, player);
     level.updateEnemies();
     level.updatePuzzleElements(player);
-    camera.follow(player);
-    camera.constrainPlayer(player);
+    if (level instanceof NavigationLevel) {
+      camera.unconstrained = true;
+      camera.follow(player);
+      // No constraints on camera.x or camera.y
+    } else {
+      camera.unconstrained = false;
+      camera.follow(player);
+      camera.constrainPlayer(player);
+    }
 
     level.drawBackground();
     camera.apply();

@@ -134,7 +134,6 @@ class Level {
 
     drawDoors() {
         for (const door of this.doors) {
-            console.log("drawing door")
             door.drawDoor();
         }
     }
@@ -143,7 +142,6 @@ class Level {
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i];
             enemy.update();
-
             if (enemy.pendingRemoval) {
                 this.enemies.splice(i, 1);
             }

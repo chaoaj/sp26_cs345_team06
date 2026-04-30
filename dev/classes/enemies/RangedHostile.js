@@ -54,6 +54,7 @@ class RangedHostile extends Hostile {
     projectileSpeed = 5.5,
     projectileDamage = 1
   ) {
+    console.log('RangedHostile constructor', x, y, w, h, speed, leftBound, rightBound, damage);
     super(x, y, w, h, speed, leftBound, rightBound, damage);
 
     this.homeX = x;
@@ -170,11 +171,21 @@ class RangedHostile extends Hostile {
   }
 
   draw() {
+    console.log('[DEBUG] RangedHostile draw', {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      camera: typeof camera !== 'undefined' ? { x: camera.x, y: camera.y } : undefined
+    });
     push();
     rectMode(CENTER);
     noStroke();
-    fill(185, 70, 70);
+    fill(255, 0, 0, 255); // Bright red, fully opaque
     rect(this.x, this.y, this.width, this.height);
+    // Draw a fixed debug rectangle in the top-left corner
+    fill(0, 255, 0, 255);
+    rect(100, 100, 40, 40);
     pop();
 
     for (const projectile of this.projectiles) {

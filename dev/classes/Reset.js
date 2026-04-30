@@ -91,6 +91,13 @@ function resetDynamicStateForLevel(level) {
                     initial.speed, initial.leftBound, initial.rightBound,
                     initial.damage
                 );
+            } else if (initial.type === "RangedHostile") {
+                newEnemy = new RangedHostile(
+                    initial.x, initial.y,
+                    initial.w, initial.h,
+                    initial.speed, initial.leftBound, initial.rightBound,
+                    initial.damage, initial.range, initial.cooldown
+                );
             } else {
                 // fallback: do nothing
                 continue;
