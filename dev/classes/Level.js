@@ -80,8 +80,21 @@ class Level {
         this.initialEnemyStates = this.enemies.map((enemy) => ({
             type: enemy.constructor.name,
             x: enemy.x,
-            y: enemy.y
-            // Add other properties as needed
+            y: enemy.y,
+            w: enemy.w,
+            h: enemy.h,
+            speed: enemy.speed,
+            leftBound: enemy.leftBound,
+            rightBound: enemy.rightBound,
+            damage: enemy.damage,
+            detectionRange: enemy.detectionRange,
+            dashRange: enemy.dashRange,
+            jumpHeight: enemy.maxJumpHeight,
+            jumpCooldownMs: enemy.jumpCooldownMs,
+            jumpSpeed: enemy.jumpStrength,
+            shootCooldownMs: enemy.shootCooldownMs,
+            projectileSpeed: enemy.projectileSpeed,
+            projectileDamage: enemy.projectileDamage,
         }));
     }
 
@@ -207,11 +220,11 @@ class Level {
         for (const collector of this.laserCollectors) collector.draw();
         for (const laser of this.lasers) laser.draw();
         for (const pipePuzzle of this.pipePuzzles) {
-            if (typeof pipePuzzle.draw === 'function') {
-                pipePuzzle.draw();
-            } else if (typeof pipePuzzle.drawPipe === 'function') {
-                pipePuzzle.drawPipe();
+            if (isPipePuzzleSolved(this.pipePuzzles)) {
+                print("true");
             }
+            pipePuzzle.update(player);  
+            pipePuzzle.drawPipe();
         }
     }
 

@@ -39,26 +39,14 @@ function setup() {
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
 
-  const level1Template = getLevel1Template();
-  levelTemplates.push(level1Template);
-  const level2Template = getLevel2Template();
-  if (level2Template.length < 10) {
-    level2Template.push(null);
-  }
-  levelTemplates.push(level2Template);
-  const level3Template = getLevel3Template();
-  if (level3Template.length < 8) {
-    level3Template.push([]);
-  }
-  if (level3Template.length < 10) {
-    level3Template.push(null);
-  }
-  levelTemplates.push(level3Template);
-  levelTemplates.push(getTestLevelTemplate());
-  // Add NavigationLevel template
-  const navigationLevelTemplate = getNavigationLevelTemplate();
-  // Do not modify navigationLevelTemplate length/order; it is already correct
-  levelTemplates.push(navigationLevelTemplate);
+  levelTemplates = [
+    getLevel1Template(),
+    getLevel2Template(),
+    getLevel3Template(),
+    getLevel4Template(),
+    getNavigationLevelTemplate(),
+    getTestLevelTemplate(),
+  ]
   setupLevel();
 }
 
@@ -82,13 +70,22 @@ function setupLevel() {
     levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5],
     levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8],
     levelTemplates[2][9], levelTemplates[2][10]);
-  levelTest = new Level(
+  level4 = new Level(
     levelTemplates[3][0], backgroundImage, floorTileLevel1,
     levelTemplates[3][1], levelTemplates[3][2], LEVEL_WORLD_WIDTHS[3],
     levelTemplates[3][3], levelTemplates[3][4], levelTemplates[3][5],
     levelTemplates[3][6], levelTemplates[3][7], levelTemplates[3][8],
     levelTemplates[3][9], levelTemplates[3][10]);
-
+  levelTest = new Level(
+    levelTemplates[5][0], backgroundImage, floorTileLevel1,
+    levelTemplates[5][1], levelTemplates[5][2], LEVEL_WORLD_WIDTHS[5],
+    levelTemplates[5][3], levelTemplates[5][4], levelTemplates[5][5],
+    levelTemplates[5][6], levelTemplates[5][7], levelTemplates[5][8],
+    levelTemplates[5][9], levelTemplates[5][10]);
+  // DEBUG: Log enemies array from template before instantiation
+  console.log('[setupLevel] NavigationLevel enemies from template:',
+    (levelTemplates[4][5] || []).map(e => e?.constructor?.name)
+  );
   navigationLevel = new NavigationLevel(
     levelTemplates[4][0], // platforms
     backgroundImage,
@@ -106,7 +103,7 @@ function setupLevel() {
     levelTemplates[4][13]  // laserPuzzles
   );
   navigationLevel.worldHeight = 6000;
-  levels.push(level1, level2, level3);
+  levels.push(level1, level2, level3, level4);
   // Insert navigationLevel after main levels, but before endGameLevel
   const navigationLevelIndex = levels.length;
   levels.push(navigationLevel);
