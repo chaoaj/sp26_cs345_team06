@@ -11,7 +11,7 @@ function getLevel2Template() {
   const boxPlatform = new BrickPlatform(2180, height - 770, 240, 32, brickTileImage);
 
   // Moving platform
-  const movingX = new MovingPlatform(2396, height - 770, 192, 32, brickTileImage, "x", 500, 2, false);
+  const movingX = new MovingPlatform(2396, height - 738, 192, 32, brickTileImage, "x", 550, 2, false);
 
 
   const farPlatform = new BrickPlatform(3116, height - 770, 240, 32, brickTileImage);
