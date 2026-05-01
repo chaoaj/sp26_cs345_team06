@@ -1,9 +1,4 @@
 function applyPlayerControls(player) {
-    // Wall jump variables
-    if (typeof player.wallJumpLockoutUntil !== "number") player.wallJumpLockoutUntil = 0;
-    if (typeof player.lastWallDir !== "number") player.lastWallDir = 0;
-    const now = typeof getGameMillis === "function" ? getGameMillis() : millis();
-
   const movingLeft = keyIsDown(65);
   const movingRight = keyIsDown(68);
   const jumpHeldNow = keyIsDown(32) || keyIsDown(87);
@@ -11,7 +6,9 @@ function applyPlayerControls(player) {
   const directionalBoost = typeof player.jumpDirectionalBoost === "number" ? player.jumpDirectionalBoost : 1.8;
   const momentumDecay = typeof player.jumpMomentumDecay === "number" ? player.jumpMomentumDecay : 0.88;
   const jumpBufferDurationMs = typeof player.jumpBufferDurationMs === "number" ? player.jumpBufferDurationMs : 120;
-
+  if (typeof player.wallJumpLockoutUntil !== "number") player.wallJumpLockoutUntil = 0;
+  if (typeof player.lastWallDir !== "number") player.lastWallDir = 0;
+  const now = typeof getGameMillis === "function" ? getGameMillis() : millis();
 
   if (typeof player.jumpMomentumX !== "number" || !isFinite(player.jumpMomentumX)) {
     player.jumpMomentumX = 0;
