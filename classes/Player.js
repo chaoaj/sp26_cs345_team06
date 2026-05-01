@@ -147,7 +147,8 @@ class Player extends Actor {
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
         this.onPlatform = platform;
-        if (platform.xVelocity) {
+        // Only apply xVelocity if platform is a MovingPlatform and xVelocity is a nonzero number
+        if (platform.constructor && platform.constructor.name === "MovingPlatform" && typeof platform.xVelocity === "number" && platform.xVelocity !== 0) {
           this.x += platform.xVelocity;
         }
         if (platform.onLand) platform.onLand(this);

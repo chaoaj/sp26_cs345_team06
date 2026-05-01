@@ -48,7 +48,7 @@ function getNavigationLevelTemplate() {
     ...(beatLevel1 ? [new HarmfulPlatform(3000, height - 200, 64, 32, 1000, 1000)] : []),
     ...(beatLevel1 ? [new HarmfulPlatform(2800, height - 200, 32, 32, 1000, 1000)] : []),
     ...(beatLevel1 ? [new MovingPlatform(1200, height - 200, 128, 32, brickTileImage, "x", 1200, 3, true)] : []),
-    ...(beatLevel1 ? [new BrickPlatform(1800, height - 250, 768, 32, brickTileImage)] : []),
+    ...(beatLevel1 ? [new BrickPlatform(1800, height - 250, 768, 32, brickTileImage)] : []), // large platform
     ...(beatLevel2 ? [new BrickPlatform(600, height - 2050, 128, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(800, height - 2050, 128, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(1000, height - 2150, 128, 32, brickTileImage)] : []),

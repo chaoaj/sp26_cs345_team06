@@ -264,16 +264,35 @@ class LaserMirror {
     this.gravity = 0.6;
     this.isOnGround = false;
   }
+  // Attach this mirror to a platform with an (x, y) offset
+  attachToPlatform(platform, offsetX = 0, offsetY = 0) {
+    this.attachedPlatform = platform;
+    this.attachmentOffsetX = offsetX;
+    this.attachmentOffsetY = offsetY;
+    this.x = platform.x + offsetX;
+    this.y = platform.y + offsetY;
+    this.xVelocity = 0;
+    this.yVelocity = 0;
+    this.isOnGround = true;
+  }
 
   update(platforms) {
-    this.yVelocity += this.gravity;
-    this.x += this.xVelocity;
-    this.y += this.yVelocity;
-    this.xVelocity = 0;
-    this.isOnGround = false;
-
-    for (const platform of platforms) {
-      this._resolvePlatformCollision(platform);
+    if (this.attachedPlatform) {
+      // Follow the platform
+      this.x = this.attachedPlatform.x + (this.attachmentOffsetX || 0);
+      this.y = this.attachedPlatform.y + (this.attachmentOffsetY || 0);
+      this.xVelocity = 0;
+      this.yVelocity = 0;
+      this.isOnGround = true;
+    } else {
+      this.yVelocity += this.gravity;
+      this.x += this.xVelocity;
+      this.y += this.yVelocity;
+      this.xVelocity = 0;
+      this.isOnGround = false;
+      for (const platform of platforms) {
+        this._resolvePlatformCollision(platform);
+      }
     }
   }
 
@@ -312,8 +331,11 @@ class LaserMirror {
         this.y -= overlapTop;
         this.yVelocity = 0;
         this.isOnGround = true;
-        this.x += platformXVelocity;
-        this.y += platformYVelocity;
+        // Only inherit velocity from moving platforms
+        if (platform.constructor && platform.constructor.name === "MovingPlatform") {
+          this.x += platformXVelocity;
+          this.y += platformYVelocity;
+        }
       } else {
         // Hitting the underside
         this.y += overlapBottom;
