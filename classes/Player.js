@@ -1,9 +1,13 @@
 class Player extends Actor {
+
+
   constructor(x, y, width, height) {
     super(x, y, width, height);
 
     this.baseMoveSpeed = 5;
     this.moveSpeed = this.baseMoveSpeed;
+
+    this.onPlatform = null; // Track the platform player is standing on
 
     this.jumpStrength = 15;
 
@@ -82,6 +86,11 @@ class Player extends Actor {
 
     this.updateTimedEffects();
 
+    // Wall contact detection for wall jump (now in Ability)
+    if (typeof Ability !== "undefined" && Ability.detectWallContact) {
+      Ability.detectWallContact(this, platforms);
+    }
+
     applyPlayerControls(this);
 
     this.applyPhysics();
@@ -92,9 +101,9 @@ class Player extends Actor {
 
     this.isOnGround = false;
     this.isOnFloor = false;
+    this.onPlatform = null; // Reset before checking collisions
 
     this.resolveVerticalCollisions(platforms, previousY);
-
     if (this.isOnGround) {
       this.coyoteUntil = getGameMillis() + this.coyoteWindowMs;
     }
@@ -104,64 +113,12 @@ class Player extends Actor {
     this.advanceFrame();
   }
 
-  updateTimedEffects() {
-    const now = getGameMillis();
-
-    if (this.highJumpExpiresAt > 0) {
-      if (now >= this.highJumpExpiresAt) {
-        this.jumpStrength = this.baseJumpStrength;
-        this.highJumpExpiresAt = 0;
-      }
-    }
-
-    if (this.speedPotionExpiresAt > 0) {
-      if (now >= this.speedPotionExpiresAt) {
-        this.moveSpeed = this.baseMoveSpeed;
-        this.speedPotionExpiresAt = 0;
-      }
-    }
-  }
-
-  resolveHorizontalCollisions(platforms, previousX, previousY) {
-    const previousHitBottom = previousY + this.height / 2;
-    const previousHitTop = previousY - this.height / 2 + this.hitboxInsetTop;
-
-    for (const platform of platforms) {
-      if (platform && platform.isActive === false) {
-        continue;
-      }
-
-      const platformTop = platform.y - platform.h / 2;
-      const platformBottom = platform.y + platform.h / 2;
-      const platformLeft = platform.x - platform.w / 2;
-      const platformRight = platform.x + platform.w / 2;
-      const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
-      const previousPlatformTop = platformTop - platformYVelocity;
-      const previousPlatformBottom = platformBottom - platformYVelocity;
-      const wasAbovePlatformLastFrame = previousHitBottom <= previousPlatformTop + 2;
-      const wasBelowPlatformLastFrame = previousHitTop >= previousPlatformBottom - 2;
-
-      const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
-      const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
-
-      if (!overlapsX || !overlapsY) continue;
-      if (wasAbovePlatformLastFrame) continue;
-      if (wasBelowPlatformLastFrame) continue;
-
-      if (this.x > previousX) {
-        this.x = platformLeft - (this.width / 2 - this.hitboxInsetX);
-      } else if (this.x < previousX) {
-        this.x = platformRight + (this.width / 2 - this.hitboxInsetX);
-      }
-    }
-  }
-
   resolveVerticalCollisions(platforms, previousY) {
     const previousHitBottom = previousY + this.height / 2;
     const previousHitTop    = previousY - this.height / 2 + this.hitboxInsetTop;
 
     for (const platform of platforms) {
-      if (platform && platform.isActive === false) {
+      if (platform && (platform.isActive === false || platform.isVisible === false)) {
         continue;
       }
 
@@ -184,11 +141,11 @@ class Player extends Actor {
       // Swept landing check prevents phasing through platforms at high relative speeds.
       if (overlapsX && crossedPlatformTop) {
         this.y = platformTop - this.height / 2;
-        // Inherit downward platform velocity so player rides it next frame.
         this.yVelocity = downwardCarry > 0 ? downwardCarry : 0;
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
+        this.onPlatform = platform;
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
@@ -204,6 +161,7 @@ class Player extends Actor {
         this.jumpMomentumX = 0;
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
+        this.onPlatform = platform;
         if (platform.xVelocity) {
           this.x += platform.xVelocity;
         }
@@ -214,7 +172,39 @@ class Player extends Actor {
       }
     }
   }
+    resolveHorizontalCollisions(platforms, previousX, previousY) {
+      const previousHitBottom = previousY + this.height / 2;
+      const previousHitTop = previousY - this.height / 2 + this.hitboxInsetTop;
 
+      for (const platform of platforms) {
+        if (platform && (platform.isActive === false || platform.isVisible === false)) {
+          continue;
+        }
+
+        const platformTop = platform.y - platform.h / 2;
+        const platformBottom = platform.y + platform.h / 2;
+        const platformLeft = platform.x - platform.w / 2;
+        const platformRight = platform.x + platform.w / 2;
+        const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
+        const previousPlatformTop = platformTop - platformYVelocity;
+        const previousPlatformBottom = platformBottom - platformYVelocity;
+        const wasAbovePlatformLastFrame = previousHitBottom <= previousPlatformTop + 2;
+        const wasBelowPlatformLastFrame = previousHitTop >= previousPlatformBottom - 2;
+
+        const overlapsY = this.hitBottom > platformTop && this.hitTop < platformBottom;
+        const overlapsX = this.hitRight > platformLeft && this.hitLeft < platformRight;
+
+        if (!overlapsX || !overlapsY) continue;
+        if (wasAbovePlatformLastFrame) continue;
+        if (wasBelowPlatformLastFrame) continue;
+
+        if (this.x > previousX) {
+          this.x = platformLeft - (this.width / 2 - this.hitboxInsetX);
+        } else if (this.x < previousX) {
+          this.x = platformRight + (this.width / 2 - this.hitboxInsetX);
+        }
+      }
+    }
   constrainToScreen() {
     const halfHeight = this.height / 2;
 
@@ -382,7 +372,23 @@ class Player extends Actor {
 
     return this.speedPotionExpiresAt - getGameMillis();
   }
+  updateTimedEffects() {
+    const now = typeof getGameMillis === 'function' ? getGameMillis() : millis();
 
+    if (this.highJumpExpiresAt > 0) {
+      if (now >= this.highJumpExpiresAt) {
+        this.jumpStrength = this.baseJumpStrength;
+        this.highJumpExpiresAt = 0;
+      }
+    }
+
+    if (this.speedPotionExpiresAt > 0) {
+      if (now >= this.speedPotionExpiresAt) {
+        this.moveSpeed = this.baseMoveSpeed;
+        this.speedPotionExpiresAt = 0;
+      }
+    }
+  }
   draw() {
     const anim = this.animations[this.animState];
     const frameW = anim.sheet.width / anim.frameCount;

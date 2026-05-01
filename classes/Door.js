@@ -1,9 +1,10 @@
 class Door {
-    constructor(x, y, w, h) {
+    constructor(x, y, w, h, targetLevelNum = null) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.targetLevelNum = targetLevelNum; // Level number to go to when used
     }
 
     drawDoor() {

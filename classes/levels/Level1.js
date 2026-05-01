@@ -1,15 +1,15 @@
 function getLevel1Template() {
-
+  const movingPlatformPuzzle = new BrickPlatform(3448 + 16, height - 380, 32, 320, brickTileImage)
   const platforms = [
     new BrickPlatform(650, height - 120, 160, 32, brickTileImage),
     new BrickPlatform(850, height - 185, 160, 32, brickTileImage),
     new MovingPlatform(1200, height - 185, 160, 32, brickTileImage, "x", 900, 3, true),
     new BrickPlatform(2300, height - 185, 160, 32, brickTileImage),
-
     new MovingPlatform(2750, height - 200, 128, 32, brickTileImage, "y", 200, 1),
     new BrickPlatform(2900, height - 210, 128, 32, brickTileImage),
     new BrickPlatform(3100, height - 240, 128, 32, brickTileImage),
     new BrickPlatform(3300, height - 270, 128, 32, brickTileImage),
+    movingPlatformPuzzle,
   ];
 
   const items = [
@@ -29,7 +29,19 @@ function getLevel1Template() {
   ];
 
   const buttons = [
-
+    new SinglePressButton(
+      3300,
+      height - 35,
+      80,
+      20,
+      () => {
+        for (let i = 0; i < 320; i++) {
+          setTimeout(() => {
+            movingPlatformPuzzle.y += 1;
+          }, i * 15);
+        }
+      }
+    ),
   ];
 
   const enemies = [
@@ -50,6 +62,12 @@ function getLevel1Template() {
 
     new Terrain(3800, height - 100, 704, 256, box4long),
   ]
+  const pipePuzzles = [
+    new Pipe(200, height-50, 64, 64, "straight", 0),
+    new Pipe(564, 200, 64, 64, "elbow", 1),
+    new Pipe(564, 264, 64, 64, "t", 2),
+    new Pipe(500, 264, 64, 64, "quad", 0),
+  ]
 
   return [
     platforms,
@@ -61,5 +79,6 @@ function getLevel1Template() {
     doors,
     pits,
     terrain,
+    pipePuzzles,
   ];
 }

@@ -2,6 +2,12 @@ function preload() {
   //can only have one preload function across all files
   // so preload here
 
+  //Puzzle images
+  pipeStraightImg = loadImage('assets/puzzles/straight.png');
+  pipeElbowImg = loadImage('assets/puzzles/elbow.png');
+  pipeTpieceImg = loadImage('assets/puzzles/tpiece.png');
+  pipeQuadImg = loadImage('assets/puzzles/quad.png');
+
   //Music
   backgroundMusic = loadSound("assets/audio/BackgroundMusic.mp3")
   soliloquyMusic = loadSound("assets/audio/Soliloquy.mp3")
@@ -76,6 +82,7 @@ function preload() {
   //Enemy Sprites
   greenslimeimage = loadImage("assets/enemies/SlimeWalk.png")
   jumpingHostileImage = loadImage("assets/enemies/Jump.png")
+  rangedHostileProjectileImage = loadImage("assets/enemies/Archer Skeleton  Animations/All parts/arrow.png")
 
   const loadFrameSequence = (basePath, filePrefix, frameCount) => {
     const frames = []
@@ -85,6 +92,31 @@ function preload() {
     }
     return frames
   }
+
+  const loadNumberedFrameSequence = (basePath, filePrefix, frameCount) => {
+    const frames = []
+    for (let i = 1; i <= frameCount; i++) {
+      frames.push(loadImage(`${basePath}/${filePrefix} (${i}).png`))
+    }
+    return frames
+  }
+
+  rangedHostileIdleFrames = loadNumberedFrameSequence(
+    "assets/enemies/Archer Skeleton  Animations/Idle/Separate sp",
+    "idle",
+    10
+  )
+  rangedHostileWalkFrames = loadNumberedFrameSequence(
+    "assets/enemies/Archer Skeleton  Animations/Walk/Separate sp",
+    "walk",
+    10
+  )
+  rangedHostileAttackFrames = loadNumberedFrameSequence(
+    "assets/enemies/Archer Skeleton  Animations/Attack/Separate sp",
+    "attack",
+    10
+  )
+  rangedHostileImage = rangedHostileIdleFrames[0]
 
   flyingHostileIdleFrames = loadFrameSequence(
     "assets/enemies/Wraith_02/PNG Sequences/Idle",

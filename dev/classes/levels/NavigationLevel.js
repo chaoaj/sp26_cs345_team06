@@ -22,7 +22,7 @@ function getNavigationLevelTemplate() {
     let beatLevel1 = true; // Set to true to test the door unlock platform
     let beatLevel2 = true; // Set to true to test the laser traps
     let beatLevel3 = true; // Set to true to test the moving platforms with traps on them
-    let beatLevel4 = false; // Set to true to test the final door and platform
+    let beatLevel4 = true; // Set to true to test the final door and platform
     let las1 = false;
 
     // Declare LaserDoor ONCE at the top of the function

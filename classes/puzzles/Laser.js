@@ -1,3 +1,4 @@
+
 // Laser puzzle system — three cooperating classes:
 //
 // Laser(x, y, direction, color)
@@ -277,6 +278,7 @@ class LaserMirror {
   }
 
   _resolvePlatformCollision(platform) {
+    if (platform.isVisible === false) return;
     const platLeft   = platform.x - platform.w / 2;
     const platRight  = platform.x + platform.w / 2;
     const platTop    = platform.y - platform.h / 2;
@@ -354,6 +356,41 @@ class LaserMirror {
     line(-half, 0, half, 0);
     noStroke();
     fill(100, 160, 220, 120);
+    rect(0, 0, this.size - 6, 4, 2);
+    pop();
+  }
+
+}
+class StaticLaserMirror extends LaserMirror {
+  constructor(x, y, size = 24, angle = 45) {
+    super(x, y, size, angle);
+    // Make it immovable
+    this.xVelocity = 0;
+    this.yVelocity = 0;
+    this.gravity = 0;
+    this.isOnGround = true;
+  }
+
+  update(platforms) {
+    // Do nothing: static, not affected by gravity or collisions
+  }
+
+  // Optionally override draw if you want a different appearance
+  draw() {
+    push();
+    rectMode(CENTER);
+    noStroke();
+    fill(120, 120, 180, 200); // Slightly different color for static
+    rect(this.x, this.y, this.size, this.size, 3);
+
+    translate(this.x, this.y);
+    rotate(radians(this.angle));
+    stroke(220, 220, 255);
+    strokeWeight(2);
+    const half = this.size / 2 - 3;
+    line(-half, 0, half, 0);
+    noStroke();
+    fill(160, 200, 255, 140);
     rect(0, 0, this.size - 6, 4, 2);
     pop();
   }

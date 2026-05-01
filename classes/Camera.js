@@ -5,6 +5,7 @@ class Camera {
     this.worldWidth = worldWidth;
     this.worldHeight = worldHeight;
     this.lerpFactor = 0.12;
+    this.unconstrained = false; // If true, disables camera constraints
   }
 
   follow(player) {
@@ -18,13 +19,14 @@ class Camera {
     this.x = lerp(this.x, targetX, lerpSpeed);
     this.y = lerp(this.y, targetY, lerpSpeed);
 
-    this.x = constrain(this.x, 0, max(0, this.worldWidth - width));
-
-    // Allow camera to scroll up when player is airborne
-    if (isAirborne) {
-      this.y = constrain(this.y, -height, max(0, this.worldHeight - height));
-    } else {
-      this.y = constrain(this.y, 0, max(0, this.worldHeight - height));
+    if (!this.unconstrained) {
+      this.x = constrain(this.x, 0, max(0, this.worldWidth - width));
+      // Allow camera to scroll up when player is airborne
+      if (isAirborne) {
+        this.y = constrain(this.y, -height, max(0, this.worldHeight - height));
+      } else {
+        this.y = constrain(this.y, 0, max(0, this.worldHeight - height));
+      }
     }
   }
 

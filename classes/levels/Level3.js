@@ -15,8 +15,14 @@ function getLevel3Template() {
   // Door width is 75, so center at 2906+50 = 2956 keeps it on the right half, or 2906 for center
   // Place the door always on the platform
   const finalDoor = new Door(2906, finalPlatformBaseY - 65, 75, 100);
+  const blocker = new BrickPlatform(2132, height - 985, 32, 200, brickTileImage);
+  blocker.isVisible = true;
 
   const platforms = [
+    blocker,
+    new MovingPlatform(300, height - 650, 200, 32, brickTileImage, "y", 300, 2, false),
+    new MovingPlatform(400, height - 800, 200, 32, brickTileImage, "x", 150, 2, false),
+    new MovingPlatform(750, height - 800, 200, 32, brickTileImage, "x", 150, 2, true),
     stairPlatform1,
     stairPlatform2,
     stairPlatform3,
@@ -116,12 +122,32 @@ function getLevel3Template() {
     [73, 7],
     [81, 8],
   ];
+  const laserPuzzles = {
+    lasers : [
+      new Laser(250, height - 825, "right", color(255, 0, 0), 14, 2000, 5000, 800, "y"),
+    ],
+    collectors : [
+      new LaserCollector(
+        675, height - 825, 30, 30,
+        () => { blocker.isVisible = false; }
+      ),
+    ],
+    mirrors : [
+      new LaserMirror(400, height - 825, 24, 45),
+      new LaserMirror(750, height - 825, 24, 45),
+      new StaticLaserMirror(486, height - 1050, 25, 45,),
+      new StaticLaserMirror(873, height - 1050, 25, -45,),
+
+    ]
+  };
 
   const terrain = [
     new Terrain(2200, height - 144, 288, 384, step4),
   ];
+    const pipePuzzles = []
 
-  return [
+
+  const level3Array = [
     platforms,
     items,
     traps,
@@ -131,5 +157,10 @@ function getLevel3Template() {
     doors,
     pits,
     terrain,
+    pipePuzzles,
+    laserPuzzles
   ];
+  // Attach blocker for reset logic
+  level3Array.blocker = blocker;
+  return level3Array;
 }

@@ -9,11 +9,12 @@ class BrickPlatform extends Platform {
     }
 
     draw() {
-        const startX = this.x - this.w / 2
-        const startY = this.y - this.h / 2
+        if (this.isVisible === false) return;
+        const startX = this.x - this.w / 2;
+        const startY = this.y - this.h / 2;
         for (let row = 0; row < this.tilesY; row++) {
             for (let col = 0; col < this.tilesX; col++) {
-                image(this.image, startX + (col * 32), startY + (row * 32), 32, 32)
+                image(this.image, startX + (col * 32), startY + (row * 32), 32, 32);
             }
         }
     }

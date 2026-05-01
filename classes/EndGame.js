@@ -123,3 +123,66 @@ class EndGame {
     this.drawTreasureChest();
   }
 }
+
+function handleEndGameKeys() {
+    if (gameState === "endgame") {
+    const canRestart = endGameLevel && endGameLevel.treasure && endGameLevel.treasure.collected;
+    if (canRestart && (key === "r" || key === "R")) {
+      restartToTitle();
+    }
+    return;
+  }
+}
+
+function startEndGame() {
+  if (!endGameLevel || !player) {
+    return;
+  }
+  const spawn = endGameLevel.getSpawnPoint();
+  player.setSpawnPoint(spawn.x, spawn.y);
+  player.respawn();
+  if (camera) {
+    camera.worldWidth = endGameLevel.worldWidth;
+    camera.x = 0;
+    camera.y = 0;
+  }
+  if (runStartedAt === null) {
+    runStartedAt = getGameMillis();
+  }
+  runCompletedAt = null;
+  gameState = "endgame";
+}
+
+function handleEndGameDraw() {
+      player.update(endGameLevel.platforms);
+    camera.follow(player);
+    camera.constrainPlayer(player);
+
+    endGameLevel.drawBackground();
+    camera.apply();
+    endGameLevel.drawWorld();
+    player.draw();
+    camera.reset();
+
+    endGameLevel.collectTouchedItems(player);
+
+    const win = endGameLevel.hasCollectedTreasure(player);
+    if (win) {
+      if (runCompletedAt === null) {
+        runCompletedAt = getGameMillis();
+      }
+      push();
+      fill(255);
+      textAlign(CENTER, CENTER);
+      textSize(38);
+      text("You Win!", width / 2, height / 2 - 20);
+      textSize(18);
+      text("Treasure recovered.", width / 2, height / 2 + 18);
+      text(`Time: ${formatElapsedTime(getRunElapsedMs())}`, width / 2, height / 2 + 40);
+      text("Press R to return to title", width / 2, height / 2 + 74);
+      pop();
+      if (hasCheated && cheatDetectionOn) {
+        drawCheaterOverlay();
+      }
+    }
+}

@@ -1,4 +1,10 @@
+  // Detect wall contact for wall jump
+
+
 class Ability {
+    static canWallJump(player) {
+      return Ability.has(player, "wallJump") || !!player?.canWallJump;
+    }
   constructor(name, description = "", applyEffect = null) {
     this.name = name;
     this.description = description;
@@ -110,29 +116,54 @@ class Ability {
     if (player.isDashing && now >= player.dashEndsAt) {
       player.isDashing = false;
     }
+      const unlocked = Ability.canDash(player);
+      if (unlocked && dashPressed && !player.isDashing && now >= player.dashCooldownUntil) {
+        if (movingLeft && !movingRight) {
+          player.dashDirection = -1;
+        } else if (movingRight && !movingLeft) {
+          player.dashDirection = 1;
+        } else {
+          player.dashDirection = player.facingLeft ? -1 : 1;
+        }
 
-    const unlocked = Ability.canDash(player);
-    if (unlocked && dashPressed && !player.isDashing && now >= player.dashCooldownUntil) {
-      if (movingLeft && !movingRight) {
-        player.dashDirection = -1;
-      } else if (movingRight && !movingLeft) {
-        player.dashDirection = 1;
-      } else {
-        player.dashDirection = player.facingLeft ? -1 : 1;
+        player.isDashing = true;
+        player.dashEndsAt = now + dashDurationMs;
+        player.dashCooldownUntil = now + dashCooldownMs;
+        player.jumpMomentumX = 0;
       }
 
-      player.isDashing = true;
-      player.dashEndsAt = now + dashDurationMs;
-      player.dashCooldownUntil = now + dashCooldownMs;
-      player.jumpMomentumX = 0;
-    }
+      if (!player.isDashing) {
+        return 0;
+      }
 
-    if (!player.isDashing) {
-      return 0;
+      const effectiveDashSpeed = player.isOnGround ? dashSpeed * groundDashMultiplier : dashSpeed;
+      return player.dashDirection * effectiveDashSpeed;
+  }
+  static detectWallContact(player, platforms) {
+    player.touchingWallLeft = false;
+    player.touchingWallRight = false;
+    for (const platform of platforms) {
+      if (!platform || platform.isActive === false) continue;
+      const platformTop = platform.y - platform.h / 2;
+      const platformBottom = platform.y + platform.h / 2;
+      const platformLeft = platform.x - platform.w / 2;
+      const platformRight = platform.x + platform.w / 2;
+      const overlapsY = player.hitBottom > platformTop && player.hitTop < platformBottom;
+      // Left wall
+      if (
+        Math.abs(player.hitLeft - platformRight) < 2 &&
+        overlapsY
+      ) {
+        player.touchingWallLeft = true;
+      }
+      // Right wall
+      if (
+        Math.abs(player.hitRight - platformLeft) < 2 &&
+        overlapsY
+      ) {
+        player.touchingWallRight = true;
+      }
     }
-
-    const effectiveDashSpeed = player.isOnGround ? dashSpeed * groundDashMultiplier : dashSpeed;
-    return player.dashDirection * effectiveDashSpeed;
   }
 
   static tryPerformJump(player, context) {
@@ -160,6 +191,7 @@ class Ability {
         player.jumpMomentumX = 0;
       }
       player.isOnGround = false;
+      player.onPlatform = null; // Clear platform when jumping
     };
 
     if (hasBufferedJump && player.isOnGround) {
@@ -222,3 +254,66 @@ const DASH_ABILITY = new Ability(
     player.canDash = true;
   }
 );
+const WALL_JUMP_ABILITY = new Ability(
+  "wallJump",
+  "Allows the player to jump off walls.",
+  (player) => {
+    player.canWallJump = true;
+  }
+);
+
+function drawAbilityUnlockOverlay() {
+  if (!abilityUnlockPopup) {
+    return;
+  }
+  push();
+  noStroke();
+  fill(0, 0, 0, 165);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+
+  const panelW = min(560, width - 60);
+  const panelH = 220;
+  const panelX = width / 2;
+  const panelY = height / 2;
+
+  rectMode(CENTER);
+  fill(24, 28, 42);
+  rect(panelX, panelY, panelW, panelH, 18);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(34);
+  text("Ability Unlocked", panelX, panelY - 65);
+  textSize(28);
+  text(abilityUnlockPopup.name, panelX, panelY - 20);
+  textSize(20);
+  text(abilityUnlockPopup.description, panelX, panelY + 24);
+  textSize(16);
+  text("Press any key to continue", panelX, panelY + 78);
+  pop();
+}
+
+function closeAbilityUnlockPopup() {
+  if (!abilityUnlockPopup || gameState !== "abilityUnlock") {
+    return;
+  }
+  if (pauseStartedAt !== null) {
+    accumulatedPauseMs += millis() - pauseStartedAt;
+  }
+  pauseStartedAt = null;
+  abilityUnlockPopup = null;
+  gameState = "playing";
+}
+
+function showAbilityUnlock(ability) {
+  if (!ability || !ability.name || gameState !== "playing") {
+    return;
+  }
+  abilityUnlockPopup = {
+    name: ability.name,
+    description: ability.description || "New ability unlocked.",
+  };
+  pauseStartedAt = millis();
+  gameState = "abilityUnlock";
+}
