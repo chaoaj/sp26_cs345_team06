@@ -51,37 +51,39 @@ function switchToLevel(nextLevelNum) {
 }
 
 function handleDoors() {
-        if (level.doors.length > 0) {
-      for (const door of level.doors) {
-        if (door.isVisible === false) continue;
-        const playerLeft = typeof player.hitLeft === "number" ? player.hitLeft : player.x - player.width / 2;
-        const playerRight = typeof player.hitRight === "number" ? player.hitRight : player.x + player.width / 2;
-        const playerTop = typeof player.hitTop === "number" ? player.hitTop : player.y - player.height / 2;
-        const playerBottom = typeof player.hitBottom === "number" ? player.hitBottom : player.y + player.height / 2;
+    if (level.doors.length > 0) {
+        for (const door of level.doors) {
+            if (door.isVisible === false) continue;
+            const playerLeft = typeof player.hitLeft === "number" ? player.hitLeft : player.x - player.width / 2;
+            const playerRight = typeof player.hitRight === "number" ? player.hitRight : player.x + player.width / 2;
+            const playerTop = typeof player.hitTop === "number" ? player.hitTop : player.y - player.height / 2;
+            const playerBottom = typeof player.hitBottom === "number" ? player.hitBottom : player.y + player.height / 2;
 
-        const doorLeft = door.x - door.w / 2;
-        const doorRight = door.x + door.w / 2;
-        const doorTop = door.y - door.h / 2;
-        const doorBottom = door.y + door.h / 2;
+            const doorLeft = door.x - door.w / 2;
+            const doorRight = door.x + door.w / 2;
+            const doorTop = door.y - door.h / 2;
+            const doorBottom = door.y + door.h / 2;
 
-        const hit =
-          playerRight > doorLeft &&
-          playerLeft < doorRight &&
-          playerBottom >= doorTop &&
-          playerTop < doorBottom;
+            const hit =
+                playerRight > doorLeft &&
+                playerLeft < doorRight &&
+                playerBottom >= doorTop &&
+                playerTop < doorBottom;
 
-        if (hit) {
-          if (levelNum >= levels.length) {
-            startEndGame();
-            gameState = "endgame";
-          } else {
-            switchToLevel(levelNum + 1);
-            if (levelNum === levels.length) {
-              gameState = "endgame";
+            if (hit) {
+                if (door.targetLevelNum != null && levels[door.targetLevelNum - 1]) {
+                    switchToLevel(door.targetLevelNum);
+                } else if (levelNum >= levels.length) {
+                    startEndGame();
+                    gameState = "endgame";
+                } else {
+                    switchToLevel(levelNum + 1);
+                    if (levelNum === levels.length) {
+                        gameState = "endgame";
+                    }
+                }
+                break;
             }
-          }
-          break;
         }
-      }
     }
 }
