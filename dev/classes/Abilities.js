@@ -1,4 +1,10 @@
+  // Detect wall contact for wall jump
+
+
 class Ability {
+    static canWallJump(player) {
+      return Ability.has(player, "wallJump") || !!player?.canWallJump;
+    }
   constructor(name, description = "", applyEffect = null) {
     this.name = name;
     this.description = description;
@@ -110,29 +116,54 @@ class Ability {
     if (player.isDashing && now >= player.dashEndsAt) {
       player.isDashing = false;
     }
+      const unlocked = Ability.canDash(player);
+      if (unlocked && dashPressed && !player.isDashing && now >= player.dashCooldownUntil) {
+        if (movingLeft && !movingRight) {
+          player.dashDirection = -1;
+        } else if (movingRight && !movingLeft) {
+          player.dashDirection = 1;
+        } else {
+          player.dashDirection = player.facingLeft ? -1 : 1;
+        }
 
-    const unlocked = Ability.canDash(player);
-    if (unlocked && dashPressed && !player.isDashing && now >= player.dashCooldownUntil) {
-      if (movingLeft && !movingRight) {
-        player.dashDirection = -1;
-      } else if (movingRight && !movingLeft) {
-        player.dashDirection = 1;
-      } else {
-        player.dashDirection = player.facingLeft ? -1 : 1;
+        player.isDashing = true;
+        player.dashEndsAt = now + dashDurationMs;
+        player.dashCooldownUntil = now + dashCooldownMs;
+        player.jumpMomentumX = 0;
       }
 
-      player.isDashing = true;
-      player.dashEndsAt = now + dashDurationMs;
-      player.dashCooldownUntil = now + dashCooldownMs;
-      player.jumpMomentumX = 0;
-    }
+      if (!player.isDashing) {
+        return 0;
+      }
 
-    if (!player.isDashing) {
-      return 0;
+      const effectiveDashSpeed = player.isOnGround ? dashSpeed * groundDashMultiplier : dashSpeed;
+      return player.dashDirection * effectiveDashSpeed;
+  }
+  static detectWallContact(player, platforms) {
+    player.touchingWallLeft = false;
+    player.touchingWallRight = false;
+    for (const platform of platforms) {
+      if (!platform || platform.isActive === false) continue;
+      const platformTop = platform.y - platform.h / 2;
+      const platformBottom = platform.y + platform.h / 2;
+      const platformLeft = platform.x - platform.w / 2;
+      const platformRight = platform.x + platform.w / 2;
+      const overlapsY = player.hitBottom > platformTop && player.hitTop < platformBottom;
+      // Left wall
+      if (
+        Math.abs(player.hitLeft - platformRight) < 2 &&
+        overlapsY
+      ) {
+        player.touchingWallLeft = true;
+      }
+      // Right wall
+      if (
+        Math.abs(player.hitRight - platformLeft) < 2 &&
+        overlapsY
+      ) {
+        player.touchingWallRight = true;
+      }
     }
-
-    const effectiveDashSpeed = player.isOnGround ? dashSpeed * groundDashMultiplier : dashSpeed;
-    return player.dashDirection * effectiveDashSpeed;
   }
 
   static tryPerformJump(player, context) {
@@ -221,6 +252,13 @@ const DASH_ABILITY = new Ability(
   "Press [Left Shift] to dash horizontally in your movement direction.",
   (player) => {
     player.canDash = true;
+  }
+);
+const WALL_JUMP_ABILITY = new Ability(
+  "wallJump",
+  "Allows the player to jump off walls.",
+  (player) => {
+    player.canWallJump = true;
   }
 );
 
