@@ -134,7 +134,7 @@ function getLevel3Template() {
     ],
     mirrors : [
       new LaserMirror(400, height - 825, 24, 45),
-      new LaserMirror(750, height - 825, 24, 45),
+      new LaserMirror(770, height - 825, 24, 45),
       new StaticLaserMirror(486, height - 1050, 25, 45,),
       new StaticLaserMirror(873, height - 1050, 25, -45,),
 
