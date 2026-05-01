@@ -316,6 +316,7 @@ class Level {
                 }
             }
         }
+
     }
 
     isPlayerTouchingPit(player) {
