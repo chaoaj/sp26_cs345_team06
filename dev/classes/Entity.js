@@ -30,7 +30,7 @@ class Entity {
   }
 
   resolvePlatformCollision(platform) {
-    if (platform.isActive === false) return;
+    if (platform.isActive === false || platform.isVisible === false) return;
 
     const platLeft   = platform.x - platform.w / 2;
     const platRight  = platform.x + platform.w / 2;

@@ -118,7 +118,7 @@ class Player extends Actor {
     const previousHitTop    = previousY - this.height / 2 + this.hitboxInsetTop;
 
     for (const platform of platforms) {
-      if (platform && platform.isActive === false) {
+      if (platform && (platform.isActive === false || platform.isVisible === false)) {
         continue;
       }
 
@@ -177,7 +177,7 @@ class Player extends Actor {
       const previousHitTop = previousY - this.height / 2 + this.hitboxInsetTop;
 
       for (const platform of platforms) {
-        if (platform && platform.isActive === false) {
+        if (platform && (platform.isActive === false || platform.isVisible === false)) {
           continue;
         }
 

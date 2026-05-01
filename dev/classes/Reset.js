@@ -4,6 +4,10 @@
 
 // Moves Level.prototype.resetDynamicState logic here
 function resetDynamicStateForLevel(level) {
+        // Special: Level 3 blocker reset
+        if (level && levelNum === 3 && level.blocker) {
+            level.blocker.isVisible = true;
+        }
     // Reset doors
     for (let i = 0; i < level.doors.length; i++) {
         if (level.initialDoorStates[i]) {
@@ -48,9 +52,15 @@ function resetDynamicStateForLevel(level) {
         if (!mirror || !initial) continue;
         mirror.x = initial.x;
         mirror.y = initial.y;
-        mirror.xVelocity = 0;
-        mirror.yVelocity = 0;
-        mirror.isOnGround = false;
+        mirror.xVelocity = initial.xVelocity || 0;
+        mirror.yVelocity = initial.yVelocity || 0;
+        mirror.isOnGround = initial.isOnGround || false;
+        // If mirrors can be attached to platforms, restore attachment here
+        if (typeof initial.attachedPlatform !== 'undefined') {
+            mirror.attachedPlatform = initial.attachedPlatform;
+            mirror.attachmentOffsetX = initial.attachmentOffsetX;
+            mirror.attachmentOffsetY = initial.attachmentOffsetY;
+        }
     }
 
     // Reset laser collectors

@@ -18,6 +18,7 @@ class Box {
     this.isOnGround = false;
 
     for (const platform of platforms) {
+      if (platform && platform.isVisible === false) continue;
       this.resolvePlatformCollision(platform);
     }
   }

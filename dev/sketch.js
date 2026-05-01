@@ -70,6 +70,10 @@ function setupLevel() {
     levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5],
     levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8],
     levelTemplates[2][9], levelTemplates[2][10]);
+  // Attach blocker to Level 3 instance for reset logic
+  if (levelTemplates[2].blocker) {
+    level3.blocker = levelTemplates[2].blocker;
+  }
   level4 = new Level(
     levelTemplates[3][0], backgroundImage, floorTileLevel1,
     levelTemplates[3][1], levelTemplates[3][2], LEVEL_WORLD_WIDTHS[3],

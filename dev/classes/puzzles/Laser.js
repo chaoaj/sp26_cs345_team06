@@ -278,6 +278,7 @@ class LaserMirror {
   }
 
   _resolvePlatformCollision(platform) {
+    if (platform.isVisible === false) return;
     const platLeft   = platform.x - platform.w / 2;
     const platRight  = platform.x + platform.w / 2;
     const platTop    = platform.y - platform.h / 2;

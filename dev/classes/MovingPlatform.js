@@ -1,4 +1,5 @@
 class MovingPlatform extends BrickPlatform {
+
     // axis:     "x" for left/right,  "y" for up/down
     // distance: how many pixels to travel away from the start position (positive)
     // speed:    pixels per frame
@@ -64,4 +65,11 @@ class MovingPlatform extends BrickPlatform {
             this.yVelocity = this.y - previousY;
         }
     }
+        reset() {
+            this.x = this.startX;
+            this.y = this.startY;
+            this.direction = (this.axis === "x" || this.axis === "y") ? 1 : this.direction;
+            this.xVelocity = 0;
+            this.yVelocity = 0;
+        }
 }
