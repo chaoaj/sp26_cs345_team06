@@ -19,10 +19,16 @@ class NavigationLevel extends Level {
     }
 }
 function getNavigationLevelTemplate() {
-    const BeatLevel1 = true; // Set to true to test the door unlock platform
-    const beatLevel2 = false; // Set to true to test the laser traps
-    const beatLevel3 = false; // Set to true to test the moving platforms with traps on them
-    const beatLevel4 = false; // Set to true to test the final door and platform
+    let beatLevel1 = true; // Set to true to test the door unlock platform
+    let beatLevel2 = true; // Set to true to test the laser traps
+    let beatLevel3 = true; // Set to true to test the moving platforms with traps on them
+    let beatLevel4 = false; // Set to true to test the final door and platform
+    let las1 = false;
+
+    // Declare LaserDoor ONCE at the top of the function
+    const LaserDoor = new Door(625, height - 315, 75, 100, 3);
+    LaserDoor.isVisible = true;
+
     const unlock1 = new MovingPlatform(800, height - 1200, 128, 32, brickTileImage, "y", 700, 2, false);
     const DoorUnlock1 = new Terrain(1026, height - 72, 192, 256, step4);
   const platforms = [
@@ -36,13 +42,13 @@ function getNavigationLevelTemplate() {
     new DisappearingPlatform(450, height - 1950, 64, 64, brickTileImage, 1000, 1000),
     new BrickPlatform(625, height - 250, 130, 32, brickTileImage),
     new BrickPlatform(950, height - 1200, 128, 32, brickTileImage),
-    ...(BeatLevel1 ? [new MovingPlatform(2800, height - 150, 128, 32, brickTileImage, "x", 700, 2, false)] : []),
-    ...(BeatLevel1 ? [new HarmfulPlatform(3350, height - 200, 64, 32, 1000, 1000)] : []),
-    ...(BeatLevel1 ? [new HarmfulPlatform(3200, height - 200, 96, 32, 1000, 1000)] : []),
-    ...(BeatLevel1 ? [new HarmfulPlatform(3000, height - 200, 64, 32, 1000, 1000)] : []),
-    ...(BeatLevel1 ? [new HarmfulPlatform(2800, height - 200, 32, 32, 1000, 1000)] : []),
-    ...(BeatLevel1 ? [new MovingPlatform(1200, height - 200, 128, 32, brickTileImage, "x", 1200, 3, true)] : []),
-    ...(BeatLevel1 ? [new BrickPlatform(1800, height - 250, 768, 32, brickTileImage)] : []),
+    ...(beatLevel1 ? [new MovingPlatform(2800, height - 150, 128, 32, brickTileImage, "x", 700, 2, false)] : []),
+    ...(beatLevel1 ? [new HarmfulPlatform(3350, height - 200, 64, 32, 1000, 1000)] : []),
+    ...(beatLevel1 ? [new HarmfulPlatform(3200, height - 200, 96, 32, 1000, 1000)] : []),
+    ...(beatLevel1 ? [new HarmfulPlatform(3000, height - 200, 64, 32, 1000, 1000)] : []),
+    ...(beatLevel1 ? [new HarmfulPlatform(2800, height - 200, 32, 32, 1000, 1000)] : []),
+    ...(beatLevel1 ? [new MovingPlatform(1200, height - 200, 128, 32, brickTileImage, "x", 1200, 3, true)] : []),
+    ...(beatLevel1 ? [new BrickPlatform(1800, height - 250, 768, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(600, height - 2050, 128, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(800, height - 2050, 128, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(1000, height - 2150, 128, 32, brickTileImage)] : []),
@@ -82,7 +88,7 @@ function getNavigationLevelTemplate() {
       ...(beatLevel2 ? [new Laser(1000, height - 2075, "left", color(255, 0, 0), 10, 2000)] : []),
     ],
     collectors: [
-      ...(beatLevel2 ? [new LaserCollector(675, height - 2525, 30, 30)] : [])
+      ...(beatLevel2 ? [new LaserCollector(675, height - 2525, 30, 30, () => { LaserDoor.isVisible = true; }, () => { LaserDoor.isVisible = false; })] : [])
     ],
     mirrors: [
     ...(beatLevel2 ? [new LaserMirror(600, height - 2100, 24, -45)] : []), // 32 is half platform height, 12 is half mirror size
@@ -105,7 +111,9 @@ function getNavigationLevelTemplate() {
     new JumpingHostile(3725, height - 282, 40, 40, 1, 3725, 3725, 1, 220, 3000),
   ]
   const doors = [
-    new Door(4000, height - 278, 75, 100),
+    LaserDoor,
+    new Door(3800, height - 278, 75, 100, 2), // Example: goes to Level 2
+    new Door(0, height - 648, 75, 100, 1), // Example: goes to Level 1
   ];
 
   const pits = [
@@ -114,7 +122,7 @@ function getNavigationLevelTemplate() {
 
   const terrain = [
     new Terrain(0, height - 300, 300, 600, step4),
-    ...(BeatLevel1 ? [DoorUnlock1] : []),
+    ...(beatLevel1 ? [DoorUnlock1] : []),
     new Terrain(2600, height - 100, 192, 256, step4),
     new Terrain(3800, height - 100, 192, 256, step4),
   ];
