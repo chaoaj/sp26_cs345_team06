@@ -166,6 +166,16 @@ class Level {
     applyPitfall(player) {
         // Use the global isPlayerTouchingPit for pitfall logic (from trapCollision.js)
         if (typeof isPlayerTouchingPit === 'function' ? isPlayerTouchingPit(this, player) : false) {
+            const previousHealth = player.health;
+            const previousTemporaryHealth = player.temporaryHealth || 0;
+            const previousShieldHealth = player.shieldHealth || 0;
+            if (typeof tryUsePitInsurance === "function" && tryUsePitInsurance(player)) {
+                player.respawn();
+                player.health = previousHealth;
+                player.temporaryHealth = previousTemporaryHealth;
+                player.shieldHealth = previousShieldHealth;
+                return;
+            }
             deathSound.play();
             player.respawn();
         }
@@ -330,6 +340,14 @@ class Level {
             for (let i = 0; i < player.health; i++) {
                 noSmooth()
                 image(heartImage, 20 + i * 40, 20, 30, 30);
+            }
+            if (player.temporaryHealth > 0) {
+                push();
+                tint(120, 210, 255);
+                for (let i = 0; i < player.temporaryHealth; i++) {
+                    image(heartImage, 20 + (player.health + i) * 40, 20, 30, 30);
+                }
+                pop();
             }
         } else {
             text(`Health: ${player.health}`, 10, 10);

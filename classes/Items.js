@@ -96,7 +96,8 @@ class Items {
 
     applyEffect(player) {
         if (this.type === "health") {
-            player.gainHealth(1);
+            const bonusHeartAmount = typeof hasLevelUpAbility === "function" && hasLevelUpAbility(player, "bonusHeart") ? 1 : 0;
+            player.gainHealth(1 + bonusHeartAmount);
         }
 
         if (this.type === "feather") {
@@ -104,7 +105,8 @@ class Items {
         }
 
         if (this.type === "shield") {
-            player.addShield(2);
+            const multiplier = typeof getItemEffectMultiplier === "function" ? getItemEffectMultiplier(player) : 1;
+            player.addShield(Math.ceil(2 * multiplier));
         }
 
         if (this.type === "potion") {

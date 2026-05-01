@@ -4,7 +4,7 @@ let runStartedAt = null;
 let runCompletedAt = null;
 
 function getGameMillis() {
-  if ((gameState === "paused" || gameState === "abilityUnlock") && pauseStartedAt !== null) {
+  if ((gameState === "paused" || gameState === "abilityUnlock" || gameState === "levelUp") && pauseStartedAt !== null) {
     return pauseStartedAt - accumulatedPauseMs;
   }
   return millis() - accumulatedPauseMs;

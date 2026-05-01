@@ -22,11 +22,11 @@ function getLevel2Template() {
   // Pair 5 (x=2950): lower h=96  → gap height-882  to height-1022 (low-mid)
   const fbLow1  = new HarmfulPlatform(2150, height - 818,  32,  64);
   const fbHigh1 = new HarmfulPlatform(2150, height - 1390, 32, 800);
-  const fbLow2  = new HarmfulPlatform(2350, height - 898,  32, 224);
+  const fbLow2  = new HarmfulPlatform(2350, height - 834,  32, 140);
   const fbHigh2 = new HarmfulPlatform(2350, height - 1550, 32, 800);
-  const fbLow3  = new HarmfulPlatform(2550, height - 850,  32, 128);
+  const fbLow3  = new HarmfulPlatform(2550, height - 822,  32,  96);
   const fbHigh3 = new HarmfulPlatform(2550, height - 1454, 32, 800);
-  const fbLow4  = new HarmfulPlatform(2750, height - 914,  32, 256);
+  const fbLow4  = new HarmfulPlatform(2750, height - 814,  32, 140);
   const fbHigh4 = new HarmfulPlatform(2750, height - 1582, 32, 800);
   const fbLow5  = new HarmfulPlatform(2950, height - 834,  32,  96);
   const fbHigh5 = new HarmfulPlatform(2950, height - 1422, 32, 800);
