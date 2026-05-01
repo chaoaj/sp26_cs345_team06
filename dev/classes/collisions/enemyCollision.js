@@ -61,6 +61,9 @@ function applyEnemyDamage(level, player) {
             }
             player.yVelocity = -Math.max(8, player.jumpStrength * 0.55);
             player.isOnGround = false;
+            if (typeof tryApplyStompHeal === "function") {
+                tryApplyStompHeal(player);
+            }
             return;
         }
 

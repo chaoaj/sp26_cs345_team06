@@ -39,6 +39,9 @@ function switchToLevel(nextLevelNum) {
   if (player) {
     player.setSpawnPoint(spawnX, spawnY);
     player.respawn();
+    if (typeof resetLevelUpAbilityUses === "function") {
+      resetLevelUpAbilityUses(player);
+    }
   }
   if (camera) {
     const activeLevel = levels[levelNum - 1];
@@ -71,14 +74,29 @@ function handleDoors() {
                 playerTop < doorBottom;
 
             if (hit) {
+                let targetLevelNum = null;
                 if (door.targetLevelNum != null && levels[door.targetLevelNum - 1]) {
-                    switchToLevel(door.targetLevelNum);
+                    targetLevelNum = door.targetLevelNum;
                 } else if (levelNum >= levels.length) {
                     startEndGame();
                     gameState = "endgame";
                 } else {
-                    switchToLevel(levelNum + 1);
-                    if (levelNum === levels.length) {
+                    targetLevelNum = levelNum + 1;
+                }
+
+                if (targetLevelNum != null) {
+                    const shouldOfferLevelUp =
+                        targetLevelNum > levelNum &&
+                        !testLevelActive &&
+                        typeof startLevelUpSelection === "function";
+
+                    if (shouldOfferLevelUp) {
+                        startLevelUpSelection(player, targetLevelNum);
+                    } else {
+                        switchToLevel(targetLevelNum);
+                    }
+
+                    if (gameState !== "levelUp" && levelNum === levels.length) {
                         gameState = "endgame";
                     }
                 }

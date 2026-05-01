@@ -49,6 +49,7 @@ class Player extends Actor {
     this.isOnFloor = false;
     this.maxShield = 2;
     this.shieldHealth = 0;
+    this.temporaryHealth = 0;
     this.onBeforeRespawn = null;
     this.onRespawn = null;
 
@@ -268,8 +269,18 @@ class Player extends Actor {
       remainingDamage -= blockedDamage;
     }
 
+    if (remainingDamage > 0 && this.temporaryHealth > 0) {
+      const blockedDamage = Math.min(this.temporaryHealth, remainingDamage);
+      this.temporaryHealth -= blockedDamage;
+      remainingDamage -= blockedDamage;
+    }
+
     if (remainingDamage > 0) {
       this.health = Math.max(0, this.health - remainingDamage);
+    }
+
+    if (typeof tryApplyEmergencyShield === "function") {
+      tryApplyEmergencyShield(this);
     }
 
     this.isHurt = true;
@@ -299,6 +310,7 @@ class Player extends Actor {
     this.moveSpeed = this.baseMoveSpeed;
     this.speedPotionExpiresAt = 0;
     this.shieldHealth = 0;
+    this.temporaryHealth = 0;
   }
 
   respawn() {
@@ -347,14 +359,18 @@ class Player extends Actor {
 
   activateHighJump() {
     const now = getGameMillis();
-    this.jumpStrength = this.highJumpStrength;
-    this.highJumpExpiresAt = now + this.highJumpDurationMs;
+    const strengthMultiplier = typeof getItemEffectMultiplier === "function" ? getItemEffectMultiplier(this) : 1;
+    const durationMultiplier = typeof getTimedEffectMultiplier === "function" ? getTimedEffectMultiplier(this) : 1;
+    this.jumpStrength = this.baseJumpStrength + (this.highJumpStrength - this.baseJumpStrength) * strengthMultiplier;
+    this.highJumpExpiresAt = now + this.highJumpDurationMs * durationMultiplier;
   }
 
   activateSpeedPotion() {
     const now = getGameMillis();
-    this.moveSpeed = this.speedPotionMoveSpeed;
-    this.speedPotionExpiresAt = now + this.speedPotionDurationMs;
+    const strengthMultiplier = typeof getItemEffectMultiplier === "function" ? getItemEffectMultiplier(this) : 1;
+    const durationMultiplier = typeof getTimedEffectMultiplier === "function" ? getTimedEffectMultiplier(this) : 1;
+    this.moveSpeed = this.baseMoveSpeed + (this.speedPotionMoveSpeed - this.baseMoveSpeed) * strengthMultiplier;
+    this.speedPotionExpiresAt = now + this.speedPotionDurationMs * durationMultiplier;
   }
 
   getHighJumpTimeLeftMs() {

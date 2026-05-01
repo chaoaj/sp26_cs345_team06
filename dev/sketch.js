@@ -169,6 +169,11 @@ function windowResized() {
 }
 
 function mousePressed() {
+  if (gameState === "levelUp") {
+    handleLevelUpClick(mouseX, mouseY);
+    return;
+  }
+
   if (gameState === "paused") {
     const action = handlePauseMenuClick(mouseX, mouseY);
     if (action === "resume") {
@@ -261,6 +266,14 @@ function draw() {
     camera.reset();
     level.drawHUD(player);
     drawAbilityUnlockOverlay();
+  } else if (gameState === "levelUp") {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawLevelUpOverlay();
   }
 }
 

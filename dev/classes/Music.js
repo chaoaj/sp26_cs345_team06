@@ -5,7 +5,7 @@ function updateLevelMusic() {
     return;
   }
 
-  const isPlayableState = gameState === "playing" || gameState === "abilityUnlock";
+  const isPlayableState = gameState === "playing" || gameState === "abilityUnlock" || gameState === "levelUp";
   if (!isPlayableState) {
     return;
   }
