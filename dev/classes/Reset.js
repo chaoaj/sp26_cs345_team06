@@ -4,6 +4,9 @@
 
 // Moves Level.prototype.resetDynamicState logic here
 function resetDynamicStateForLevel(level) {
+        // EndGame and other non-Level objects don't have reset state — skip.
+        if (!level || !level.initialDoorStates) return;
+
         // Special: Level 3 blocker reset
         if (level && levelNum === 3 && level.blocker) {
             level.blocker.isVisible = true;

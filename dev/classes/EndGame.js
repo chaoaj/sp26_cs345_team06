@@ -30,15 +30,17 @@ class EndGame {
     const floorHeight = 50;
     this.platforms = [
       new Platform(this.worldWidth / 2, height, this.worldWidth, floorHeight, this.floorImage),
-      new Platform(340, height - 160, 180, 26, this.platformImage),
-      new Platform(510, height - 250, 180, 26, this.platformImage),
-      new Platform(680, height - 340, 180, 26, this.platformImage),
-      new Platform(850, height - 430, 180, 26, this.platformImage),
+      // Terrain steps — each block sits on the floor and uses the matching step image.
+      // Platform center y = height - blockHeight/2 so the bottom is flush with the floor.
+      new Platform(250,  height - 32,  192,  64,  step1),
+      new Platform(442,  height - 64,  192, 128,  step2),
+      new Platform(634,  height - 96,  192, 192,  step3),
+      new Platform(826,  height - 128, 192, 256,  step4),
     ];
 
     this.treasure = {
-      x: 850,
-      y: height - 470,
+      x: 826,
+      y: height - 279, // rests on top of step4 (top surface at height-256)
       w: 62,
       h: 46,
       collected: false,
