@@ -5,14 +5,13 @@ class Camera {
     this.worldWidth = worldWidth;
     this.worldHeight = worldHeight;
     this.lerpFactor = 0.12;
-    this.unconstrained = false; // If true, disables camera constraints
+    this.unconstrained = false;
   }
 
   follow(player) {
     const targetX = player.x - width / 2;
     const targetY = player.y - height / 2;
 
-    // Follow more aggressively when player is airborne
     const isAirborne = !player.isOnFloor;
     const lerpSpeed = isAirborne ? 0.25 : this.lerpFactor;
 
