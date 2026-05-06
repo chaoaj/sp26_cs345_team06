@@ -96,6 +96,11 @@ class Level {
             projectileSpeed: enemy.projectileSpeed,
             projectileDamage: enemy.projectileDamage,
         }));
+
+        this._dynamicObjects = [...this.boxes, ...this.laserMirrors];
+        this._laserBlockers = [...this.platforms, ...this.boxes];
+        this._platformsAndBoxes = [...this.platforms, ...this.boxes];
+        this._buttonEntities = [null, ...this.boxes];
     }
 
     getSpawnPoint() {
@@ -233,13 +238,13 @@ class Level {
             if (isPipePuzzleSolved(this.pipePuzzles)) {
                 print("true");
             }
-            pipePuzzle.update(player);  
+            pipePuzzle.update(player);
             pipePuzzle.drawPipe();
         }
     }
 
     updatePuzzleElements(player) {
-        const dynamicObjects = [...this.boxes, ...this.laserMirrors];
+        const dynamicObjects = this._dynamicObjects;
 
         resolvePlayerDynamicCollisions(player, dynamicObjects);
 
@@ -286,14 +291,13 @@ class Level {
             }
         }
 
-        const entities = [player, ...this.boxes];
+        this._buttonEntities[0] = player;
         for (const button of this.buttons) {
-            button.checkPressed(entities);
+            button.checkPressed(this._buttonEntities);
         }
 
-        const laserBlockers = [...this.platforms, ...this.boxes];
         for (const laser of this.lasers) {
-            laser.update(this.laserMirrors, this.laserCollectors, laserBlockers);
+            laser.update(this.laserMirrors, this.laserCollectors, this._laserBlockers);
         }
     }
 

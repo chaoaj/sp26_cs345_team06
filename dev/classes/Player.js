@@ -147,9 +147,6 @@ class Player extends Actor {
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
         this.onPlatform = platform;
-        if (platform.xVelocity) {
-          this.x += platform.xVelocity;
-        }
         if (platform.onLand) platform.onLand(this);
         continue;
       }
@@ -163,14 +160,14 @@ class Player extends Actor {
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
         this.onPlatform = platform;
-        if (platform.xVelocity) {
-          this.x += platform.xVelocity;
-        }
         if (platform.onLand) platform.onLand(this);
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;
       }
+    }
+    if (this.onPlatform && this.onPlatform.xVelocity) {
+      this.x += this.onPlatform.xVelocity;
     }
   }
     resolveHorizontalCollisions(platforms, previousX, previousY) {
