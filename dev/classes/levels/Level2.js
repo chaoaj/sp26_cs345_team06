@@ -20,15 +20,17 @@ function getLevel2Template() {
   // Pair 3 (x=2550): lower h=128 → gap height-914  to height-1054 (mid)
   // Pair 4 (x=2750): lower h=256 → gap height-1042 to height-1182 (highest)
   // Pair 5 (x=2950): lower h=96  → gap height-882  to height-1022 (low-mid)
-  const fbLow1  = new HarmfulPlatform(2150, height - 818,  32,  64);
+  // All fbLow bottoms aligned to height-786 (top edge of longPlatform).
+  // center_y = (height-786) - h/2  for each pair.
+  const fbLow1  = new HarmfulPlatform(2150, height - 818,  32,  64);  // h=64,  center=height-818
   const fbHigh1 = new HarmfulPlatform(2150, height - 1390, 32, 800);
-  const fbLow2  = new HarmfulPlatform(2350, height - 834,  32, 140);
+  const fbLow2  = new HarmfulPlatform(2350, height - 850,  32, 128);  // h=128, center=height-850
   const fbHigh2 = new HarmfulPlatform(2350, height - 1550, 32, 800);
-  const fbLow3  = new HarmfulPlatform(2550, height - 822,  32,  96);
+  const fbLow3  = new HarmfulPlatform(2550, height - 834,  32,  96);  // h=96,  center=height-834
   const fbHigh3 = new HarmfulPlatform(2550, height - 1454, 32, 800);
-  const fbLow4  = new HarmfulPlatform(2750, height - 814,  32, 140);
+  const fbLow4  = new HarmfulPlatform(2750, height - 850,  32, 128);  // h=128, center=height-850
   const fbHigh4 = new HarmfulPlatform(2750, height - 1582, 32, 800);
-  const fbLow5  = new HarmfulPlatform(2950, height - 834,  32,  96);
+  const fbLow5  = new HarmfulPlatform(2950, height - 834,  32,  96);  // h=96,  center=height-834
   const fbHigh5 = new HarmfulPlatform(2950, height - 1422, 32, 800);
 
   // ── SECTION 3: BOX PUZZLE ─────────────────────────────────────────────────

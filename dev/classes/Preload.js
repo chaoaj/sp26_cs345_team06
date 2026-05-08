@@ -62,6 +62,8 @@ function preload() {
   floorTileLevel2 = loadImage("assets/tiles/FloorTileLvl2.png")
   floorTileLevel3 = loadImage("assets/tiles/FloorTileLvl3.png")
   lavaImage = loadImage("assets/tiles/Lava.png")
+  harmfulPlatformTileset = loadImage("assets/tiles/harmfulplatform_tileset.png")
+  harmfulPlatformVinesTileset = loadImage("assets/tiles/harmfulplatform_vines_tileset.png")
 
   //Platforms
   brickPlatformImage = loadImage("assets/tiles/BrickPlatform.png")
