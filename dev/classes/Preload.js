@@ -55,6 +55,7 @@ function preload() {
 
   //Backgrounds
   backgroundImage = loadImage("assets/title_screen/Background1.png");
+  backgroundImageLevel4 = loadImage("assets/tilebg.png");
 
   //Floors
   brickFloorImage = loadImage("assets/tiles/Floor1.png");

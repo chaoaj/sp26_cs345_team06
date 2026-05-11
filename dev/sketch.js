@@ -75,7 +75,7 @@ function setupLevel() {
     level3.blocker = levelTemplates[2].blocker;
   }
   level4 = new Level(
-    levelTemplates[3][0], backgroundImage, floorTileLevel1,
+    levelTemplates[3][0], backgroundImageLevel4, floorTileLevel1,
     levelTemplates[3][1], levelTemplates[3][2], LEVEL_WORLD_WIDTHS[3],
     levelTemplates[3][3], levelTemplates[3][4], levelTemplates[3][5],
     levelTemplates[3][6], levelTemplates[3][7], levelTemplates[3][8],
