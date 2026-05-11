@@ -10,12 +10,18 @@ class Door {
     drawDoor() {
         if (this.isVisible === false) return;
 
+        push();
+        imageMode(CENTER);
+        rectMode(CENTER);
+
         if (typeof doorImage !== "undefined" && doorImage) {
             image(doorImage, this.x, this.y, this.w, this.h);
+            pop();
             return;
         }
 
         fill(139, 69, 19);
         rect(this.x, this.y, this.w, this.h);
+        pop();
     }
 }

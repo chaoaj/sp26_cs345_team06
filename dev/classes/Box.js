@@ -119,9 +119,12 @@ class Box {
   }
 
   draw() {
+    push();
     fill(160, 100, 40);
     noStroke();
+    imageMode(CENTER);
     //rect(this.x, this.y, this.w, this.h);
     image(woodenBox, this.x, this.y, this.w, this.h);
+    pop();
   }
 }
