@@ -143,7 +143,7 @@ class Ability {
     player.touchingWallLeft = false;
     player.touchingWallRight = false;
     for (const platform of platforms) {
-      if (!platform || platform.isActive === false) continue;
+      if (!platform || platform.isActive === false || platform.isVisible === false) continue;
       const platformTop = platform.y - platform.h / 2;
       const platformBottom = platform.y + platform.h / 2;
       const platformLeft = platform.x - platform.w / 2;

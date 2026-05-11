@@ -3,7 +3,7 @@
 
 function resolvePlayerDynamicCollisions(player, dynamicObjects) {
     for (const object of dynamicObjects) {
-        if (object && object.isVisible === false) continue;
+        if (object && (object.isActive === false || object.isVisible === false)) continue;
         const objectLeft = object.x - object.w / 2;
         const objectRight = object.x + object.w / 2;
         const objectTop = object.y - object.h / 2;
