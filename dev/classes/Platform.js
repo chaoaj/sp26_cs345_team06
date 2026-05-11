@@ -9,8 +9,10 @@ class Platform{
     draw(){
         noStroke();
         if (this.platformImage) {
+            push();
             imageMode(CENTER);
             image(this.platformImage, this.x, this.y, this.w, this.h);
+            pop();
         }
     }
 }
