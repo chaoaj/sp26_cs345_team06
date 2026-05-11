@@ -132,6 +132,7 @@ class Laser {
       c.isHit = c._hitThisFrame;
 
       if (c.isHit && !wasHit && c.callback) {
+        c.isActivated = true;
         c.callback();
       }
       if (!c.isHit && wasHit && c.releaseCallback) {
@@ -221,6 +222,7 @@ class LaserCollector {
     this.callback = callback;
     this.releaseCallback = releaseCallback;
     this.isHit = false;
+    this.isActivated = false;
     this._hitThisFrame = false;
   }
 
@@ -228,15 +230,16 @@ class LaserCollector {
     push();
     rectMode(CENTER);
     noStroke();
+    const isLit = this.isHit || this.isActivated;
 
     // Outer ring
-    stroke(this.isHit ? color(255, 220, 80) : color(100, 100, 100));
+    stroke(isLit ? color(255, 220, 80) : color(100, 100, 100));
     strokeWeight(2);
     noFill();
     ellipse(this.x, this.y, this.w + 6, this.h + 6);
 
     // Inner fill
-    fill(this.isHit ? color(255, 200, 50) : color(50, 50, 50));
+    fill(isLit ? color(255, 200, 50) : color(50, 50, 50));
     noStroke();
     ellipse(this.x, this.y, this.w, this.h);
     pop();

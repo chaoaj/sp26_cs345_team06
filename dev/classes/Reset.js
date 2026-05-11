@@ -69,6 +69,7 @@ function resetDynamicStateForLevel(level) {
     // Reset laser collectors
     for (const collector of level.laserCollectors) {
         collector.isHit = false;
+        collector.isActivated = false;
         collector._hitThisFrame = false;
     }
 
