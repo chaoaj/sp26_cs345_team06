@@ -21,41 +21,6 @@ class Box {
       if (platform && platform.isVisible === false) continue;
       this.resolvePlatformCollision(platform);
     }
-
-    if (this.isOnGround) {
-      this._applyMovingPlatformRide(platforms);
-    }
-  }
-
-  _applyMovingPlatformRide(platforms) {
-    let bestPlatform = null;
-    let bestOverlap = 0;
-    const myLeft   = this.x - this.w / 2;
-    const myRight  = this.x + this.w / 2;
-    const myBottom = this.y + this.h / 2;
-
-    for (const platform of platforms) {
-      if (!platform || platform.isVisible === false) continue;
-      const pvx = platform.xVelocity || 0;
-      const pvy = platform.yVelocity || 0;
-      if (pvx === 0 && pvy === 0) continue;
-
-      const platLeft  = platform.x - platform.w / 2;
-      const platRight = platform.x + platform.w / 2;
-      const platTop   = platform.y - platform.h / 2;
-      if (Math.abs(myBottom - platTop) > 4) continue;
-
-      const overlap = Math.min(myRight, platRight) - Math.max(myLeft, platLeft);
-      if (overlap > bestOverlap) {
-        bestOverlap = overlap;
-        bestPlatform = platform;
-      }
-    }
-
-    if (bestPlatform && bestOverlap >= this.w * 0.5) {
-      this.x += bestPlatform.xVelocity || 0;
-      this.y += bestPlatform.yVelocity || 0;
-    }
   }
 
   resolvePlatformCollision(platform) {
@@ -63,33 +28,44 @@ class Box {
     const platRight  = platform.x + platform.w / 2;
     const platTop    = platform.y - platform.h / 2;
     const platBottom = platform.y + platform.h / 2;
+    const platformXVelocity = typeof platform.xVelocity === "number" ? platform.xVelocity : 0;
+    const platformYVelocity = typeof platform.yVelocity === "number" ? platform.yVelocity : 0;
     const myLeft   = this.x - this.w / 2;
     const myRight  = this.x + this.w / 2;
     const myTop    = this.y - this.h / 2;
     const myBottom = this.y + this.h / 2;
 
+    // No overlap — nothing to do
     if (myRight <= platLeft || myLeft >= platRight ||
         myBottom <= platTop || myTop >= platBottom) {
       return;
     }
 
+    // Compute penetration depth on each axis
     const overlapLeft   = myRight   - platLeft;
     const overlapRight  = platRight - myLeft;
     const overlapTop    = myBottom  - platTop;
     const overlapBottom = platBottom - myTop;
+
     const minX = Math.min(overlapLeft, overlapRight);
     const minY = Math.min(overlapTop, overlapBottom);
 
     if (minY <= minX) {
+      // Vertical resolution
       if (overlapTop <= overlapBottom) {
+        // Landing on top
         this.y -= overlapTop;
         this.yVelocity = 0;
         this.isOnGround = true;
+        this.x += platformXVelocity;
+        this.y += platformYVelocity;
       } else {
+        // Hitting the underside
         this.y += overlapBottom;
         this.yVelocity = 0;
       }
     } else {
+      // Horizontal resolution
       if (overlapLeft <= overlapRight) {
         this.x -= overlapLeft;
         this.xVelocity = 0;
@@ -146,11 +122,8 @@ class Box {
     push();
     fill(160, 100, 40);
     noStroke();
-<<<<<<< Updated upstream
     imageMode(CENTER);
     //rect(this.x, this.y, this.w, this.h);
-=======
->>>>>>> Stashed changes
     image(woodenBox, this.x, this.y, this.w, this.h);
     pop();
   }

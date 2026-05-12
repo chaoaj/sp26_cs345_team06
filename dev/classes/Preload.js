@@ -146,11 +146,4 @@ function preload() {
 
   //UI
   heartImage = loadImage("assets/abilities/collectibles/heart.png")
-
-  //Pause Menu Buttons
-  pauseResumeBtn   = loadImage("assets/menu/resume_button_sprite.png")
-  pauseRetryBtn    = loadImage("assets/menu/retry_button_sprite.png")
-  pauseLevelBtn    = loadImage("assets/menu/level_button_sprite.png")
-  pauseMusicOnBtn  = loadImage("assets/menu/Music_ON_button_sprite.png")
-  pauseMusicOffBtn = loadImage("assets/menu/Music_OFF_button_sprite.png")
 }
