@@ -234,10 +234,8 @@ class Level {
         for (const mirror of this.laserMirrors) mirror.draw();
         for (const collector of this.laserCollectors) collector.draw();
         for (const laser of this.lasers) laser.draw();
+        const solved = isPipePuzzleSolved(this.pipePuzzles);
         for (const pipePuzzle of this.pipePuzzles) {
-            if (isPipePuzzleSolved(this.pipePuzzles)) {
-                print("true");
-            }
             pipePuzzle.update(player);
             pipePuzzle.drawPipe();
         }

@@ -8,6 +8,11 @@ function preload() {
   pipeTpieceImg = loadImage('assets/puzzles/tpiece.png');
   pipeQuadImg = loadImage('assets/puzzles/quad.png');
 
+  pipeStraightWaterImg = loadImage('assets/puzzles/straightwater.png');
+  pipeElbowWaterImg = loadImage('assets/puzzles/elbowwater.png');
+  pipeTpieceWaterImg = loadImage('assets/puzzles/tpiecewater.png');
+  pipeQuadWaterImg = loadImage('assets/puzzles/quadwater.png');
+
   //Music
   backgroundMusic = loadSound("assets/audio/BackgroundMusic.mp3")
   soliloquyMusic = loadSound("assets/audio/Soliloquy.mp3")
