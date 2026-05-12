@@ -161,6 +161,7 @@ function handleDoors() {
                         rebuildNavigationLevel();
                     }
 
+
                     const shouldOfferLevelUp =
                         targetLevelNum > levelNum &&
                         !testLevelActive &&

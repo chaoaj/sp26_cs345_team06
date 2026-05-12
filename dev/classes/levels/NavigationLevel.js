@@ -43,10 +43,10 @@ function getNavigationLevelTemplate() {
     new BrickPlatform(625, height - 250, 130, 32, brickTileImage),
     new BrickPlatform(950, height - 1200, 128, 32, brickTileImage),
     ...(beatLevel1 ? [new MovingPlatform(2800, height - 150, 128, 32, brickTileImage, "x", 700, 2, false)] : []),
-    ...(beatLevel1 ? [new HarmfulPlatform(3350, height - 200, 64, 32, 1000, 1000)] : []),
-    ...(beatLevel1 ? [new HarmfulPlatform(3200, height - 200, 96, 32, 1000, 1000)] : []),
-    ...(beatLevel1 ? [new HarmfulPlatform(3000, height - 200, 64, 32, 1000, 1000)] : []),
-    ...(beatLevel1 ? [new HarmfulPlatform(2800, height - 200, 32, 32, 1000, 1000)] : []),
+    ...(beatLevel1 ? [new HarmfulPlatform(3350, height - 200, 64, 32, 1, 1)] : []),
+    ...(beatLevel1 ? [new HarmfulPlatform(3200, height - 200, 96, 32, 1, 1)] : []),
+    ...(beatLevel1 ? [new HarmfulPlatform(3000, height - 200, 64, 32, 1, 1)] : []),
+    ...(beatLevel1 ? [new HarmfulPlatform(2800, height - 200, 32, 32, 1, 1)] : []),
     ...(beatLevel1 ? [new MovingPlatform(1200, height - 200, 128, 32, brickTileImage, "x", 1200, 3, true)] : []),
     ...(beatLevel1 ? [new BrickPlatform(1800, height - 250, 768, 32, brickTileImage)] : []),
     ...(beatLevel2 ? [new BrickPlatform(600, height - 2050, 128, 32, brickTileImage)] : []),
@@ -59,10 +59,12 @@ function getNavigationLevelTemplate() {
     // placeholder after this
 
     new BrickPlatform(850, height - 185, 160, 32, brickTileImage),
+    new BrickPlatform(-130, height - 374, 32, 5000, brickTileImage), // Wall before level 1 door
   ];
 
   const items = [
     new Items(900, height - 1230, "potion"),
+    new Items(1026, height - 172, "shield"),
     // new Items(420, height - 40, "potion"),
     // new Items(400, height - 40, "feather"),
     // new Items(300, height - 40, "dashAbility"),
