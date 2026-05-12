@@ -56,12 +56,12 @@ function getLevel1Template() {
   ];
 
   const pits = [
-    [36, 40],
+    [35, 44],
   ];
 
   const terrain = [
     new Terrain(1026, height - 72, 192, 256, step4),
-    new Terrain(2600, height - 100, 192, 256, step4),
+    new Terrain(2592, height - 100, 192, 256, step4),
 
     new Terrain(3800, height - 100, 704, 256, box4long),
   ]

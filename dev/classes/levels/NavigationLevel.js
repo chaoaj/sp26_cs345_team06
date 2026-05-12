@@ -35,11 +35,11 @@ function getNavigationLevelTemplate() {
     new BrickPlatform(625, height - 400, 250, 32, brickTileImage),
     new DisappearingPlatform(350, height - 500, 128, 32, brickTileImage, 1000, 500),
     new DisappearingPlatform(500, height - 1200, 64, 64, brickTileImage, 2000, 1000),
-    new DisappearingPlatform(450, height - 1350, 64, 64, brickTileImage, 1000, 1000),
-    new DisappearingPlatform(500, height - 1500, 64, 64, brickTileImage, 1000, 1000),
-    new DisappearingPlatform(450, height - 1650, 64, 64, brickTileImage, 1000, 1000),
-    new DisappearingPlatform(500, height - 1800, 64, 64, brickTileImage, 1000, 1000),
-    new DisappearingPlatform(450, height - 1950, 64, 64, brickTileImage, 1000, 1000),
+    ...(beatLevel2 ? [new DisappearingPlatform(450, height - 1350, 64, 64, brickTileImage, 1000, 1000)] : []),
+    ...(beatLevel2 ? [new DisappearingPlatform(500, height - 1500, 64, 64, brickTileImage, 1000, 1000)] : []),
+    ...(beatLevel2 ? [new DisappearingPlatform(450, height - 1650, 64, 64, brickTileImage, 1000, 1000)] : []),
+    ...(beatLevel2 ? [new DisappearingPlatform(500, height - 1800, 64, 64, brickTileImage, 1000, 1000)] : []),
+    ...(beatLevel2 ? [new DisappearingPlatform(450, height - 1950, 64, 64, brickTileImage, 1000, 1000)] : []),
     new BrickPlatform(625, height - 250, 130, 32, brickTileImage),
     new BrickPlatform(950, height - 1200, 128, 32, brickTileImage),
     ...(beatLevel1 ? [new MovingPlatform(2800, height - 150, 128, 32, brickTileImage, "x", 700, 2, false)] : []),
@@ -76,9 +76,9 @@ function getNavigationLevelTemplate() {
   const traps = [
     ... (beatLevel2 ? [laserTrap1] : []),
     ... (beatLevel2 ? [laserTrap2] : []),
-    new SpikeTrap(1600, height - 282, 160, 32, 1),
-    new SpikeTrap(1850, height - 282, 160, 32, 1),
-    new SpikeTrap(2050, height - 282, 160, 32, 1),
+    ...(beatLevel1 ? [new SpikeTrap(1600, height - 282, 160, 32, 1)] : []),
+    ...(beatLevel1 ? [new SpikeTrap(1850, height - 282, 160, 32, 1)] : []),
+    ...(beatLevel1 ? [new SpikeTrap(2050, height - 282, 160, 32, 1)] : []),
 
   ];
 
@@ -114,10 +114,10 @@ function getNavigationLevelTemplate() {
   ];
 
   const enemies = [
-    new Hostile(1600, height - 288, 40, 40, 2, 1450, 2150),
-    new Hostile(1500, height - 288, 40, 40, 1.4, 1450, 2150),
-    new Hostile(1700, height - 288, 40, 40, 2.6, 1450, 2150),
-    new JumpingHostile(3725, height - 282, 40, 40, 1, 3725, 3725, 1, 220, 3000),
+    ...(beatLevel1 ? [new Hostile(1600, height - 288, 40, 40, 2, 1450, 2150)] : []),
+    ...(beatLevel1 ? [new Hostile(1500, height - 288, 40, 40, 1.4, 1450, 2150)] : []),
+    ...(beatLevel1 ? [new Hostile(1700, height - 288, 40, 40, 2.6, 1450, 2150)] : []),
+    ...(beatLevel1 ? [new JumpingHostile(3725, height - 282, 40, 40, 1, 3725, 3725, 1, 220, 3000)] : []),
   ]
   const spawnDoorNav = new Door(width * 0.12, height - 76, 75, 100);
   spawnDoorNav.isVisible = false;

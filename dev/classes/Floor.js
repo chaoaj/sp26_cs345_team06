@@ -26,6 +26,7 @@ class Floor {
                     const tileY = this.y - 35;
                     this.lavaTiles.push({ x: tileX, y: tileY });
                 }
+                i--;
             } else {
                 const tileX = this.x + i * 32;
                 const tileY = this.y - 35;
