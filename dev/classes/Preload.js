@@ -75,6 +75,13 @@ function preload() {
   brickPlatformImage = loadImage("assets/tiles/BrickPlatform.png")
   brickTileImage = loadImage("assets/tiles/bricktile.png")
 
+  //Menu Button Sprites
+  menuResumeButtonImage = loadImage("assets/menu/resume_button_sprite.png")
+  menuRetryButtonImage = loadImage("assets/menu/retry_button_sprite.png")
+  menuLevelButtonImage = loadImage("assets/menu/level_button_sprite.png")
+  menuMusicOnButtonImage = loadImage("assets/menu/Music_ON_button_sprite.png")
+  menuMusicOffButtonImage = loadImage("assets/menu/Music_OFF_button_sprite.png")
+
   //Object Sprites
   woodenBox = loadImage("assets/objects/WoodenBox.png")
   spikeTrap = loadImage("assets/objects/SpikeTrap.png")

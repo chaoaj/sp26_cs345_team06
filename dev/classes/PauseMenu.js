@@ -53,15 +53,41 @@ function drawPauseOverlay() {
   }
 
   const rects = getPauseItemRects();
+  const buttonImageMap = {
+    "Resume": typeof menuResumeButtonImage !== "undefined" ? menuResumeButtonImage : null,
+    "Retry":  typeof menuRetryButtonImage  !== "undefined" ? menuRetryButtonImage  : null,
+    "Level":  typeof menuLevelButtonImage  !== "undefined" ? menuLevelButtonImage  : null,
+  };
   for (const item of rects) {
     const isMusicBtn = item.label === "Music";
-    rectMode(CENTER);
-    fill(isMusicBtn && gameMuted ? color(75, 45, 45) : color(50, 55, 75));
-    rect(item.x, item.y, item.w, item.h, 10);
-    fill(255);
-    textSize(24);
-    textAlign(CENTER, CENTER);
-    text(isMusicBtn ? (gameMuted ? "Music: OFF" : "Music: ON") : item.label, item.x, item.y);
+    push();
+    imageMode(CENTER);
+    if (isMusicBtn) {
+      const musicImg = gameMuted
+        ? (typeof menuMusicOffButtonImage !== "undefined" ? menuMusicOffButtonImage : null)
+        : (typeof menuMusicOnButtonImage  !== "undefined" ? menuMusicOnButtonImage  : null);
+      if (musicImg) {
+        image(musicImg, item.x, item.y, item.w, item.h);
+      } else {
+        rectMode(CENTER);
+        fill(gameMuted ? color(75, 45, 45) : color(50, 55, 75));
+        rect(item.x, item.y, item.w, item.h, 10);
+        fill(255); textSize(24); textAlign(CENTER, CENTER);
+        text(gameMuted ? "Music: OFF" : "Music: ON", item.x, item.y);
+      }
+    } else {
+      const img = buttonImageMap[item.label];
+      if (img) {
+        image(img, item.x, item.y, item.w, item.h);
+      } else {
+        rectMode(CENTER);
+        fill(color(50, 55, 75));
+        rect(item.x, item.y, item.w, item.h, 10);
+        fill(255); textSize(24); textAlign(CENTER, CENTER);
+        text(item.label, item.x, item.y);
+      }
+    }
+    pop();
   }
 
   pop();
