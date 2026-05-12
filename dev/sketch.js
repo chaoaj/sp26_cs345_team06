@@ -3,7 +3,7 @@
 const CHEAT_MODE = true;
 const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT_MULTIPLIER = 1;
-const LEVEL_WORLD_WIDTHS = [4160, 5000, 3296, 2400];
+const LEVEL_WORLD_WIDTHS = [4160, 5000, 3296, 2400, 4200];
 
 
 ///TEMP VARIABLES
@@ -27,6 +27,7 @@ let endGameLevel;
 let levelNum = 1
 let levels = []
 let levelTemplates = []
+let completedLevels = [false, false, false, false];
 let abilityUnlockPopup = null;
 let testLevelActive = false;
 let gameState = "title";
@@ -107,6 +108,9 @@ function setupLevel() {
     levelTemplates[4][13]  // laserPuzzles
   );
   navigationLevel.worldHeight = 6000;
+  if (typeof refreshNavigationDoorLocks === "function") {
+    refreshNavigationDoorLocks(navigationLevel);
+  }
   levels.push(level1, level2, level3, level4);
   // Insert navigationLevel after main levels, but before endGameLevel
   const navigationLevelIndex = levels.length;

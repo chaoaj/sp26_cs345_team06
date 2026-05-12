@@ -8,26 +8,26 @@ class NavigationLevel extends Level {
     }
     // Add/override methods if needed
     getSpawnPoint() {
-        // Center of the world, or customize as needed
+        const spawnPlatformY = height - 400;
         return {
-            x: (this.worldWidth || width) / 2,
-            y: 200
+            x: 625,
+            y: spawnPlatformY - 76
         };
     }
     setSpawnPoint() {
-        this.spawnPoint = { x: width/2, y: height -500 };
+        this.spawnPoint = this.getSpawnPoint();
     }
 }
 function getNavigationLevelTemplate() {
-    let beatLevel1 = true; // Set to true to test the door unlock platform
-    let beatLevel2 = true; // Set to true to test the laser traps
-    let beatLevel3 = true; // Set to true to test the moving platforms with traps on them
-    let beatLevel4 = true; // Set to true to test the final door and platform
+    let beatLevel1 = typeof hasBeatenLevel === "function" ? hasBeatenLevel(1) : false;
+    let beatLevel2 = typeof hasBeatenLevel === "function" ? hasBeatenLevel(2) : false;
+    let beatLevel3 = typeof hasBeatenLevel === "function" ? hasBeatenLevel(3) : false;
+    let beatLevel4 = typeof hasBeatenLevel === "function" ? hasBeatenLevel(4) : false;
     let las1 = false;
 
     // Declare LaserDoor ONCE at the top of the function
     const LaserDoor = new Door(625, height - 315, 75, 100, 3);
-    LaserDoor.isVisible = true;
+    LaserDoor.isVisible = typeof isLevelUnlocked === "function" ? isLevelUnlocked(3) : false;
 
     const unlock1 = new MovingPlatform(800, height - 1200, 128, 32, brickTileImage, "y", 700, 2, false);
     const DoorUnlock1 = new Terrain(1026, height - 72, 192, 256, step4);
@@ -88,7 +88,14 @@ function getNavigationLevelTemplate() {
       ...(beatLevel2 ? [new Laser(1000, height - 2075, "left", color(255, 0, 0), 10, 2000)] : []),
     ],
     collectors: [
-      ...(beatLevel2 ? [new LaserCollector(675, height - 2525, 30, 30, () => { LaserDoor.isVisible = true; }, () => { LaserDoor.isVisible = false; })] : [])
+      ...(beatLevel2 ? [new LaserCollector(
+        675,
+        height - 2525,
+        30,
+        30,
+        () => { LaserDoor.isVisible = typeof isLevelUnlocked === "function" ? isLevelUnlocked(3) : false; },
+        () => { LaserDoor.isVisible = false; }
+      )] : [])
     ],
     mirrors: [
     ...(beatLevel2 ? [new LaserMirror(600, height - 2100, 24, -45)] : []), // 32 is half platform height, 12 is half mirror size
@@ -112,11 +119,15 @@ function getNavigationLevelTemplate() {
   ]
   const spawnDoorNav = new Door(width * 0.12, height - 76, 75, 100);
   spawnDoorNav.isVisible = false;
+  const level1Door = new Door(0, height - 648, 75, 100, 1);
+  level1Door.isVisible = typeof isLevelUnlocked === "function" ? isLevelUnlocked(1) : true;
+  const level2Door = new Door(3800, height - 278, 75, 100, 2);
+  level2Door.isVisible = typeof isLevelUnlocked === "function" ? isLevelUnlocked(2) : false;
   const doors = [
     spawnDoorNav,
     LaserDoor,
-    new Door(3800, height - 278, 75, 100, 2), // Example: goes to Level 2
-    new Door(0, height - 648, 75, 100, 1), // Example: goes to Level 1
+    level2Door,
+    level1Door,
   ];
 
   const pits = [
