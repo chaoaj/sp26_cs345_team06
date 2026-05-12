@@ -53,15 +53,16 @@ function drawPauseOverlay() {
   }
 
   const rects = getPauseItemRects();
+  imageMode(CENTER);
   for (const item of rects) {
-    const isMusicBtn = item.label === "Music";
-    rectMode(CENTER);
-    fill(isMusicBtn && gameMuted ? color(75, 45, 45) : color(50, 55, 75));
-    rect(item.x, item.y, item.w, item.h, 10);
-    fill(255);
-    textSize(24);
-    textAlign(CENTER, CENTER);
-    text(isMusicBtn ? (gameMuted ? "Music: OFF" : "Music: ON") : item.label, item.x, item.y);
+    let btnImg;
+    if      (item.label === "Resume") btnImg = pauseResumeBtn;
+    else if (item.label === "Retry")  btnImg = pauseRetryBtn;
+    else if (item.label === "Level")  btnImg = pauseLevelBtn;
+    else if (item.label === "Music")  btnImg = gameMuted ? pauseMusicOffBtn : pauseMusicOnBtn;
+    if (btnImg) {
+      image(btnImg, item.x, item.y, item.w, item.h);
+    }
   }
 
   pop();
