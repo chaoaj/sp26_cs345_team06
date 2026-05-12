@@ -74,9 +74,9 @@ function getNavigationLevelTemplate() {
   const traps = [
     ... (beatLevel2 ? [laserTrap1] : []),
     ... (beatLevel2 ? [laserTrap2] : []),
-    new SpikeTrap(1600, height - 282, 160, 32, 1000, 1000),
-    new SpikeTrap(1850, height - 282, 160, 32, 1000, 1000),
-    new SpikeTrap(2050, height - 282, 160, 32, 1000, 1000),
+    new SpikeTrap(1600, height - 282, 160, 32, 1),
+    new SpikeTrap(1850, height - 282, 160, 32, 1),
+    new SpikeTrap(2050, height - 282, 160, 32, 1),
 
   ];
 
@@ -110,7 +110,10 @@ function getNavigationLevelTemplate() {
     new Hostile(1700, height - 288, 40, 40, 2.6, 1450, 2150),
     new JumpingHostile(3725, height - 282, 40, 40, 1, 3725, 3725, 1, 220, 3000),
   ]
+  const spawnDoorNav = new Door(width * 0.12, height - 76, 75, 100);
+  spawnDoorNav.isVisible = false;
   const doors = [
+    spawnDoorNav,
     LaserDoor,
     new Door(3800, height - 278, 75, 100, 2), // Example: goes to Level 2
     new Door(0, height - 648, 75, 100, 1), // Example: goes to Level 1

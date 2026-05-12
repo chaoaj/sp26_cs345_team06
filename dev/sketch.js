@@ -53,19 +53,19 @@ function setup() {
 function setupLevel() {
   print(levelTemplates[0][9])
   level1 = new Level(
-    levelTemplates[0][0], backgroundImage, floorTileLevel1,
+    levelTemplates[0][0], backgroundImageLevel4, floorTileLevel1,
     levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0],
     levelTemplates[0][3], levelTemplates[0][4], levelTemplates[0][5],
     levelTemplates[0][6], levelTemplates[0][7], levelTemplates[0][8],
     levelTemplates[0][9], levelTemplates[0][10]);
   level2 = new Level(
-    levelTemplates[1][0], backgroundImage, floorTileLevel2,
+    levelTemplates[1][0], backgroundImageLevel4, floorTileLevel2,
     levelTemplates[1][1], levelTemplates[1][2], LEVEL_WORLD_WIDTHS[1],
      levelTemplates[1][3], levelTemplates[1][4], levelTemplates[1][5],
      levelTemplates[1][6], levelTemplates[1][7], levelTemplates[1][8],
      levelTemplates[1][9], levelTemplates[1][10]);
   level3 = new Level(
-    levelTemplates[2][0], backgroundImage, floorTileLevel3,
+    levelTemplates[2][0], backgroundImageLevel4, floorTileLevel3,
     levelTemplates[2][1], levelTemplates[2][2], LEVEL_WORLD_WIDTHS[2],
     levelTemplates[2][3], levelTemplates[2][4], levelTemplates[2][5],
     levelTemplates[2][6], levelTemplates[2][7], levelTemplates[2][8],

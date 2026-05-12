@@ -40,7 +40,7 @@ function getLevel2Template() {
   const farPlatform    = new BrickPlatform(4556, height - 770, 240, 32, brickTileImage);
   const buttonPlatform = new BrickPlatform(4086, height - 516, 192, 32, brickTileImage);
 
-  const exitDoor     = new Door(4556, height - 851, 75, 130);
+  const exitDoor     = new Door(4556, height - 836, 75, 100);
   exitDoor.isVisible = false;
 
   const exitButton = new Button(
@@ -64,7 +64,7 @@ function getLevel2Template() {
 
   // ── ITEMS ─────────────────────────────────────────────────────────────────
   const items = [
-    new Items(220, height - 40, "potion"),
+    new Items(320, height - 172, "potion"),
     // Dash ability at the start of the long platform so the player has it for the gauntlet
     new Items(2050, height - 806, "dashAbility"),
   ];
@@ -84,7 +84,9 @@ function getLevel2Template() {
   const enemies = [];
 
   // ── DOORS ─────────────────────────────────────────────────────────────────
-  const doors = [exitDoor];
+  const spawnDoor2 = new Door(width * 0.12, height - 76, 75, 100);
+  spawnDoor2.isVisible = false;
+  const doors = [spawnDoor2, exitDoor];
 
   // ── PITS ──────────────────────────────────────────────────────────────────
   const pits = [

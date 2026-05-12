@@ -12,7 +12,9 @@ function getLevel4Template() {
     const boxes = [];
     const buttons = [];
     const enemies = [];
-    const doors = [];
+    const spawnDoor4 = new Door(width * 0.12, height - 76, 75, 100);
+    spawnDoor4.isVisible = false;
+    const doors = [spawnDoor4];
     const pits = [];
     const terrain = [];
 
@@ -21,7 +23,7 @@ function getLevel4Template() {
         new Pipe(300, height - 128, 64, 64, "straight", 0),
         new Pipe(300, height - 192, 64, 64, "straight", 0),
 
-    
+
         new RotatablePipe(300, height - 256, 64, 64, "elbow", 0,1),
         new Pipe(364, height - 256, 64, 64, "straight", 1),
         new RotatablePipe(428, height - 256, 64, 64, "t", 2, 1),

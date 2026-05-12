@@ -48,7 +48,10 @@ function getLevel1Template() {
     new Hostile(3600, height - 248, 40, 40, 1.6, 3500, 3900),
   ];
 
+  const spawnDoor1 = new Door(width * 0.12, height - 76, 75, 100);
+  spawnDoor1.isVisible = false;
   const doors = [
+    spawnDoor1,
     new Door(4000, height - 278, 75, 100),
   ];
 

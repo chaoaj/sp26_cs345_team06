@@ -114,7 +114,10 @@ function getLevel3Template() {
     new FlyingHostile(1680, height - 560, 44, 44, 2.2, 1500, 2000, 1, 420, 150),
   ];
 
+  const spawnDoor3 = new Door(width * 0.12, height - 76, 75, 100);
+  spawnDoor3.isVisible = false;
   const doors = [
+    spawnDoor3,
     finalDoor,
   ];
 
