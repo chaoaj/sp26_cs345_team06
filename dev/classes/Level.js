@@ -279,8 +279,19 @@ class Level {
             }
         }
 
-        for (const mirror of this.laserMirrors) {
+        for (let i = 0; i < this.laserMirrors.length; i++) {
+            const mirror = this.laserMirrors[i];
             mirror.update(this.platforms);
+            const initial = this.initialLaserMirrorStates[i];
+            const dropDistance = typeof mirror.respawnDropDistance === "number" ? mirror.respawnDropDistance : 220;
+
+            if (mirror.respawnIfDropped && initial && mirror.y > initial.y + dropDistance) {
+                mirror.x = initial.x;
+                mirror.y = initial.y;
+                mirror.xVelocity = 0;
+                mirror.yVelocity = 0;
+                mirror.isOnGround = false;
+            }
         }
 
         for (let i = 0; i < dynamicObjects.length; i++) {

@@ -125,6 +125,13 @@ function getLevel3Template() {
     [73, 7],
     [81, 8],
   ];
+  const firstMirror = new LaserMirror(400, height - 825, 24, 45);
+  const secondMirror = new LaserMirror(873, height - 825, 24, 45);
+  firstMirror.respawnIfDropped = true;
+  secondMirror.respawnIfDropped = true;
+  firstMirror.respawnDropDistance = 140;
+  secondMirror.respawnDropDistance = 140;
+
   const laserPuzzles = {
     lasers : [
       new Laser(250, height - 825, "right", color(255, 0, 0), 14, 2000, 5000, 800, "y"),
@@ -136,8 +143,8 @@ function getLevel3Template() {
       ),
     ],
     mirrors : [
-      new LaserMirror(400, height - 825, 24, 45),
-      new LaserMirror(873, height - 825, 24, 45),
+      firstMirror,
+      secondMirror,
       new StaticLaserMirror(486, height - 1050, 25, 45,),
       new StaticLaserMirror(873, height - 1050, 25, -45,),
 
