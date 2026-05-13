@@ -31,10 +31,10 @@ class NavigationLevel extends Level {
     }
 }
 function getNavigationLevelTemplate() {
-    let beatLevel1 = true; // TEMP DEBUG
-    let beatLevel2 = true; // TEMP DEBUG
-    let beatLevel3 = true; // TEMP DEBUG
-    let beatLevel4 = true; // TEMP DEBUG
+    let beatLevel1 = hasBeatenLevel(1);
+    let beatLevel2 = hasBeatenLevel(2);
+    let beatLevel3 = hasBeatenLevel(3);
+    let beatLevel4 = hasBeatenLevel(4);
     let las1 = false;
 
     // Declare LaserDoor ONCE at the top of the function
