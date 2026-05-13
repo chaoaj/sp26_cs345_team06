@@ -81,6 +81,9 @@ function setupLevel() {
     levelTemplates[3][3], levelTemplates[3][4], levelTemplates[3][5],
     levelTemplates[3][6], levelTemplates[3][7], levelTemplates[3][8],
     levelTemplates[3][9], levelTemplates[3][10]);
+  if (levelTemplates[3][10] instanceof Door) {
+    level4.pipePuzzleSolvedDoor = levelTemplates[3][10];
+  }
   levelTest = new Level(
     levelTemplates[5][0], backgroundImage, floorTileLevel1,
     levelTemplates[5][1], levelTemplates[5][2], LEVEL_WORLD_WIDTHS[5],

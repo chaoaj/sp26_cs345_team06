@@ -17,7 +17,9 @@ function getLevel4Template() {
     const enemies = [];
     const spawnDoor4 = new Door(width * 0.12, height - 76, 75, 100);
     spawnDoor4.isVisible = false;
-    const doors = [spawnDoor4];
+    const endGameDoor4 = new Door(1388, height - 100, 75, 100);
+    endGameDoor4.isVisible = false;
+    const doors = [spawnDoor4, endGameDoor4];
     const pits = [];
     const terrain = [];
 
@@ -77,5 +79,6 @@ function getLevel4Template() {
         pits,
         terrain,
         pipePuzzles,
+        endGameDoor4, // index 10: pipe puzzle solved door
     ];
 }

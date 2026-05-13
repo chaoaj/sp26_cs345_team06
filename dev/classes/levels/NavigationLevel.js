@@ -19,10 +19,11 @@ class NavigationLevel extends Level {
     }
 
     getSpawnPoint() {
-        const spawnPlatformY = height - 400;
+        // Platform center: height-400, half-height 16 → top at height-416
+        // Player half-height 60 → center y at height-416-60 = height-476
         return {
             x: 625,
-            y: spawnPlatformY - 76
+            y: height - 476
         };
     }
     setSpawnPoint() {
@@ -145,7 +146,7 @@ function getNavigationLevelTemplate() {
     ...(beatLevel1 ? [new Hostile(1700, height - 288, 40, 40, 2.6, 1450, 2150)] : []),
     ...(beatLevel1 ? [new JumpingHostile(3725, height - 282, 40, 40, 1, 3725, 3725, 1, 220, 3000)] : []),
   ]
-  const spawnDoorNav = new Door(width * 0.12, height - 76, 75, 100);
+  const spawnDoorNav = new Door(625, height - 466, 75, 100);
   spawnDoorNav.isVisible = false;
   const level1Door = new Door(0, height - 648, 75, 100, 1);
   level1Door.isVisible = typeof isLevelUnlocked === "function" ? isLevelUnlocked(1) : true;

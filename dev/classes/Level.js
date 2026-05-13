@@ -235,6 +235,9 @@ class Level {
         for (const collector of this.laserCollectors) collector.draw();
         for (const laser of this.lasers) laser.draw();
         const solved = isPipePuzzleSolved(this.pipePuzzles);
+        if (this.pipePuzzleSolvedDoor) {
+            this.pipePuzzleSolvedDoor.isVisible = solved;
+        }
         for (const pipePuzzle of this.pipePuzzles) {
             pipePuzzle.update(player);
             pipePuzzle.drawPipe();
