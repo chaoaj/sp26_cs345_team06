@@ -155,6 +155,7 @@ function startEndGame() {
 
 function handleEndGameDraw() {
       player.update(endGameLevel.platforms);
+    camera.unconstrained = false;
     camera.follow(player);
     camera.constrainPlayer(player);
 

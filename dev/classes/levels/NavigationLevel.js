@@ -1,12 +1,23 @@
 class NavigationLevel extends Level {
-        // Add a wide dirt terrain at the bottom to visually cover empty space
 
     constructor(...args) {
         super(...args);
-        // Add a wide dirt terrain at the bottom to visually cover empty space
-        // Do not call drawTerrain() here; Level will handle terrainPlatforms/platforms if needed
     }
-    // Add/override methods if needed
+
+    drawBackground() {
+        super.drawBackground();
+    }
+
+    drawWorld() {
+        push();
+        noStroke();
+        fill(130, 40, 15);
+        rectMode(CORNER);
+        rect(-1000, height, 10000, 2000);
+        pop();
+        super.drawWorld();
+    }
+
     getSpawnPoint() {
         const spawnPlatformY = height - 400;
         return {
@@ -59,7 +70,8 @@ function getNavigationLevelTemplate() {
     // placeholder after this
 
     new BrickPlatform(850, height - 185, 160, 32, brickTileImage),
-    new BrickPlatform(-130, height - 374, 32, 5000, brickTileImage), // Wall before level 1 door
+    new BrickPlatform(-130, height - 374, 32, 5000, brickTileImage), // left boundary wall
+    new BrickPlatform(-466, height - 374, 640, 5000, brickTileImage), // dark fill to the left of boundary wall
   ];
 
   const items = [
@@ -85,6 +97,15 @@ function getNavigationLevelTemplate() {
   const boxes = [
 
   ];
+  const navMirror1 = new LaserMirror(600, height - 2100, 24, -45);
+  const navMirror2 = new LaserMirror(800, height - 2100, 24, 45);
+  const navMirror3 = new LaserMirror(700, height - 2325, 24, 45);
+  const navMirror4 = new LaserMirror(850, height - 2100, 24, -45);
+  navMirror1.respawnIfDropped = true; navMirror1.respawnDropDistance = 140;
+  navMirror2.respawnIfDropped = true; navMirror2.respawnDropDistance = 140;
+  navMirror3.respawnIfDropped = true; navMirror3.respawnDropDistance = 140;
+  navMirror4.respawnIfDropped = true; navMirror4.respawnDropDistance = 140;
+
   const laserPuzzles = {
     lasers: [
       ...(beatLevel2 ? [new Laser(1000, height - 2075, "left", color(255, 0, 0), 10, 2000)] : []),
@@ -100,10 +121,10 @@ function getNavigationLevelTemplate() {
       )] : [])
     ],
     mirrors: [
-    ...(beatLevel2 ? [new LaserMirror(600, height - 2100, 24, -45)] : []), // 32 is half platform height, 12 is half mirror size
-    ...(beatLevel2 ? [new LaserMirror(800, height - 2100, 24, 45)] : []),
-    ...(beatLevel2 ? [new LaserMirror(700, height - 2325, 24, 45)] : []),
-    ...(beatLevel2 ? [new LaserMirror(850, height - 2100, 24, -45)] : []),
+    ...(beatLevel2 ? [navMirror1] : []), // 32 is half platform height, 12 is half mirror size
+    ...(beatLevel2 ? [navMirror2] : []),
+    ...(beatLevel2 ? [navMirror3] : []),
+    ...(beatLevel2 ? [navMirror4] : []),
     ...(beatLevel2 ? [new StaticLaserMirror(575, height - 2325, 25, 45, 3, 2000, 2000, 800, "y")] : []),
     ...(beatLevel2 ? [new StaticLaserMirror(825, height - 2425, 25, 45, 3, 2000, 2000, 800, "y")] : []),
     ...(beatLevel2 ? [new StaticLaserMirror(850, height - 2425, 25, -45, 3, 2000, 2000, 800, "y")] : []),

@@ -93,7 +93,7 @@ function setupLevel() {
   );
   navigationLevel = new NavigationLevel(
     levelTemplates[4][0], // platforms
-    backgroundImage,
+    backgroundImageLevel4,
     floorTileLevel1,
     levelTemplates[4][1], // items
     levelTemplates[4][2], // traps
@@ -229,14 +229,9 @@ function draw() {
     level.updateEnemies();
     level.updatePuzzleElements(player);
     resolvePlayerDynamicCollisions(player, level._platformsAndBoxes || [...level.platforms, ...level.boxes]);
-    if (level instanceof NavigationLevel) {
-      camera.unconstrained = true;
-      camera.follow(player);
-    } else {
-      camera.unconstrained = false;
-      camera.follow(player);
-      camera.constrainPlayer(player);
-    }
+    camera.unconstrained = false;
+    camera.follow(player);
+    camera.constrainPlayer(player);
 
     level.drawBackground();
     camera.apply();
