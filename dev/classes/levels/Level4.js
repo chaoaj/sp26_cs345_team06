@@ -79,6 +79,6 @@ function getLevel4Template() {
         pits,
         terrain,
         pipePuzzles,
-        endGameDoor4, // index 10: pipe puzzle solved door
+        endGameDoor4, 
     ];
 }

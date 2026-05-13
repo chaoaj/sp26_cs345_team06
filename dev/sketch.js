@@ -29,7 +29,6 @@ let levels = []
 let levelTemplates = []
 let completedLevels = [false, false, false, false];
 let abilityUnlockPopup = null;
-let testLevelActive = false;
 let gameState = "title";
 
 // FUNCTIONS
@@ -46,7 +45,6 @@ function setup() {
     getLevel3Template(),
     getLevel4Template(),
     getNavigationLevelTemplate(),
-    getTestLevelTemplate(),
   ]
   setupLevel();
 }
@@ -84,12 +82,6 @@ function setupLevel() {
   if (levelTemplates[3][10] instanceof Door) {
     level4.pipePuzzleSolvedDoor = levelTemplates[3][10];
   }
-  levelTest = new Level(
-    levelTemplates[5][0], backgroundImage, floorTileLevel1,
-    levelTemplates[5][1], levelTemplates[5][2], LEVEL_WORLD_WIDTHS[5],
-    levelTemplates[5][3], levelTemplates[5][4], levelTemplates[5][5],
-    levelTemplates[5][6], levelTemplates[5][7], levelTemplates[5][8],
-    levelTemplates[5][9], levelTemplates[5][10]);
   // DEBUG: Log enemies array from template before instantiation
   console.log('[setupLevel] NavigationLevel enemies from template:',
     (levelTemplates[4][5] || []).map(e => e?.constructor?.name)
@@ -135,14 +127,14 @@ function setupLevel() {
       player.setSpawnPoint(spawn.x, spawn.y);
       return;
     }
-    const activeLevel = testLevelActive ? levelTest : levels[levelNum - 1];
+    const activeLevel = levels[levelNum - 1];
     if (activeLevel && typeof activeLevel.getSpawnPoint === "function") {
       const spawn = activeLevel.getSpawnPoint();
       player.setSpawnPoint(spawn.x, spawn.y);
     }
   };
   player.onRespawn = () => {
-    const activeLevel = testLevelActive ? levelTest : levels[levelNum - 1];
+    const activeLevel = levels[levelNum - 1];
     if (activeLevel) {
       resetDynamicStateForLevel(activeLevel);
     }
@@ -212,7 +204,7 @@ function mousePressed() {
 }
 
 function draw() {
-  level = testLevelActive ? levelTest : levels[levelNum - 1];
+  level = levels[levelNum - 1];
   if (camera && level) {
     camera.worldWidth = level.worldWidth;
   }
@@ -307,9 +299,4 @@ function keyPressed() {
   handleEndGameKeys()
   handleCheatMenuKeys()
   handlePauseKeys()
-
-  if (key === 'q' || key === 'Q') {
-    testLevelActive = !testLevelActive;
-    player.respawn();
-  }
 }

@@ -174,7 +174,6 @@ function handleDoors() {
 
                     const shouldOfferLevelUp =
                         targetLevelNum > levelNum &&
-                        !testLevelActive &&
                         typeof startLevelUpSelection === "function";
 
                     if (shouldOfferLevelUp) {
