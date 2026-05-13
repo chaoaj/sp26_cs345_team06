@@ -4,7 +4,7 @@ function drawTitleScreenLayers() {
   const layer2Offset = -normalized * maxShift * 0.2;
   const layer3Offset = -normalized * maxShift * 0.5;
   const layer4Offset = -normalized * maxShift * 0.75;
-  
+
   image(layer5, 0, 0, width, height);
   image(layer4, layer4Offset, 0, width, height);
   image(layer2, layer2Offset, 0, width, height);
@@ -50,8 +50,18 @@ function drawTitleScreen() {
 
 function handleTitleKeyPressed() {
   if (keyCode === 32) {
-    runStartedAt = getGameMillis();
     runCompletedAt = null;
+    // startEndGame(); // start in lobby room; second step triggers nav level
+    // TEMP: spawn directly on navigation level
+    levelNum = (window.navigationLevelIndex || 4) + 1;
+    const spawn = navigationLevel.getSpawnPoint();
+    player.setSpawnPoint(spawn.x, spawn.y);
+    player.respawn();
+    camera.unconstrained = true;
+    camera.worldWidth = navigationLevel.worldWidth;
+    camera.x = 0;
+    camera.y = 0;
+    runStartedAt = getGameMillis();
     gameState = "playing";
     if (typeof soliloquyMusic !== "undefined" && soliloquyMusic.isPlaying()) {
       soliloquyMusic.stop();

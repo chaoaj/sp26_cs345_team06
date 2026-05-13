@@ -55,7 +55,7 @@ function rebuildNavigationLevel() {
   levelTemplates[4] = getNavigationLevelTemplate();
   const rebuiltNavigationLevel = new NavigationLevel(
     levelTemplates[4][0],
-    backgroundImage,
+    backgroundImageLevel4,
     floorTileLevel1,
     levelTemplates[4][1],
     levelTemplates[4][2],
@@ -159,6 +159,16 @@ function handleDoors() {
                     if (isCompletingMainLevel) {
                         markLevelCompleted(levelNum);
                         rebuildNavigationLevel();
+                        // After beating level 4, go to end game
+                        if (levelNum === 4) {
+                            startEndGame();
+                            gameState = "endgame";
+                            break;
+                        }
+                        // After beating other main levels, return to navigation level
+                        if (typeof window.navigationLevelIndex === "number") {
+                            targetLevelNum = window.navigationLevelIndex + 1;
+                        }
                     }
 
 

@@ -80,12 +80,11 @@ class EndGame {
   }
 
   drawBackground() {
-    background(20, 24, 34);
-
-    noStroke();
-    fill(42, 55, 78);
-    rectMode(CORNER);
-    rect(0, height * 0.62, width, height * 0.38);
+    if (typeof backgroundImageLevel4 !== "undefined" && backgroundImageLevel4) {
+      image(backgroundImageLevel4, 0, 0, width, height);
+    } else {
+      background(20, 24, 34);
+    }
   }
 
   drawTreasureChest() {
@@ -146,18 +145,62 @@ function startEndGame() {
     camera.x = 0;
     camera.y = 0;
   }
-  if (runStartedAt === null) {
-    runStartedAt = getGameMillis();
-  }
+  endGameLevel.lobbyTriggered = false;
+  endGameLevel.lobbyFalling = false;
   runCompletedAt = null;
   gameState = "endgame";
 }
 
 function handleEndGameDraw() {
+    // Falling animation: player falls off screen before transitioning to NavigationLevel
+    if (endGameLevel.lobbyFalling) {
+      // Manually apply only gravity/physics — skip controls so the player can't jump out of the fall
+      player.yVelocity += player.gravity;
+      player.y += player.yVelocity;
+      player.advanceFrame();
+      camera.unconstrained = true;
+      camera.follow(player);
+      endGameLevel.drawBackground();
+      camera.apply();
+      endGameLevel.drawWorld();
+      player.draw();
+      camera.reset();
+      if (player.y > height + 150) {
+        levelNum = (window.navigationLevelIndex || 4) + 1;
+        gameState = "playing";
+        runStartedAt = getGameMillis();
+        const spawn = navigationLevel.getSpawnPoint();
+        player.ignoreFallConstraint = false;
+        player.setSpawnPoint(spawn.x, spawn.y);
+        player.respawn();
+        camera.unconstrained = true;
+        camera.worldWidth = navigationLevel.worldWidth;
+        camera.x = 0;
+        camera.y = 0;
+      }
+      return;
+    }
+
       player.update(endGameLevel.platforms);
     camera.unconstrained = false;
     camera.follow(player);
     camera.constrainPlayer(player);
+
+    // TEMP: Lobby trigger commented out — game can be beaten normally
+    // if (!endGameLevel.lobbyTriggered && endGameLevel.platforms[2]) {
+    //   const step2 = endGameLevel.platforms[2];
+    //   const stepTop = step2.y - step2.h / 2;
+    //   const onStep = player.hitBottom >= stepTop - 2
+    //               && player.hitBottom <= stepTop + 10
+    //               && player.hitRight > step2.x - step2.w / 2
+    //               && player.hitLeft  < step2.x + step2.w / 2;
+    //   if (onStep) {
+    //     endGameLevel.lobbyTriggered = true;
+    //     endGameLevel.lobbyFalling = true;
+    //     player.ignoreFallConstraint = true;
+    //     player.yVelocity = 8; // kick off the fall
+    //   }
+    // }
 
     endGameLevel.drawBackground();
     camera.apply();

@@ -228,10 +228,15 @@ function draw() {
     applyEnemyDamage(level, player);
     level.updateEnemies();
     level.updatePuzzleElements(player);
-    resolvePlayerDynamicCollisions(player, level._platformsAndBoxes || [...level.platforms, ...level.boxes]);
-    camera.unconstrained = false;
-    camera.follow(player);
-    camera.constrainPlayer(player);
+    resolvePlayerDynamicCollisions(player, level._dynamicObjects || [...level.boxes, ...level.laserMirrors]);
+    if (level === navigationLevel) {
+      camera.unconstrained = true;
+      camera.follow(player);
+    } else {
+      camera.unconstrained = false;
+      camera.follow(player);
+      camera.constrainPlayer(player);
+    }
 
     level.drawBackground();
     camera.apply();

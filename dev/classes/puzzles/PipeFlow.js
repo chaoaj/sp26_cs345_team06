@@ -5,29 +5,13 @@ function isPipePuzzleSolved(pipes) {
     p.correctOrientation !== undefined
   );
   if (rotatables.length === 0) return false;
-  
-  const totalRotatables = rotatables.length;
-  const correctPipes = [];
-  const incorrectPipes = [];
 
-  rotatables.forEach(p => {
-    let isCorrect = false;
+  const allCorrect = rotatables.every(p => {
     if (p.pipeType === "straight") {
-      isCorrect = p.currentOrientation % 2 === p.correctOrientation % 2;
-    } else {
-      isCorrect = p.currentOrientation === p.correctOrientation;
+      return p.currentOrientation % 2 === p.correctOrientation % 2;
     }
-
-    if (isCorrect) {
-      correctPipes.push(p.id || "unnamed");
-    } else {
-      incorrectPipes.push(p.id || "unnamed");
-    }
+    return p.currentOrientation === p.correctOrientation;
   });
-
-  const correctCount = correctPipes.length;
-
-  const allCorrect = correctCount === totalRotatables;
 
   if (allCorrect) {
     updatePipeFlow(pipes);
@@ -37,20 +21,24 @@ function isPipePuzzleSolved(pipes) {
 }
 
 function updatePipeFlow(pipes) {
-  let fillSpeed = 0.02; 
-  
-  pipes.forEach(pipe => {
+  const fillSpeed = 0.02;
+  // Build id->pipe map once per call instead of find() per pipe
+  const pipeById = {};
+  for (const pipe of pipes) {
+    if (pipe.id != null) pipeById[pipe.id] = pipe;
+  }
 
-    const canFill = !pipe.parentIds || pipe.parentIds.length === 0 || 
+  for (const pipe of pipes) {
+    if (pipe.fillAmount >= 1) continue;
+    const canFill = !pipe.parentIds || pipe.parentIds.length === 0 ||
                     pipe.parentIds.some(parentId => {
-                      const parent = pipes.find(p => p.id === parentId);
+                      const parent = pipeById[parentId];
                       return parent && parent.fillAmount >= 1;
                     });
-
-    if (canFill && pipe.fillAmount < 1) {
+    if (canFill) {
       pipe.fillAmount = Math.min(1, pipe.fillAmount + fillSpeed);
     }
-  });
+  }
 }
 
 function mapTypeToImage(pipeType) {
@@ -94,14 +82,13 @@ class Pipe {
     translate(this.x, this.y);
     rotate(this.currentOrientation * HALF_PI);
     imageMode(CENTER);
-    
+
     image(this.image, 0, 0, this.width, this.height);
-    
+
     if (this.fillAmount > 0) {
-      push();
-      tint(255, 255 * this.fillAmount); 
+      drawingContext.globalAlpha = this.fillAmount;
       image(this.waterImage, 0, 0, this.width, this.height);
-      pop();
+      drawingContext.globalAlpha = 1.0;
     }
     pop();
   }

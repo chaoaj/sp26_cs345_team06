@@ -93,7 +93,7 @@ function preload() {
   playerWalkSheet = loadImage("assets/characters/player/1/Walk.png");
   playerRunSheet  = loadImage("assets/characters/player/1/Run.png");
   playerJumpSheet = loadImage("assets/characters/player/1/Jump.png");
-  playerHurtSheet = loadImage("assets/characters/player/1/Hurt.png");
+  playerHurtSheet  = loadImage("assets/characters/player/1/Hurt.png");
 
   //Enemy Sprites
   greenslimeimage = loadImage("assets/enemies/SlimeWalk.png")
