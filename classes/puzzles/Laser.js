@@ -132,6 +132,7 @@ class Laser {
       c.isHit = c._hitThisFrame;
 
       if (c.isHit && !wasHit && c.callback) {
+        c.isActivated = true;
         c.callback();
       }
       if (!c.isHit && wasHit && c.releaseCallback) {
@@ -221,6 +222,7 @@ class LaserCollector {
     this.callback = callback;
     this.releaseCallback = releaseCallback;
     this.isHit = false;
+    this.isActivated = false;
     this._hitThisFrame = false;
   }
 
@@ -228,15 +230,16 @@ class LaserCollector {
     push();
     rectMode(CENTER);
     noStroke();
+    const isLit = this.isHit || this.isActivated;
 
     // Outer ring
-    stroke(this.isHit ? color(255, 220, 80) : color(100, 100, 100));
+    stroke(isLit ? color(255, 220, 80) : color(100, 100, 100));
     strokeWeight(2);
     noFill();
     ellipse(this.x, this.y, this.w + 6, this.h + 6);
 
     // Inner fill
-    fill(this.isHit ? color(255, 200, 50) : color(50, 50, 50));
+    fill(isLit ? color(255, 200, 50) : color(50, 50, 50));
     noStroke();
     ellipse(this.x, this.y, this.w, this.h);
     pop();
@@ -264,35 +267,16 @@ class LaserMirror {
     this.gravity = 0.6;
     this.isOnGround = false;
   }
-  // Attach this mirror to a platform with an (x, y) offset
-  attachToPlatform(platform, offsetX = 0, offsetY = 0) {
-    this.attachedPlatform = platform;
-    this.attachmentOffsetX = offsetX;
-    this.attachmentOffsetY = offsetY;
-    this.x = platform.x + offsetX;
-    this.y = platform.y + offsetY;
-    this.xVelocity = 0;
-    this.yVelocity = 0;
-    this.isOnGround = true;
-  }
 
   update(platforms) {
-    if (this.attachedPlatform) {
-      // Follow the platform
-      this.x = this.attachedPlatform.x + (this.attachmentOffsetX || 0);
-      this.y = this.attachedPlatform.y + (this.attachmentOffsetY || 0);
-      this.xVelocity = 0;
-      this.yVelocity = 0;
-      this.isOnGround = true;
-    } else {
-      this.yVelocity += this.gravity;
-      this.x += this.xVelocity;
-      this.y += this.yVelocity;
-      this.xVelocity = 0;
-      this.isOnGround = false;
-      for (const platform of platforms) {
-        this._resolvePlatformCollision(platform);
-      }
+    this.yVelocity += this.gravity;
+    this.x += this.xVelocity;
+    this.y += this.yVelocity;
+    this.xVelocity = 0;
+    this.isOnGround = false;
+
+    for (const platform of platforms) {
+      this._resolvePlatformCollision(platform);
     }
   }
 
@@ -331,11 +315,8 @@ class LaserMirror {
         this.y -= overlapTop;
         this.yVelocity = 0;
         this.isOnGround = true;
-        // Only inherit velocity from moving platforms
-        if (platform.constructor && platform.constructor.name === "MovingPlatform") {
-          this.x += platformXVelocity;
-          this.y += platformYVelocity;
-        }
+        this.x += platformXVelocity;
+        this.y += platformYVelocity;
       } else {
         // Hitting the underside
         this.y += overlapBottom;

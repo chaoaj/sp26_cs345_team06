@@ -2,6 +2,7 @@ function restartToTitle() {
   levelNum = 1;
   levels = [];
   levelTemplates = [];
+  completedLevels = [false, false, false, false];
   setup();
   if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) {
     backgroundMusic.stop();
@@ -10,6 +11,69 @@ function restartToTitle() {
     soliloquyMusic.stop();
   }
   gameState = "title";
+}
+
+function hasBeatenLevel(levelNumber) {
+  return Array.isArray(completedLevels) && completedLevels[levelNumber - 1] === true;
+}
+
+function isLevelUnlocked(levelNumber) {
+  if (levelNumber <= 1) {
+    return true;
+  }
+  return hasBeatenLevel(levelNumber - 1);
+}
+
+function markLevelCompleted(levelNumber) {
+  if (!Array.isArray(completedLevels)) {
+    completedLevels = [false, false, false, false];
+  }
+  if (levelNumber >= 1 && levelNumber <= 4) {
+    completedLevels[levelNumber - 1] = true;
+  }
+}
+
+function refreshNavigationDoorLocks(navLevel = null) {
+  const activeNavLevel = navLevel || (typeof window.navigationLevelIndex === "number" ? levels[window.navigationLevelIndex] : null);
+  if (!activeNavLevel || !activeNavLevel.doors) {
+    return;
+  }
+
+  for (const door of activeNavLevel.doors) {
+    if (door.targetLevelNum == null || door.targetLevelNum > 4) {
+      continue;
+    }
+    door.isVisible = isLevelUnlocked(door.targetLevelNum);
+  }
+}
+
+function rebuildNavigationLevel() {
+  if (typeof window.navigationLevelIndex !== "number" || !Array.isArray(levels)) {
+    return null;
+  }
+
+  levelTemplates[4] = getNavigationLevelTemplate();
+  const rebuiltNavigationLevel = new NavigationLevel(
+    levelTemplates[4][0],
+    backgroundImageLevel4,
+    floorTileLevel1,
+    levelTemplates[4][1],
+    levelTemplates[4][2],
+    LEVEL_WORLD_WIDTHS[4],
+    levelTemplates[4][3],
+    levelTemplates[4][4],
+    levelTemplates[4][5],
+    levelTemplates[4][6],
+    levelTemplates[4][7],
+    levelTemplates[4][8],
+    levelTemplates[4][12],
+    levelTemplates[4][13]
+  );
+  rebuiltNavigationLevel.worldHeight = 6000;
+  refreshNavigationDoorLocks(rebuiltNavigationLevel);
+  levels[window.navigationLevelIndex] = rebuiltNavigationLevel;
+  navigationLevel = rebuiltNavigationLevel;
+  return rebuiltNavigationLevel;
 }
 
 function handleLevelSelectMousePressed() {
@@ -42,6 +106,9 @@ function switchToLevel(nextLevelNum) {
     if (typeof resetLevelUpAbilityUses === "function") {
       resetLevelUpAbilityUses(player);
     }
+  }
+  if (typeof window.navigationLevelIndex === "number" && levelNum === window.navigationLevelIndex + 1) {
+    refreshNavigationDoorLocks(levels[levelNum - 1]);
   }
   if (camera) {
     const activeLevel = levels[levelNum - 1];
@@ -85,6 +152,26 @@ function handleDoors() {
                 }
 
                 if (targetLevelNum != null) {
+                    const isCompletingMainLevel =
+                        levelNum >= 1 &&
+                        levelNum <= 4 &&
+                        targetLevelNum !== levelNum;
+                    if (isCompletingMainLevel) {
+                        markLevelCompleted(levelNum);
+                        rebuildNavigationLevel();
+                        // After beating level 4, go to end game
+                        if (levelNum === 4) {
+                            startEndGame();
+                            gameState = "endgame";
+                            break;
+                        }
+                        // After beating other main levels, return to navigation level
+                        if (typeof window.navigationLevelIndex === "number") {
+                            targetLevelNum = window.navigationLevelIndex + 1;
+                        }
+                    }
+
+
                     const shouldOfferLevelUp =
                         targetLevelNum > levelNum &&
                         typeof startLevelUpSelection === "function";

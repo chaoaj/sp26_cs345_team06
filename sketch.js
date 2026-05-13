@@ -3,7 +3,7 @@
 const CHEAT_MODE = true;
 const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT_MULTIPLIER = 1;
-const LEVEL_WORLD_WIDTHS = [4160, 5000, 3296, 2400, 4200];
+const LEVEL_WORLD_WIDTHS = [4160, 5000, 3296, 1700, 4200];
 
 
 ///TEMP VARIABLES
@@ -18,18 +18,19 @@ let level1LaserPuzzles = null
 
 // INITIALIZATIONS
 
-let platforms = [];
-let players;
-let player;
-let camera;
-let endGameLevel;
+var platforms = [];
+var players;
+var player;
+var camera;
+var endGameLevel;
 
-let levelNum = 1
-let levels = []
-let levelTemplates = []
-let completedLevels = [false, false, false, false];
-let abilityUnlockPopup = null;
-let gameState = "title";
+var levelNum = 1
+var levels = []
+var levelTemplates = []
+var completedLevels = [false, false, false, false];
+var abilityUnlockPopup = null;
+var navigationLevel = null;
+var gameState = "title";
 
 // FUNCTIONS
 
@@ -50,7 +51,6 @@ function setup() {
 }
 
 function setupLevel() {
-  print(levelTemplates[0][9])
   level1 = new Level(
     levelTemplates[0][0], backgroundImageLevel4, floorTileLevel1,
     levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0],
@@ -82,10 +82,10 @@ function setupLevel() {
   if (levelTemplates[3][10] instanceof Door) {
     level4.pipePuzzleSolvedDoor = levelTemplates[3][10];
   }
-  // DEBUG: Log enemies array from template before instantiation
-  console.log('[setupLevel] NavigationLevel enemies from template:',
-    (levelTemplates[4][5] || []).map(e => e?.constructor?.name)
-  );
+  if (levelTemplates[3][11]) {
+    level4.decorations = levelTemplates[3][11];
+  }
+  level4.worldHeight = 2000;
   navigationLevel = new NavigationLevel(
     levelTemplates[4][0], // platforms
     backgroundImageLevel4,
@@ -109,89 +109,185 @@ function setupLevel() {
   levels.push(level1, level2, level3, level4);
   // Insert navigationLevel after main levels, but before endGameLevel
   const navigationLevelIndex = levels.length;
-  window.navigationLevelIndex = navigationLevelIndex;
   levels.push(navigationLevel);
 
-  endGameLevel = new EndGame();
+  endGameLevel = new EndGame(1200, floorTileLevel3, brickPlatformImage);
+  endGameLevel.setup();
   levels.push(endGameLevel);
 
-  level = levels[levelNum - 1];
+  // Store navigationLevelIndex globally for use in keyPressed
+  window.navigationLevelIndex = navigationLevelIndex;
 
-  player = new Player(width / 2, height / 2, 64, 64);
-  camera = new Camera(player);
-}
-
-function draw() {
-  if (gameState === "title") {
-    drawTitleScreen();
-    return;
-  }
-
-  if (gameState === "paused") {
-    drawPauseMenu();
-    return;
-  }
-
-  if (gameState === "levelUp") {
-    drawLevelUpSelection();
-    return;
-  }
-
-  background(220);
-
-  const activeLevel = levels[levelNum - 1];
-  camera.update(activeLevel.worldWidth, activeLevel.worldHeight);
-
-  push();
-  translate(-camera.x, -camera.y);
-
-  activeLevel.draw();
-
-  player.update(activeLevel.platforms, activeLevel.traps, activeLevel.boxes, activeLevel.enemies, activeLevel.pits, activeLevel.terrain);
-  player.draw();
-
-  activeLevel.update(player);
-
-  pop();
-
-  if (gameState === "abilityUnlock") {
-    drawAbilityUnlockPopup();
-  }
-
-  drawCheatMenu();
-  drawTimer();
+  const spawnX = width * 0.12;
+  const spawnY = height - 160;
+  player = new Player(spawnX, spawnY, 80, 120);
+  player.onBeforeRespawn = () => {
+    if (gameState === "endgame" && endGameLevel && typeof endGameLevel.getSpawnPoint === "function") {
+      const spawn = endGameLevel.getSpawnPoint();
+      player.setSpawnPoint(spawn.x, spawn.y);
+      return;
+    }
+    const activeLevel = levels[levelNum - 1];
+    if (activeLevel && typeof activeLevel.getSpawnPoint === "function") {
+      const spawn = activeLevel.getSpawnPoint();
+      player.setSpawnPoint(spawn.x, spawn.y);
+    }
+  };
+  player.onRespawn = () => {
+    const activeLevel = levels[levelNum - 1];
+    if (activeLevel) {
+      resetDynamicStateForLevel(activeLevel);
+    }
+    if (camera) {
+      if (gameState === "endgame" && endGameLevel) {
+        camera.worldWidth = endGameLevel.worldWidth;
+      } else if (activeLevel) {
+        camera.worldWidth = activeLevel.worldWidth;
+      }
+      camera.x = 0;
+      camera.y = 0;
+    }
+  };
+  camera = new Camera(LEVEL_WORLD_WIDTHS[0], height * WORLD_HEIGHT_MULTIPLIER);
+  abilityUnlockPopup = null;
+  pauseStartedAt = null;
+  accumulatedPauseMs = 0;
+  runStartedAt = null;
+  runCompletedAt = null;
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-}
-
-function switchToLevel(newLevelNum) {
-  if (newLevelNum >= 1 && newLevelNum <= levels.length) {
-    levelNum = newLevelNum;
-    level = levels[levelNum - 1];
-    player.respawn();
+  if (camera) {
+    camera.worldHeight = height * WORLD_HEIGHT_MULTIPLIER;
+    if (player) {
+      camera.follow(player);
+      camera.constrainPlayer(player);
+    }
   }
 }
 
-function keyPressed() {
-  if (gameState === "title") {
-    if (keyCode === ENTER) {
-      gameState = "playing";
-      if (backgroundMusic && !backgroundMusic.isPlaying()) {
-        backgroundMusic.loop();
-      }
-    }
+function mousePressed() {
+  if (gameState === "levelUp") {
+    handleLevelUpClick(mouseX, mouseY);
     return;
   }
 
   if (gameState === "paused") {
-    handlePauseKeys();
+    const action = handlePauseMenuClick(mouseX, mouseY);
+    if (action === "resume") {
+      if (pauseStartedAt !== null) {
+        accumulatedPauseMs += millis() - pauseStartedAt;
+      }
+      pauseStartedAt = null;
+      gameState = "playing";
+    } else if (action === "retry") {
+      resetDynamicStateForLevel(levels[levelNum - 1]);
+      player.respawn();
+      accumulatedPauseMs = 0;
+      pauseStartedAt = null;
+      runStartedAt = getGameMillis();
+      runCompletedAt = null;
+      gameState = "playing";
+    } else if (action === "levelSelect") {
+      gameState = "levelSelect";
+    }
     return;
   }
+  if (gameState === "cheatMenu") {
+      handleCheatMenuMousePressed()
+  }
 
-  if (gameState === "levelUp") {
-    handleLevelUpKeys();
+  if (gameState === "levelSelect") {
+    handleLevelSelectMousePressed()
+  }
+}
+
+function draw() {
+  level = levels[levelNum - 1];
+  if (camera && level) {
+    camera.worldWidth = level.worldWidth;
+  }
+  updateLevelMusic();
+  if (levelNum === levels.length && gameState !== "endgame") {
+    gameState = "endgame";
+  }
+
+  if (gameState === "title") {
+    drawTitleScreen();
+  } else if (gameState === "playing") {
+    level.updateMovingPlatforms(player);
+    player.update(level.platforms);
+    level.applyPitfall(player);
+    applyTrapDamage(level, player);
+    applyEnemyDamage(level, player);
+    level.updateEnemies();
+    level.updatePuzzleElements(player);
+    resolvePlayerDynamicCollisions(player, level._dynamicObjects || [...level.boxes, ...level.laserMirrors]);
+    if (level === navigationLevel) {
+      camera.unconstrained = true;
+      camera.follow(player);
+    } else {
+      camera.unconstrained = false;
+      camera.follow(player);
+      camera.constrainPlayer(player);
+    }
+
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+
+    level.drawHUD(player);
+    level.collectTouchedItems(player);
+
+    handleDoors()
+  } else if (gameState === "endgame") {
+    handleEndGameDraw()
+  } else if (gameState === "paused") {
+    handlePauseMenuDraw()
+  } else if (gameState === "cheatMenu") {
+    handleCheatMenuDraw()
+  } else if (gameState === "levelSelect") {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawLevelSelectOverlay();
+  } else if (gameState === "abilityUnlock") {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawAbilityUnlockOverlay();
+  } else if (gameState === "levelUp") {
+    level.drawBackground();
+    camera.apply();
+    level.drawWorld();
+    player.draw();
+    camera.reset();
+    level.drawHUD(player);
+    drawLevelUpOverlay();
+  }
+}
+
+function keyPressed() {
+    // TEMP: Press 'n' to switch to NavigationLevel
+    if (key === 'n' || key === 'N') {
+      // Jump to navigationLevel (now in levels array)
+      if (typeof window.navigationLevelIndex === 'number') {
+        levelNum = window.navigationLevelIndex + 1; // levelNum is 1-based
+        player.respawn();
+        return;
+      }
+    }
+  if (gameState === "title") {
+    handleTitleKeyPressed();
     return;
   }
 

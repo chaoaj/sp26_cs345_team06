@@ -7,6 +7,9 @@ class SpikeTrap extends Trap {
   draw() {
     fill(180, 180, 180);
     noStroke();
+    push();
+    imageMode(CENTER);
     image(spikeTrap, this.x, this.y, this.w, this.h);
+    pop();
   }
 }

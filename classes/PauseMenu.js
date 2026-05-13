@@ -1,4 +1,5 @@
 const PAUSE_ITEMS = ["Resume", "Retry", "Level", "Music"];
+let gameMuted = false;
 
 function getPauseItemRects() {
   const itemW = 320, itemH = 62, gap = 22;
@@ -39,7 +40,7 @@ function drawPauseOverlay() {
 
   rectMode(CENTER);
   fill(26, 31, 46);
-  rect(width / 2, height / 2 + 50, 420, 650, 18);
+  rect(width / 2, height / 2, 420, 520, 18);
 
   fill(255);
   textAlign(CENTER, CENTER);
@@ -52,46 +53,48 @@ function drawPauseOverlay() {
   }
 
   const rects = getPauseItemRects();
+  const buttonImageMap = {
+    "Resume": typeof menuResumeButtonImage !== "undefined" ? menuResumeButtonImage : null,
+    "Retry":  typeof menuRetryButtonImage  !== "undefined" ? menuRetryButtonImage  : null,
+    "Level":  typeof menuLevelButtonImage  !== "undefined" ? menuLevelButtonImage  : null,
+  };
   for (const item of rects) {
-    const disabled = item.label === "Music";
-    rectMode(CENTER);
-    fill(disabled ? color(60, 65, 80) : color(50, 55, 75));
-    rect(item.x, item.y, item.w, item.h, 10);
-    fill(disabled ? color(120, 130, 150) : 255);
-    textSize(24);
-    textAlign(CENTER, CENTER);
-    text(item.label, item.x, item.y);
+    const isMusicBtn = item.label === "Music";
+    push();
+    imageMode(CENTER);
+    if (isMusicBtn) {
+      const musicImg = gameMuted
+        ? (typeof menuMusicOffButtonImage !== "undefined" ? menuMusicOffButtonImage : null)
+        : (typeof menuMusicOnButtonImage  !== "undefined" ? menuMusicOnButtonImage  : null);
+      if (musicImg) {
+        image(musicImg, item.x, item.y, item.w, item.h);
+      } else {
+        rectMode(CENTER);
+        fill(gameMuted ? color(75, 45, 45) : color(50, 55, 75));
+        rect(item.x, item.y, item.w, item.h, 10);
+        fill(255); textSize(24); textAlign(CENTER, CENTER);
+        text(gameMuted ? "Music: OFF" : "Music: ON", item.x, item.y);
+      }
+    } else {
+      const img = buttonImageMap[item.label];
+      if (img) {
+        image(img, item.x, item.y, item.w, item.h);
+      } else {
+        rectMode(CENTER);
+        fill(color(50, 55, 75));
+        rect(item.x, item.y, item.w, item.h, 10);
+        fill(255); textSize(24); textAlign(CENTER, CENTER);
+        text(item.label, item.x, item.y);
+      }
+    }
+    pop();
   }
 
-  const lastRect = rects[rects.length - 1];
-  const abilitySectionY = lastRect.y + lastRect.h / 2 + 30;
-
-  stroke(255, 255, 255, 40);
-  strokeWeight(1);
-  line(width / 2 - 160, abilitySectionY, width / 2 + 160, abilitySectionY);
-  noStroke();
-
-  fill(170, 182, 205);
-  textSize(16);
-  textAlign(CENTER, CENTER);
-  text("Abilities", width / 2, abilitySectionY + 20);
-
-  const abilities = Ability.getUnlockedAbilities(player);
-  const labels = abilities.length > 0
-    ? abilities.map(a => a.name.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, c => c.toUpperCase()))
-    : ["None yet"];
-
-  fill(255);
-  textSize(18);
-  for (let i = 0; i < labels.length; i++) {
-    text(labels[i], width / 2, abilitySectionY + 48 + i * 26);
-  }
   pop();
 }
 
 function handlePauseMenuClick(mx, my) {
   for (const item of getPauseItemRects()) {
-    if (item.label === "Music") continue;
     if (
       mx >= item.x - item.w / 2 && mx <= item.x + item.w / 2 &&
       my >= item.y - item.h / 2 && my <= item.y + item.h / 2
@@ -99,67 +102,78 @@ function handlePauseMenuClick(mx, my) {
       if (item.label === "Resume") return "resume";
       if (item.label === "Retry")  return "retry";
       if (item.label === "Level")  return "levelSelect";
+      if (item.label === "Music") {
+        gameMuted = !gameMuted;
+        if (gameMuted) {
+          if (typeof backgroundMusic !== "undefined" && backgroundMusic.isPlaying()) backgroundMusic.pause();
+          if (typeof soliloquyMusic  !== "undefined" && soliloquyMusic.isPlaying())  soliloquyMusic.pause();
+        }
+        return null;
+      }
     }
   }
   return null;
 }
 
+// Toggle to false to allow access to all levels regardless of progress
+const LEVEL_SELECT_LOCK = false;
+let _highestLevelSeen = 1;
+
 function getLevelSelectRects() {
-  // Use global levels array if available
-  const count = (typeof levels !== 'undefined' && Array.isArray(levels)) ? levels.length : 3;
-  const itemW = 120, itemH = 120, gap = 30;
-  // Layout: up to 4 per row
-  const perRow = Math.min(4, count);
-  const rows = Math.ceil(count / perRow);
-  const totalW = perRow * itemW + (perRow - 1) * gap;
-  const totalH = rows * itemH + (rows - 1) * gap;
-  const startX = width / 2 - totalW / 2 + itemW / 2;
-  const startY = height / 2 - totalH / 2 + itemH / 2 + 20;
-  let rects = [];
-  for (let i = 0; i < count; i++) {
-    const col = i % perRow;
-    const row = Math.floor(i / perRow);
-    rects.push({
-      num: i + 1,
-      label: (i === count - 1) ? 'Final Level' : `Level ${i + 1}`,
-      x: startX + col * (itemW + gap),
-      y: startY + row * (itemH + gap),
-      w: itemW,
-      h: itemH,
-    });
+  if (typeof levelNum !== 'undefined') {
+    _highestLevelSeen = max(_highestLevelSeen, levelNum);
   }
-  return rects;
+
+  // Layout constants — adjust CW (card width) and CH (card height) to resize cards
+  const CW = 130, CH = 90, GAP = 25, ROW_GAP = 40;
+  const PAD_X = 36, PAD_TOP = 0, PAD_BOT = 36;
+  const TITLE_H = 32, TITLE_GAP = 16;
+  const FW = CW * 3 + GAP * 2;   // Final Level spans full inner row
+  const FH = CH;                  // same height as numbered cards
+  const PW = FW + PAD_X * 2;
+  const PH = PAD_TOP + TITLE_H + TITLE_GAP + CH + ROW_GAP + CH + ROW_GAP + FH + PAD_BOT;
+
+  const PX = width / 2, PY = height / 2;
+  const panelTop = PY - PH / 2;
+  const row1Y = panelTop + PAD_TOP + TITLE_H + TITLE_GAP + CH / 2;
+  const row2Y = row1Y + CH + ROW_GAP;
+  const finalY = row2Y + CH / 2 + ROW_GAP + FH / 2;
+
+  return [
+    { num: 1, label: '1',           x: PX - CW - GAP,         y: row1Y, w: CW, h: CH, PX, PY, PW, PH },
+    { num: 2, label: '2',           x: PX,                     y: row1Y, w: CW, h: CH, PX, PY, PW, PH },
+    { num: 3, label: '3',           x: PX + CW + GAP,          y: row1Y, w: CW, h: CH, PX, PY, PW, PH },
+    { num: 4, label: '4',           x: PX - CW / 2 - GAP / 2,  y: row2Y, w: CW, h: CH, PX, PY, PW, PH },
+    { num: 5, label: '5',           x: PX + CW / 2 + GAP / 2,  y: row2Y, w: CW, h: CH, PX, PY, PW, PH },
+    { num: 6, label: 'Final Level', x: PX,                     y: finalY, w: FW, h: FH, PX, PY, PW, PH },
+  ];
 }
 
 function drawLevelSelectOverlay() {
+  const rects = getLevelSelectRects();
+  const { PX, PY, PW, PH } = rects[0];
+
   push();
   noStroke();
-  fill(0, 0, 0, 150);
+  fill(0, 0, 0, 160);
   rectMode(CORNER);
   rect(0, 0, width, height);
 
+  noStroke();
   rectMode(CENTER);
   fill(26, 31, 46);
-  // Dynamic height for more levels
-  const count = (typeof levels !== 'undefined' && Array.isArray(levels)) ? levels.length : 3;
-  const perRow = Math.min(4, count);
-  const rows = Math.ceil(count / perRow);
-  const panelW = Math.max(500, perRow * 160);
-  const panelH = Math.max(260, rows * 140);
-  rect(width / 2, height / 2, panelW, panelH, 18);
+  rect(PX, PY, PW, PH, 14);
 
-  fill(255);
-  textAlign(CENTER, CENTER);
-  textSize(30);
-  text("Select Level", width / 2, height / 2 - panelH / 2 + 40);
 
-  for (const r of getLevelSelectRects()) {
+  for (const r of rects) {
+    const locked = LEVEL_SELECT_LOCK && r.num > _highestLevelSeen;
+    noStroke();
     rectMode(CENTER);
-    fill(50, 55, 75);
-    rect(r.x, r.y, r.w, r.h, 12);
-    fill(255);
-    textSize(20);
+    fill(locked ? color(38, 42, 56) : color(50, 55, 75));
+    rect(r.x, r.y, r.w, r.h, 8);
+    fill(locked ? color(75, 82, 102) : color(210, 218, 235));
     textAlign(CENTER, CENTER);
+    textSize(r.num < 6 ? 26 : 20);
     text(r.label, r.x, r.y);
   }
   pop();
@@ -167,6 +181,8 @@ function drawLevelSelectOverlay() {
 
 function handleLevelSelectClick(mx, my) {
   for (const r of getLevelSelectRects()) {
+    const locked = LEVEL_SELECT_LOCK && r.num > _highestLevelSeen;
+    if (locked) continue;
     if (
       mx >= r.x - r.w / 2 && mx <= r.x + r.w / 2 &&
       my >= r.y - r.h / 2 && my <= r.y + r.h / 2

@@ -66,7 +66,7 @@ class Player extends Actor {
       walk: { sheet: playerWalkSheet, frameCount: 6, fps: 10, loop: true  },
       run:  { sheet: playerRunSheet,  frameCount: 6, fps: 14, loop: true  },
       jump: { sheet: playerJumpSheet, frameCount: 8, fps: 10, loop: false },
-      hurt: { sheet: playerHurtSheet, frameCount: 4, fps: 12, loop: false },
+      hurt:  { sheet: playerHurtSheet,  frameCount: 4, fps: 12, loop: false },
     };
     this.animState = "idle";
     this.animFrame = 0;
@@ -147,10 +147,6 @@ class Player extends Actor {
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
         this.onPlatform = platform;
-        // Only apply xVelocity if platform is a MovingPlatform and xVelocity is a nonzero number
-        if (platform.constructor && platform.constructor.name === "MovingPlatform" && typeof platform.xVelocity === "number" && platform.xVelocity !== 0) {
-          this.x += platform.xVelocity;
-        }
         if (platform.onLand) platform.onLand(this);
         continue;
       }
@@ -164,14 +160,14 @@ class Player extends Actor {
         this.remainingAirJumps = this.maxAirJumps;
         this.isOnGround = true;
         this.onPlatform = platform;
-        if (platform.xVelocity) {
-          this.x += platform.xVelocity;
-        }
         if (platform.onLand) platform.onLand(this);
       } else if (this.yVelocity < 0 && previousHitTop >= platformBottom) {
         this.y = platformBottom + this.height / 2 - this.hitboxInsetTop;
         this.yVelocity = 0;
       }
+    }
+    if (this.onPlatform && this.onPlatform.xVelocity) {
+      this.x += this.onPlatform.xVelocity;
     }
   }
     resolveHorizontalCollisions(platforms, previousX, previousY) {
@@ -208,6 +204,7 @@ class Player extends Actor {
       }
     }
   constrainToScreen() {
+    if (this.ignoreFallConstraint) return;
     const halfHeight = this.height / 2;
 
     if (this.y + halfHeight >= height) {

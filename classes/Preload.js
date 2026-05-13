@@ -8,6 +8,11 @@ function preload() {
   pipeTpieceImg = loadImage('assets/puzzles/tpiece.png');
   pipeQuadImg = loadImage('assets/puzzles/quad.png');
 
+  pipeStraightWaterImg = loadImage('assets/puzzles/straightwater.png');
+  pipeElbowWaterImg = loadImage('assets/puzzles/elbowwater.png');
+  pipeTpieceWaterImg = loadImage('assets/puzzles/tpiecewater.png');
+  pipeQuadWaterImg = loadImage('assets/puzzles/quadwater.png');
+
   //Music
   backgroundMusic = loadSound("assets/audio/BackgroundMusic.mp3")
   soliloquyMusic = loadSound("assets/audio/Soliloquy.mp3")
@@ -55,6 +60,7 @@ function preload() {
 
   //Backgrounds
   backgroundImage = loadImage("assets/title_screen/Background1.png");
+  backgroundImageLevel4 = loadImage("assets/tilebg.png");
 
   //Floors
   brickFloorImage = loadImage("assets/tiles/Floor1.png");
@@ -62,22 +68,34 @@ function preload() {
   floorTileLevel2 = loadImage("assets/tiles/FloorTileLvl2.png")
   floorTileLevel3 = loadImage("assets/tiles/FloorTileLvl3.png")
   lavaImage = loadImage("assets/tiles/Lava.png")
+  harmfulPlatformTileset = loadImage("assets/tiles/harmfulplatform_tileset.png")
+  harmfulPlatformVinesTileset = loadImage("assets/tiles/harmfulplatform_vines_tileset.png")
 
   //Platforms
   brickPlatformImage = loadImage("assets/tiles/BrickPlatform.png")
   brickTileImage = loadImage("assets/tiles/bricktile.png")
 
+  //Menu Button Sprites
+  menuResumeButtonImage = loadImage("assets/menu/resume_button_sprite.png")
+  menuRetryButtonImage = loadImage("assets/menu/retry_button_sprite.png")
+  menuLevelButtonImage = loadImage("assets/menu/level_button_sprite.png")
+  menuMusicOnButtonImage = loadImage("assets/menu/Music_ON_button_sprite.png")
+  menuMusicOffButtonImage = loadImage("assets/menu/Music_OFF_button_sprite.png")
+
   //Object Sprites
   woodenBox = loadImage("assets/objects/WoodenBox.png")
   spikeTrap = loadImage("assets/objects/SpikeTrap.png")
   doorImage = loadImage("assets/objects/door2.png")
+  doorClosedImage = loadImage("assets/objects/door1.png")
+  
+  presse = loadImage("assets/presse.png")
 
   //Player Sprites
   playerIdleSheet = loadImage("assets/characters/player/1/Idle.png");
   playerWalkSheet = loadImage("assets/characters/player/1/Walk.png");
   playerRunSheet  = loadImage("assets/characters/player/1/Run.png");
   playerJumpSheet = loadImage("assets/characters/player/1/Jump.png");
-  playerHurtSheet = loadImage("assets/characters/player/1/Hurt.png");
+  playerHurtSheet  = loadImage("assets/characters/player/1/Hurt.png");
 
   //Enemy Sprites
   greenslimeimage = loadImage("assets/enemies/SlimeWalk.png")

@@ -53,11 +53,12 @@ class Items {
     }
 
     draw() {
-        imageMode(CENTER);
         if (!this.isAvailable()) {
             return;
         }
 
+        push();
+        imageMode(CENTER);
         if (this.type === "health") {
             image(healthImage, this.x, this.y, this.w*1.5, this.h*1.5);
         }
@@ -80,6 +81,7 @@ class Items {
         if (this.type === "dashAbility") {
             image(dashAmuletImage, this.x, this.y, this.w*1.5, this.h*1.5);
         }
+        pop();
 
         noStroke();
         rectMode(CENTER);

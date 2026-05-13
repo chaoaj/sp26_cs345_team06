@@ -28,6 +28,7 @@ class Level {
         this.laserCollectors = [...(laserPuzzles.collectors || [])];
         this.laserMirrors = [...(laserPuzzles.mirrors || [])];
         this.pipePuzzles = [...(pipePuzzles || [])];
+        this.decorations = [];
 
         this.abilityToImageMap = [
             { ability: "doubleJump", image: doublejumpui },
@@ -95,6 +96,11 @@ class Level {
             shootCooldownMs: enemy.shootCooldownMs,
             projectileSpeed: enemy.projectileSpeed,
             projectileDamage: enemy.projectileDamage,
+        }));
+
+        this.initialPipeStates = this.pipePuzzles.map((pipe) => ({
+            currentOrientation: pipe.currentOrientation,
+            fillAmount: pipe.fillAmount,
         }));
 
         this._dynamicObjects = [...this.boxes, ...this.laserMirrors];
@@ -224,6 +230,17 @@ class Level {
 
     drawWorld() {
         this.drawPlatforms();
+        for (const dec of this.decorations) dec.draw();
+
+        const solved = isPipePuzzleSolved(this.pipePuzzles);
+        if (this.pipePuzzleSolvedDoor) {
+            this.pipePuzzleSolvedDoor.isVisible = solved;
+        }
+        for (const pipePuzzle of this.pipePuzzles) {
+            pipePuzzle.update(player);
+            pipePuzzle.drawPipe();
+        }
+
         this.drawItems();
         this.drawTraps();
         this.drawEnemies();
@@ -234,13 +251,6 @@ class Level {
         for (const mirror of this.laserMirrors) mirror.draw();
         for (const collector of this.laserCollectors) collector.draw();
         for (const laser of this.lasers) laser.draw();
-        for (const pipePuzzle of this.pipePuzzles) {
-            if (isPipePuzzleSolved(this.pipePuzzles)) {
-                print("true");
-            }
-            pipePuzzle.update(player);
-            pipePuzzle.drawPipe();
-        }
     }
 
     updatePuzzleElements(player) {
@@ -281,8 +291,19 @@ class Level {
             }
         }
 
-        for (const mirror of this.laserMirrors) {
+        for (let i = 0; i < this.laserMirrors.length; i++) {
+            const mirror = this.laserMirrors[i];
             mirror.update(this.platforms);
+            const initial = this.initialLaserMirrorStates[i];
+            const dropDistance = typeof mirror.respawnDropDistance === "number" ? mirror.respawnDropDistance : 220;
+
+            if (mirror.respawnIfDropped && initial && mirror.y > initial.y + dropDistance) {
+                mirror.x = initial.x;
+                mirror.y = initial.y;
+                mirror.xVelocity = 0;
+                mirror.yVelocity = 0;
+                mirror.isOnGround = false;
+            }
         }
 
         for (let i = 0; i < dynamicObjects.length; i++) {

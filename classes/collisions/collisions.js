@@ -3,7 +3,7 @@
 
 function resolvePlayerDynamicCollisions(player, dynamicObjects) {
     for (const object of dynamicObjects) {
-        if (object && object.isVisible === false) continue;
+        if (object && (object.isActive === false || object.isVisible === false)) continue;
         const objectLeft = object.x - object.w / 2;
         const objectRight = object.x + object.w / 2;
         const objectTop = object.y - object.h / 2;
@@ -33,10 +33,10 @@ function resolvePlayerDynamicCollisions(player, dynamicObjects) {
         } else {
             if (overlapLeft <= overlapRight) {
                 player.x -= overlapLeft;
-                object.xVelocity = 4;
+                if (object.xVelocity !== undefined && !(object instanceof BrickPlatform)) object.xVelocity = 4;
             } else {
                 player.x += overlapRight;
-                object.xVelocity = -4;
+                if (object.xVelocity !== undefined && !(object instanceof BrickPlatform)) object.xVelocity = -4;
             }
         }
     }

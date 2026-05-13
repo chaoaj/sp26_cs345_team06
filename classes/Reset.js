@@ -4,6 +4,9 @@
 
 // Moves Level.prototype.resetDynamicState logic here
 function resetDynamicStateForLevel(level) {
+        // EndGame and other non-Level objects don't have reset state — skip.
+        if (!level || !level.initialDoorStates) return;
+
         // Special: Level 3 blocker reset
         if (level && levelNum === 3 && level.blocker) {
             level.blocker.isVisible = true;
@@ -66,12 +69,26 @@ function resetDynamicStateForLevel(level) {
     // Reset laser collectors
     for (const collector of level.laserCollectors) {
         collector.isHit = false;
+        collector.isActivated = false;
         collector._hitThisFrame = false;
     }
 
     // Reset lasers
     for (const laser of level.lasers) {
         laser.segments = [];
+    }
+
+    // Reset pipe puzzles
+    if (level.pipePuzzles && level.initialPipeStates) {
+        for (let i = 0; i < level.pipePuzzles.length; i++) {
+            const pipe = level.pipePuzzles[i];
+            const initial = level.initialPipeStates[i];
+            if (pipe && initial) {
+                pipe.currentOrientation = initial.currentOrientation;
+                pipe.fillAmount = initial.fillAmount;
+                pipe.wasEHeld = false;
+            }
+        }
     }
 
     // Remove dynamically spawned enemies (those not in initialEnemyStates)

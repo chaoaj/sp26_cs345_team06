@@ -10,6 +10,8 @@ class BrickPlatform extends Platform {
 
     draw() {
         if (this.isVisible === false) return;
+        push();
+        imageMode(CORNER);
         const startX = this.x - this.w / 2;
         const startY = this.y - this.h / 2;
         for (let row = 0; row < this.tilesY; row++) {
@@ -17,5 +19,6 @@ class BrickPlatform extends Platform {
                 image(this.image, startX + (col * 32), startY + (row * 32), 32, 32);
             }
         }
+        pop();
     }
 }

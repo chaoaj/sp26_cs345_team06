@@ -50,7 +50,6 @@ function setup() {
 }
 
 function setupLevel() {
-  print(levelTemplates[0][9])
   level1 = new Level(
     levelTemplates[0][0], backgroundImageLevel4, floorTileLevel1,
     levelTemplates[0][1], levelTemplates[0][2], LEVEL_WORLD_WIDTHS[0],
@@ -82,10 +81,6 @@ function setupLevel() {
   if (levelTemplates[3][10] instanceof Door) {
     level4.pipePuzzleSolvedDoor = levelTemplates[3][10];
   }
-  // DEBUG: Log enemies array from template before instantiation
-  console.log('[setupLevel] NavigationLevel enemies from template:',
-    (levelTemplates[4][5] || []).map(e => e?.constructor?.name)
-  );
   navigationLevel = new NavigationLevel(
     levelTemplates[4][0], // platforms
     backgroundImageLevel4,

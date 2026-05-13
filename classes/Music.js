@@ -5,6 +5,8 @@ function updateLevelMusic() {
     return;
   }
 
+  if (typeof gameMuted !== 'undefined' && gameMuted) return;
+
   const isPlayableState = gameState === "playing" || gameState === "abilityUnlock" || gameState === "levelUp";
   if (!isPlayableState) {
     return;

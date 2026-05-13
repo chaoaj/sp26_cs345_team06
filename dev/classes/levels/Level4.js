@@ -17,7 +17,7 @@ function getLevel4Template() {
     const enemies = [];
     const spawnDoor4 = new Door(width * 0.12, height - 76, 75, 100);
     spawnDoor4.isVisible = false;
-    const endGameDoor4 = new Door(1388, height - 100, 75, 100);
+    const endGameDoor4 = new Door(1388, height - 76, 75, 100);
     endGameDoor4.isVisible = false;
     const doors = [spawnDoor4, endGameDoor4];
     const pits = [];

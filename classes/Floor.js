@@ -26,6 +26,7 @@ class Floor {
                     const tileY = this.y - 35;
                     this.lavaTiles.push({ x: tileX, y: tileY });
                 }
+                i--;
             } else {
                 const tileX = this.x + i * 32;
                 const tileY = this.y - 35;
@@ -40,6 +41,8 @@ class Floor {
     drawFloor() {
         this.generateFloor();
 
+        push();
+        imageMode(CENTER);
         for (const tile of this.floorTiles) {
             image(this.floorImage, tile.x, tile.y, 32, 32);
         }
@@ -47,6 +50,7 @@ class Floor {
         for (const lava of this.lavaTiles) {
             image(lavaImage, lava.x, lava.y, 32, 32);
         }
+        pop();
 
         return this.floors;
     }
